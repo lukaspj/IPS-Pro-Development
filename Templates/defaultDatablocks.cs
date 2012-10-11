@@ -116,7 +116,7 @@ datablock MaskEmitterData(msk_DefaultEmitter)
    blendStyle = "ADDITIVE";
    softParticles = "0";
    softnessDistance = "0.1";
-   pixelMaskPath = "IPS.png";
+   pixelMaskPath = "./IPS.png";
 };
 
 datablock MaskEmitterNodeData(msk_DefaultNode)
@@ -174,12 +174,12 @@ datablock ParticleEmitterNodeData( pEffecTest : broadNode )
 
 datablock ParticleEffectData(DefaultEffect)
 {
-   pEffect = "testEffect.pEffect";
+   pEffect = "./testEffect.pEffect";
    lifeTimeMS = 20000;
 };
 
 datablock ParticleEffectData(DefaultEffect2)
 {
-   pEffect = "testEffect_2.pEffect";
+   pEffect = "./testEffect_2.pEffect";
    lifeTimeMS = 20000;
 };
