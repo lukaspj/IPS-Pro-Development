@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 
 #include "platform/platform.h"
-#include "T3D/fx/ImprovedParticle/particleEmitter.h"
+#include "T3D/fx/particleEmitter.h"
 
 #include "scene/sceneManager.h"
 #include "scene/sceneRenderState.h"

@@ -6,7 +6,7 @@
 #include "particleEmitterNode.h"
 #include "console/consoleTypes.h"
 #include "core/stream/bitStream.h"
-#include "T3D/fx/ImprovedParticle/particleEmitter.h"
+#include "T3D/fx/particleEmitter.h"
 #include "math/mathIO.h"
 #include "sim/netConnection.h"
 #include "console/engineAPI.h"
