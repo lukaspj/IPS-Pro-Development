@@ -1,19 +1,13 @@
 IPS-Pro-Development
 ===================
 
-## ImprovedParticle directory
-This directory holds all the IPS Pro particle emitters, nodes and some of the helper functions.
-
 ## T3D/fx/particle.h
 At the bottom of this file at the bottom of the struct "Particle" the line
 '''Point3F relPos;'''
 was added
 
-## Tools
-This directory contains several files whose function is not only for IPS Pro but could be used in other contexts aswell.
-
 ## Documentation
-This will hold instructions, information and more.
+This folder will hold instructions, information and more.
 
 # Installation
 You can either just copy and paste to merge your source folder with the source folder in the repo or do it manually:
