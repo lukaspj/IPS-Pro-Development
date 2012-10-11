@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ParticleEffect>
+  <Emitters>
+    <Emitter Type="MeshEmitter">
+      <Value Name="yPosition" DeltaValue="100">
+        <Point X="0" Y="0" Easing="" EaseIn="False" EaseOut="False" />
+        <Point X="1000" Y="1000" Easing="Cubic" EaseIn="True" EaseOut="True" />
+      </Value>
+      <Value Name="EjectionPeriod" DeltaValue="34">
+        <Point X="0" Y="0" Easing="" EaseIn="False" EaseOut="False" />
+        <Point X="1000" Y="1000" Easing="Quadratic" EaseIn="True" EaseOut="True" />
+      </Value>
+      <Value Name="EjectionOffset" DeltaValue="64">
+        <Point X="0" Y="0" Easing="" EaseIn="False" EaseOut="False" />
+        <Point X="1000" Y="1000" Easing="Cubic" EaseIn="True" EaseOut="True" />
+      </Value>
+    </Emitter>
+    <Emitter Type="GraphEmitter">
+      <Value Name="LowerBoundary" DeltaValue="89">
+        <Point X="0" Y="0" Easing="" EaseIn="False" EaseOut="False" />
+        <Point X="1000" Y="1000" Easing="Quartic" EaseIn="True" EaseOut="True" />
+      </Value>
+    </Emitter>
+    <Emitter Type="StockEmitter">
+      <Value Name="xPosition" DeltaValue="13">
+        <Point X="0" Y="0" Easing="" EaseIn="False" EaseOut="False" />
+        <Point X="1000" Y="1000" Easing="Exponential" EaseIn="True" EaseOut="True" />
+      </Value>
+    </Emitter>
+  </Emitters>
+</ParticleEffect>
