@@ -10,6 +10,8 @@ IPS-Pro-Development
 
 # [Documentation](https://github.com/lukaspj/IPS-Pro-Development/wiki)
 
+# [Update news](https://github.com/lukaspj/IPS-Pro-Development/wiki/Update-news)
+
 # Installation
 You can either just copy and paste to merge your source folder with the source folder in the repo or do it manually:
 
