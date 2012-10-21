@@ -1,13 +1,14 @@
 IPS-Pro-Development
 ===================
 
-## T3D/fx/particle.h
-At the bottom of this file at the bottom of the struct "Particle" the line
-'''Point3F relPos;'''
-was added
+# Important information
+* The particle effect is still a prototype please focus on the emitters atm.
 
-## Documentation
-This folder will hold instructions, information and more.
+# POI's
+* MeshEmitter and RadiusMeshEmitter might have performance issues.
+* Making the emitters properly load and save values is a tricky business. Please keep an eye out for load/save errors.
+
+# [Documentation](https://github.com/lukaspj/IPS-Pro-Development/wiki)
 
 # Installation
 You can either just copy and paste to merge your source folder with the source folder in the repo or do it manually:
