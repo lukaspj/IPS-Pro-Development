@@ -65,12 +65,47 @@
       <DependentUpon>UCChartCurveGraph.xaml</DependentUpon>
     </Compile>
     <Compile Include="Chart\Utilities.cs" />
+    <Compile Include="Dialogs\AlertDialog.xaml.cs">
+      <DependentUpon>AlertDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TimeInputDialog.xaml.cs">
+      <DependentUpon>TimeInputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\VectorInputDialog.xaml.cs">
+      <DependentUpon>VectorInputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\StringInputDialog.xaml.cs">
+      <DependentUpon>StringInputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ItemInputDialog.xaml.cs">
+      <DependentUpon>ItemInputDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utility\Emitter.cs" />
     <Compile Include="Utility\ParticleEffect.cs" />
     <Compile Include="Utility\Tweener.cs" />
     <Page Include="Chart\UCChartCurveGraph.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\AlertDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\TimeInputDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\VectorInputDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\StringInputDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\ItemInputDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

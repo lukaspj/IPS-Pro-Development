@@ -1,72 +1,76 @@
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\MahApps.Metro.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\MahApps.Metro.pdb
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\System.Windows.Interactivity.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\System.Windows.Interactivity.xml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\de\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\en\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\es\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\fr\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\it\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\ja\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\ko\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ContextMenu.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ProgressBar.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.TextBlock.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.Slider.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.TabControl.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.Tooltip.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\Button.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\Colours.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\ListBox.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\Menu.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\ScrollBar.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\Styles.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\TextBox.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Controls\RevealImage.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\BaseDark.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\BaseLight.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Orange.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Purple.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Red.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Blue.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Green.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Colours.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.Scrollbars.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\FlatButton.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Fonts.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Generic.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.CheckBox.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.RadioButton.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Controls\ProgressIndicator.g.cs
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Controls\RevealImage.g.cs
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro_MarkupCompile.cache
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro_MarkupCompile.lref
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.AnimatedSingleRowTabControl.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.AnimatedTabControl.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ComboBox.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ListView.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.PasswordBox.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.TextBox.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\TabControl.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\AppBarButton.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Flyout.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\MetroContentControl.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\MetroImage.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\MetroProgressBar.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\MetroWindow.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Panorama.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Pivot.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\ProgressRing.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\RangeSlider.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Tile.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\ToggleSwitch.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\TransitioningContentControl.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Controls\ProgressIndicator.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.Buttons.baml
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro.g.resources
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro.dll
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro.pdb
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\MahApps.Metro.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\MahApps.Metro.pdb
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\System.Windows.Interactivity.xml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\de\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\en\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\es\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\fr\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\it\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\ja\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\ko\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro.csprojResolveAssemblyReference.cache
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ContextMenu.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ListBox.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ProgressBar.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.TextBlock.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.Slider.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.TabControl.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.Tooltip.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\Button.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\Colours.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\ListBox.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\Menu.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\ScrollBar.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\Styles.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\TextBox.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Controls\RevealImage.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\BaseDark.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\BaseLight.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Orange.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Purple.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Red.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Blue.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Accents\Green.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Colours.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.Scrollbars.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\FlatButton.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Fonts.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Generic.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.CheckBox.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.RadioButton.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Controls\ProgressIndicator.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Controls\RevealImage.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro_MarkupCompile.cache
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro_MarkupCompile.lref
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.AnimatedSingleRowTabControl.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.AnimatedTabControl.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ComboBox.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.ListView.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.PasswordBox.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.TextBox.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\VS\TabControl.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\AppBarButton.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Flyout.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\MetroContentControl.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\MetroImage.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\MetroProgressBar.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\MetroWindow.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Panorama.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Pivot.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\ProgressRing.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\RangeSlider.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\Tile.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\ToggleSwitch.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Themes\TransitioningContentControl.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Controls\ProgressIndicator.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\Styles\Controls.Buttons.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro.g.resources
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\MahApps.Metro\obj\Debug\MahApps.Metro.pdb
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\bin\Debug\MahApps.Metro.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\bin\Debug\MahApps.Metro.pdb

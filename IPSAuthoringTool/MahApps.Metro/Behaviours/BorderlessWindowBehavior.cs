@@ -144,22 +144,20 @@ namespace MahApps.Metro.Behaviours
             }
         }
 
-        private bool HandleMaximize()
+        private void HandleMaximize()
         {
-            bool retVal = false;
             IntPtr monitor = UnsafeNativeMethods.MonitorFromWindow(_mHWND, Constants.MONITOR_DEFAULTTONEAREST);
             if (monitor != IntPtr.Zero)
             {
                 var monitorInfo = new MONITORINFO();
                 UnsafeNativeMethods.GetMonitorInfo(monitor, monitorInfo);
-                var x = monitorInfo.rcWork.left;
-                var y = monitorInfo.rcWork.top;
-                var cx = Math.Abs(monitorInfo.rcWork.right - x);
-                var cy = Math.Abs(monitorInfo.rcWork.bottom - y);
+                bool ignoreTaskBar = AssociatedObject as MetroWindow != null && ((MetroWindow)this.AssociatedObject).IgnoreTaskbarOnMaximize;
+                var x = ignoreTaskBar ? monitorInfo.rcMonitor.left : monitorInfo.rcWork.left;
+                var y = ignoreTaskBar ? monitorInfo.rcMonitor.top : monitorInfo.rcWork.top;
+                var cx = ignoreTaskBar ? monitorInfo.rcWork.right : Math.Abs(monitorInfo.rcWork.right - x);
+                var cy = ignoreTaskBar ? monitorInfo.rcMonitor.bottom : Math.Abs(monitorInfo.rcWork.bottom - y);
                 UnsafeNativeMethods.SetWindowPos(_mHWND, new IntPtr(-2), x, y, cx, cy, 0x0040);
-                retVal = true;
             }
-            return retVal;
         }
 
         protected override void OnDetaching()
@@ -292,7 +290,7 @@ namespace MahApps.Metro.Behaviours
 
                     // don't process the message on windows that can't be resized
                     var resizeMode = AssociatedObject.ResizeMode;
-                    if (resizeMode == ResizeMode.CanMinimize || resizeMode == ResizeMode.NoResize)
+                    if (resizeMode == ResizeMode.CanMinimize || resizeMode == ResizeMode.NoResize || AssociatedObject.WindowState == WindowState.Maximized)
                         break;
 
                     // get X & Y out of the message                   

@@ -208,17 +208,8 @@ namespace IPSAuthoringTool.Chart
             labelTitle.Visibility = ShowTitle ? Visibility.Visible : Visibility.Collapsed;
             labelTitle.Content = GraphTitle;
 
-            textblockXAxis.Visibility = ShowXYLabel ? Visibility.Visible : Visibility.Collapsed;
-            textblockYAxis.Visibility = ShowXYLabel ? Visibility.Visible : Visibility.Collapsed;
-            textblockXAxis.Text = XAxisLabelString;
-            textblockYAxis.Text = YAxisLabelString;
-            dockpanelXTicks.Visibility = ShowXTicks ? Visibility.Visible : Visibility.Collapsed;
-            dockpanelYTicks.Visibility = ShowYTicks ? Visibility.Visible : Visibility.Collapsed;
-            
-
-            borderFrame.Background = FrameBgColor;
+           
             borderUC.Background = ChartBgColor;
-            stackpanelLegendTable.Visibility = ShowLegendTable ? Visibility.Visible : Visibility.Collapsed;
 
             //Step 2: Convert given data into graph data
             ConvertToGraphData();
@@ -272,6 +263,7 @@ namespace IPSAuthoringTool.Chart
                             };
                             Canvas.SetLeft(rect, knots[i].X - markerSize / 2);
                             Canvas.SetTop(rect, knots[i].Y - markerSize / 2);
+                            MessageBox.Show(Canvas.GetLeft(rect) + "\n" + Canvas.GetTop(rect) + "\n" + knots[i].X + "\n" + knots[i].Y + "\n" + markerSize);
                             borderChart.Children.Add(rect);
                         }
                     }
@@ -305,6 +297,7 @@ namespace IPSAuthoringTool.Chart
                             };
                             Canvas.SetLeft(rect, knots[i].X - markerSize / 2);
                             Canvas.SetTop(rect, knots[i].Y - markerSize / 2);
+                            MessageBox.Show(Canvas.GetLeft(rect) + "\n" + Canvas.GetTop(rect) + "\n" + knots[i].X + "\n" + knots[i].Y + "\n" + markerSize);
                             borderChart.Children.Add(rect);
                         }
                     }
@@ -313,18 +306,6 @@ namespace IPSAuthoringTool.Chart
 
             if (ShowLegendTable)
                 DrawLegends();
-
-            if (ShowXTicks)
-            {
-                labelMinXValue.Content = this.minXValue.ToString();
-                labelMaxXValue.Content = this.supportedDataPointsCount.ToString();
-            }
-
-            if (ShowYTicks)
-            {
-                labelMinYValue.Content = this.minYValue.ToString();
-                labelMaxYValue.Content = this.maxYValue.ToString();
-            }
         }
 
         private void DrawLegends()
@@ -343,7 +324,6 @@ namespace IPSAuthoringTool.Chart
                 TextBlock tb = new TextBlock();
                 tb.Text = cc.Legend;
                 sp.Children.Add(tb);
-                stackpanelLegend.Children.Add(sp);
             }
         }        
     }

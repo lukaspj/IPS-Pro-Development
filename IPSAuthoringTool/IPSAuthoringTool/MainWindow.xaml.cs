@@ -14,7 +14,6 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using System.Collections.ObjectModel;
 using IPSAuthoringTool.Utility;
-using WinCharts = System.Windows.Forms.DataVisualization.Charting;
 
 namespace IPSAuthoringTool
 {
@@ -31,9 +30,9 @@ namespace IPSAuthoringTool
         PanoramaGroup panEmitters;
         PanoramaGroup valEffects;
 
-        List<Grid> EffectPanels;
-        List<Grid> EmitterPanels;
-        List<Grid> ValuePanels;
+        ObservableCollection<Grid> EffectPanels;
+        ObservableCollection<Grid> EmitterPanels;
+        ObservableCollection<Grid> ValuePanels;
 
         Emitter emitter;
         List<ParticleEffect> Effects;
@@ -47,104 +46,33 @@ namespace IPSAuthoringTool
             // EffectsPanorama binding
             panEffects = new PanoramaGroup("Effects");
             EffectGroups = new ObservableCollection<PanoramaGroup> { panEffects };
-            EffectPanels = new List<Grid>();
+            EffectPanels = new ObservableCollection<Grid>();
             panEffects.SetSource(EffectPanels);
             EffectPan.ItemsSource = EffectGroups;
 
             // ValuesPanorama binding
             valEffects = new PanoramaGroup("Values");
             ValueGroups = new ObservableCollection<PanoramaGroup> { valEffects };
-            ValuePanels = new List<Grid>();
+            ValuePanels = new ObservableCollection<Grid>();
             valEffects.SetSource(ValuePanels);
-            //ValuesPan.ItemsSource = ValueGroups;
+            ValuesPan.ItemsSource = ValueGroups;
 
             // EmittersPanorama binding
             panEmitters = new PanoramaGroup("Emitters");
             EmitterGroups = new ObservableCollection<PanoramaGroup> { panEmitters };
-            EmitterPanels = new List<Grid>();
+            EmitterPanels = new ObservableCollection<Grid>();
             panEmitters.SetSource(EmitterPanels);
             EmitterPan.ItemsSource = EmitterGroups;
             Effects = ParticleEffect.loadLatestFile();
             reloadEffects();
             reloadEmitters();
+            ItemInputControl.SetParent(ModalDialogParent);
+            StringInputControl.SetParent(ModalDialogParent);
+            VectorInputControl.SetParent(ModalDialogParent);
+            TimeInputControl.SetParent(ModalDialogParent);
+            AlertControl.SetParent(ModalDialogParent);
         }
-
-        #region EmitterWindow
-
-        private void reloadEmitters()
-        {
-            EmitterPanels.Clear();
-            if (Effect != null)
-            {
-                for (int i = 0; i < Effect.Emitters.Count; i++)
-                {
-                    Grid p = new Grid();
-                    p.Width = 160;
-                    p.Height = 160;
-                    Image img = new Image();
-                    img.Source = new BitmapImage( new Uri("/Icons/" + Effect.Emitters[i].ToString() + ".png", UriKind.Relative) );
-                    img.Width = 160;
-                    img.Height = 160;
-                    img.Stretch = Stretch.Fill;
-                    img.Tag = i;
-                    img.PreviewMouseDown += Emitter_Click;
-                    RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.Fant);
-                    p.Children.Add(img);
-                    EmitterPanels.Add(p);
-                }
-            }
-        }
-
-        void Emitter_Click(object sender, EventArgs e)
-        {
-            emitter = Effect.Emitters[(int)((Image)sender).Tag];
-            selEmitterTab.IsEnabled = true;
-            selEmitterTab.Header = emitter.ToString();
-            selValueTab.Header = "Value";
-            selValueTab.IsEnabled = false;
-
-            valStackPanel.Children.Clear();
-            if (emitter != null)
-            {
-                for (int i = 0; i < emitter.Values.Count; i++)
-                {
-                    Emitter.value val = emitter.Values[i];
-                    Grid p = new Grid();
-                    p.Height = 255;
-                    p.Width = 555;
-                    //List<double> Points = new List<double>();
-                    ObservableCollection<double> Points = new ObservableCollection<double>();
-                    ComputeGraph(Points,i);
-                    //Chart.ChartCurve cc = new Chart.ChartCurve(Brushes.Red, Points.ToArray(), Chart.ChartLineType.PolylineType, "xOffset");
-                    Chart.UCChartCurveGraph ucGraph = new Chart.UCChartCurveGraph();
-                    ucGraph.Tag = i;
-                    ucGraph.PreviewMouseDown += new MouseButtonEventHandler(ucGraph_PreviewMouseDown);
-                    ObservableCollection<Chart.ChartRequestInfo> ri = new ObservableCollection<Chart.ChartRequestInfo>();
-                    ri.Add(new Chart.ChartRequestInfo(Brushes.Red, Points, Chart.ChartLineType.PolylineType, val.valueName));
-                    ucGraph.RequestData = ri;
-                    ucGraph.ShowGridLines = true;
-                    ucGraph.GraphTitle = val.valueName;
-                    ucGraph.ShowTitle = true;
-                    ucGraph.ShowXTicks = true;
-                    ucGraph.ShowYTicks = true;
-                    ucGraph.ShowXYLabel = true;
-                    ucGraph.Height = 255;
-                    ucGraph.Width = 555;
-                    p.Children.Add(ucGraph);
-                    valStackPanel.Children.Add(p);
-                }
-            }
-        }
-
-        void ucGraph_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Value = emitter.Values[(int)((Chart.UCChartCurveGraph)sender).Tag];
-            selValueTab.Header = Value.valueName;
-            selValueTab.IsEnabled = true;
-        }
-
-        #endregion
-
+        
         #region EffectTab
         private void reloadEffects()
         {
@@ -175,9 +103,303 @@ namespace IPSAuthoringTool
             selValueTab.Header = "Value";
             selEmitterTab.IsEnabled = false;
             selValueTab.IsEnabled = false;
-            reloadEffects();
             reloadEmitters();
         }
+
+
+        #region buttonClicks
+        private void CreateEffectButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog SFD = new System.Windows.Forms.SaveFileDialog();
+            if (SFD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                ParticleEffect newEff = new ParticleEffect();
+                newEff.path = SFD.FileName;
+                newEff.name = System.IO.Path.GetFileNameWithoutExtension(SFD.FileName);
+                Effects.Add(newEff);
+                reloadEffects();
+            }
+        }
+        private void LoadEffectButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog OFD = new System.Windows.Forms.OpenFileDialog();
+            if (OFD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                ParticleEffect newEff = new ParticleEffect();
+                newEff.ReadFromFile(OFD.FileName, AlertControl);
+                Effects.Add(newEff);
+                reloadEffects();
+            }
+        }
+        private void DeleteEffectButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Effect != null)
+            {
+                Effects.Remove(Effect);
+                Effect = null;
+                reloadEffects();
+                reloadEmitters();
+            }
+        }
+        private void SaveEffectButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Effect != null)
+            {
+                Effect.WriteToFile(Effect.path, AlertControl);
+                reloadEffects();
+            }
+        }
+        #endregion
+
+        #endregion
+
+        #region EmitterTab
+
+        private void reloadEmitters()
+        {
+            EmitterPanels.Clear();
+            if (Effect != null)
+            {
+                for (int i = 0; i < Effect.Emitters.Count; i++)
+                {
+                    Grid p = new Grid();
+                    p.Width = 160;
+                    p.Height = 160;
+                    Image img = new Image();
+                    img.Source = new BitmapImage(new Uri("/Icons/" + Effect.Emitters[i].ToString() + ".png", UriKind.Relative));
+                    img.Width = 160;
+                    img.Height = 160;
+                    img.Stretch = Stretch.Fill;
+                    img.Tag = i;
+                    img.PreviewMouseDown += Emitter_Click;
+                    RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.Fant);
+                    p.Children.Add(img);
+                    EmitterPanels.Add(p);
+                }
+            }
+        }
+
+        void Emitter_Click(object sender, EventArgs e)
+        {
+            emitter = Effect.Emitters[(int)((Image)sender).Tag];
+            selEmitterTab.IsEnabled = true;
+            selEmitterTab.Header = emitter.ToString();
+            selValueTab.Header = "Value";
+            selValueTab.IsEnabled = false;
+            reloadValues();
+        }
+
+        #region buttonClicks
+        private void CreateEmitterButton_Click(object sender, RoutedEventArgs e)
+        {
+            object o = ItemInputControl.ShowHandlerDialog("Please choose emitter type:", getEmitterLabels());
+            Emitter emi = new Emitter();
+            if ( o != null )
+            {
+                switch((int)o)
+                {
+                    case 1:
+                        emi.Type = Emitter.EmitterType.StockEmitter;
+                        break;
+                    case 2:
+                        emi.Type = Emitter.EmitterType.GraphEmitter;
+                        break;
+                    case 3:
+                        emi.Type = Emitter.EmitterType.GroundEmitter;
+                        break;
+                    case 4:
+                        emi.Type = Emitter.EmitterType.MaskEmitter;
+                        break;
+                    default:
+                        emi.Type = Emitter.EmitterType.Error;
+                        break;
+                }
+            }
+            else
+                return;
+
+            string s = StringInputControl.ShowHandlerDialog("Emitter datablock:");
+            if (s != null)
+                emi.emitter = s;
+            else
+                return;
+
+            s = StringInputControl.ShowHandlerDialog("Node datablock:");
+            if (s != null)
+                emi.datablock = s;
+            else
+                return;
+
+            float[] timeRange = TimeInputControl.ShowHandlerDialog("Time range:");
+            if (timeRange != null)
+            {
+                emi.Start = timeRange[0];
+                emi.End = timeRange[1];
+            }
+            else
+                return;
+
+            float[] relPos = VectorInputControl.ShowHandlerDialog("Relative position: ");
+            if (relPos != null)
+            {
+                emi.x = relPos[0];
+                emi.y = relPos[1];
+                emi.z = relPos[2];
+            }
+            else
+                return;
+
+            Effect.Emitters.Add(emi);
+            reloadEmitters();
+        }
+        private void DeleteEmitterButton_Click(object sender, RoutedEventArgs e)
+        {
+            Effect.Emitters.Remove(emitter);
+            emitter = null;
+            selEmitterTab.IsEnabled = false;
+            selEmitterTab.Header = "EmitterType";
+            reloadEmitters();
+        }
+        private void SaveEmitterButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Save emitter dialog is missing");
+        }
+
+        #endregion
+
+        private List<object> getEmitterLabels()
+        {
+            List<object> IC = new List<object>();
+            Label l1 = new Label();
+            l1.Content = "SphereEmitter";
+            l1.Tag = 1;
+            Label l2 = new Label();
+            l2.Content = "GraphEmitter";
+            l2.Tag = 2;
+            Label l3 = new Label();
+            l3.Content = "GroundEmitter";
+            l3.Tag = 3;
+            Label l4 = new Label();
+            l4.Content = "MaskEmitter";
+            l4.Tag = 4;
+            IC.Add(l1);
+            IC.Add(l2);
+            IC.Add(l3);
+            IC.Add(l4);
+            return IC;
+        }
+
+        #endregion
+
+        #region ValuesTab
+
+        private void reloadValues()
+        {
+            ValuePanels.Clear();
+            if (emitter != null)
+            {
+                for (int i = 0; i < emitter.Values.Count; i++)
+                {
+                    Emitter.value val = emitter.Values[i];
+                    Grid p = new Grid();
+                    p.Height = 180;
+                    p.Width = 180;
+                    p.Margin = new Thickness(5);
+                    if (val.Ease == true)
+                    {
+                        ObservableCollection<double> Points = new ObservableCollection<double>();
+                        ComputeGraph(Points, i);
+                        Chart.UCChartCurveGraph ucGraph = new Chart.UCChartCurveGraph();
+                        ucGraph.Tag = i;
+                        ucGraph.PreviewMouseDown += new MouseButtonEventHandler(ucGraph_PreviewMouseDown);
+                        ObservableCollection<Chart.ChartRequestInfo> ri = new ObservableCollection<Chart.ChartRequestInfo>();
+                        ri.Add(new Chart.ChartRequestInfo(Brushes.Red, Points, Chart.ChartLineType.PolylineType, val.valueName));
+                        ucGraph.RequestData = ri;
+                        ucGraph.ShowGridLines = true;
+                        ucGraph.GraphTitle = val.valueName;
+                        ucGraph.ShowTitle = true;
+                        ucGraph.ShowXTicks = false;
+                        ucGraph.ShowYTicks = false;
+                        ucGraph.Height = 180;
+                        ucGraph.Width = 180;
+                        p.Children.Add(ucGraph);
+                    }
+                    else
+                    {
+                        Label l = new Label();
+                        l.Content = val.valueName;
+                        l.Tag = i;
+                        l.PreviewMouseDown += new MouseButtonEventHandler(LabelValue_PreviewMouseDown);
+                        p.Children.Add(l);
+                    }
+                    ValuePanels.Add(p);
+                }
+            }
+        }
+
+        void ucGraph_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Value = emitter.Values[(int)((Chart.UCChartCurveGraph)sender).Tag];
+            selValueTab.Header = Value.valueName;
+            selValueTab.IsEnabled = true;
+        }
+
+        void LabelValue_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Value = emitter.Values[(int)((Label)sender).Tag];
+            selValueTab.Header = Value.valueName;
+            selValueTab.IsEnabled = true;
+        }
+
+        #region ButtonClicks
+
+        private void AddValueButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> fields = Emitter.getFields(emitter.Type);
+            object o = ItemInputControl.ShowHandlerDialog("Choose value:", getFieldList());
+            if (o != null)
+            {
+                Emitter.value val = new Emitter.value();
+                val.valueName = fields.ElementAt((int)o);
+                emitter.Values.Add(val);
+                reloadValues();
+            }
+        }
+
+        private void RemoveValueButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((Value.Ease == false && Value.setTime != null) || ( Value.Ease == true && Value.points.Count > 0 ))
+            {
+                emitter.Values.Remove(Value);
+                reloadValues();
+                selValueTab.IsEnabled = false;
+                selValueTab.Header = "Value";
+            }
+        }
+
+        private void SaveValueButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        private List<object> getFieldList()
+        {
+            List<string> strings = Emitter.getFields(emitter.Type);
+            List<object> ret = new List<object>();
+            int i = 0;
+            foreach (string s in strings)
+            {
+                Label l = new Label();
+                l.Content = s;
+                l.Tag = i;
+                i++;
+                ret.Add(l);
+            }
+            return ret;
+        }
+
         #endregion
 
         #region GraphComputing
@@ -187,7 +409,7 @@ namespace IPSAuthoringTool
             int[] relPoints = GetRelevantPointIndexes(0, idx);
             for (int i = 0; i < 1000; i++)
             {
-                int[] newPoints = GetRelevantPointIndexes(i, idx);
+                int[] newPoints = GetRelevantPointIndexes((float)i/1000, idx);
                 Points.Add(GetY(i, emitter.Values[idx].points[newPoints[0]], emitter.Values[idx].points[newPoints[1]], idx));
                 //Points.Add(new Point(i, GetY(i, emitter.Values[idx].points[newPoints[0]], emitter.Values[idx].points[newPoints[1]], idx)));
             }
@@ -195,19 +417,21 @@ namespace IPSAuthoringTool
 
         private int GetY(int x, Emitter.PointOnValue p1, Emitter.PointOnValue p3, int idx)
         {
-            return (int)Utility.Tweener.EaseFromString(x - p1.point.X, p1.point.Y, p3.point.Y - p1.point.Y, p3.point.X - p1.point.X, p3.Easing, p3.EaseIn, p3.EaseOut);
+            float ease = (float)Utility.Tweener.EaseFromString((float)x/1000 - p1.point.X, p1.point.Y, p3.point.Y - p1.point.Y, p3.point.X - p1.point.X, p3.Easing, p3.EaseIn, p3.EaseOut);
+            int ret = (int)(ease * 1000);
+            return ret;
         }
 
-        private int[] GetRelevantPointIndexes(int x, int id)
+        private int[] GetRelevantPointIndexes(float x, int id)
         {
             int[] retArr = new int[2];
             int p1 = 0;
             int p2 = emitter.Values[id].points.Count - 1;
             for (int i = 0; i < emitter.Values[id].points.Count; i++)
             {
-                Point p = emitter.Values[id].points[i].point;
-                Point pp1 = emitter.Values[id].points[p1].point;
-                Point pp2 = emitter.Values[id].points[p2].point;
+                Emitter.PointF p = emitter.Values[id].points[i].point;
+                Emitter.PointF pp1 = emitter.Values[id].points[p1].point;
+                Emitter.PointF pp2 = emitter.Values[id].points[p2].point;
                 if (p.X - x >= pp1.X - x && p.X - x <= 0)
                     p1 = i;
                 if (p.X - x < pp2.X - x && p.X - x > 0)
@@ -217,13 +441,6 @@ namespace IPSAuthoringTool
             retArr[0] = p1;
             retArr[1] = p2;
             return retArr;
-        }
-
-        private void applyVisualStyles(WinCharts.Series serie)
-        {
-            serie.ChartType = WinCharts.SeriesChartType.Line;
-            serie.XValueType = WinCharts.ChartValueType.Int32;
-            serie.YValueType = WinCharts.ChartValueType.Int32;
         }
 
         #endregion
@@ -276,6 +493,11 @@ namespace IPSAuthoringTool
         }
 
         #endregion
+
+        private void MetroWindow_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ParticleEffect.writeLatestFile(Effects);
+        }
 
     }
 }

@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\
 IPSAuthoringTool
 none
 false
 DEBUG;TRACE
-C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\IPSAuthoringTool\App.xaml
-31162805093
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\App.xaml
+8-1368426524
 
-121433078523
-16-1948083762
-Chart\UCChartCurveGraph.xaml;MainWindow.xaml;Resources\Icons.xaml;
+17-900342859
+16-297495363
+Chart\UCChartCurveGraph.xaml;Dialogs\AlertDialog.xaml;Dialogs\TimeInputDialog.xaml;Dialogs\VectorInputDialog.xaml;Dialogs\StringInputDialog.xaml;Dialogs\ItemInputDialog.xaml;MainWindow.xaml;Resources\Icons.xaml;
 
-False
+True
 

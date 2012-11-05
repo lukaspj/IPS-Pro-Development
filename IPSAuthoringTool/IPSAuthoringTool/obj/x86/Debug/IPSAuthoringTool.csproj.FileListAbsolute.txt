@@ -16,3 +16,32 @@ c:\users\lukas\documents\visual studio 2010\Projects\IPSAuthoringTool\IPSAuthori
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\IPSAuthoringTool\bin\Debug\MahApps.Metro.pdb
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Chart\UCChartCurveGraph.baml
 C:\Users\Lukas\Documents\Visual Studio 2010\Projects\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Chart\UCChartCurveGraph.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.exe
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.pdb
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\bin\Debug\IPSAuthoringTool.exe
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\bin\Debug\IPSAuthoringTool.pdb
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\bin\Debug\MahApps.Metro.pdb
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.csprojResolveAssemblyReference.cache
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Chart\UCChartCurveGraph.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\MainWindow.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Resources\Icons.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Chart\UCChartCurveGraph.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\App.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool_MarkupCompile.cache
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.g.resources
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.Properties.Resources.resources
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.csproj.GenerateResource.Cache
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool_MarkupCompile.lref
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\ItemInputDialog.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\ItemInputDialog.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\StringInputDialog.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\StringInputDialog.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\VectorInputDialog.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\VectorInputDialog.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\TimeInputDialog.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\TimeInputDialog.g.cs
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\AlertDialog.baml
+C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\AlertDialog.g.cs

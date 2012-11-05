@@ -9,6 +9,40 @@ namespace IPSAuthoringTool.Utility
 {
     public class Emitter
     {
+        public List<value> Values = new List<value>();
+        public EmitterType Type = 0;
+        public float x = 0;
+        public float y = 0;
+        public float z = 0;
+        public string datablock = "";
+        public string emitter = "";
+        public float Start = 0;
+        public float End = 0;
+
+        public struct value
+        {
+            public string valueName;
+            public float deltaValue;
+            public string startEasing;
+            public List<PointOnValue> points;
+            public bool Ease;
+            public float setTime;
+        }
+
+        public struct PointF
+        {
+            public float X;
+            public float Y;
+        }
+
+        public class PointOnValue
+        {
+            public PointF point;
+            public string Easing;
+            public bool EaseIn;
+            public bool EaseOut;
+        }
+
         public enum EmitterType
         {
             StockEmitter = 0,
@@ -71,22 +105,6 @@ namespace IPSAuthoringTool.Utility
             }
         }
 
-        public class PointOnValue
-        {
-            public Point point;
-            public string Easing;
-            public bool EaseIn;
-            public bool EaseOut;
-        }
-
-        public struct value
-        {
-            public string valueName;
-            public float deltaValue;
-            public string startEasing;
-            public List<PointOnValue> points;
-        }
-
         public class PointXSorter : IComparer<PointOnValue>
         {
             public int Compare(PointOnValue obj1, PointOnValue obj2)
@@ -94,10 +112,6 @@ namespace IPSAuthoringTool.Utility
                 return obj1.point.X.CompareTo(obj2.point.X);
             }
         }
-
-        public List<value> Values = new List<value>();
-
-        public EmitterType Type = 0;
 
         public static List<string> getFields(EmitterType _type)
         {
