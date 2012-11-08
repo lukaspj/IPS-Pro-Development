@@ -101,6 +101,12 @@ datablock GraphEmitterData(g_DefaultEmitter)
    softnessDistance = "0.1";
 };
 
+datablock PixelMask(pMask1)
+{
+	MaskPath = "./IPS.png";
+	Treshold = 125;
+};
+
 datablock MaskEmitterData(msk_DefaultEmitter)
 {
    ejectionPeriodMS = "500";
@@ -116,7 +122,7 @@ datablock MaskEmitterData(msk_DefaultEmitter)
    blendStyle = "ADDITIVE";
    softParticles = "0";
    softnessDistance = "0.1";
-   pixelMaskPath = "./IPS.png";
+   PixelMask = "pMask1";
 };
 
 datablock MaskEmitterNodeData(msk_DefaultNode)

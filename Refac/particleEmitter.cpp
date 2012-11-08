@@ -572,6 +572,9 @@ ParticleEmitter::ParticleEmitter()
 		Attraction_offset[i] = "0 0 0";
 		attractedObjectID[i] = "";
 	}
+
+	oldTime = 0;
+	parentNodePos = Point3F(0);
 }
 
 //-----------------------------------------------------------------------------
@@ -725,7 +728,6 @@ void ParticleEmitter::prepRenderImage(SceneRenderState* state)
 	ri->translucentSort = true;
 	ri->type = RenderPassManager::RIT_Particle;
 	ri->sortDistSq = getRenderWorldBox().getSqDistanceToPoint( camPos );
-	ri->matInst = MaterialManager::instance()->getWarningMatInstance();
 
 	// Draw the system offscreen unless the highResOnly flag is set on the datablock
 	ri->systemState = ( getDataBlock()->highResOnly ? PSS_AwaitingHighResDraw : PSS_AwaitingOffscreenDraw );
@@ -733,10 +735,6 @@ void ParticleEmitter::prepRenderImage(SceneRenderState* state)
 	ri->modelViewProj = renderManager->allocUniqueXform(  GFX->getProjectionMatrix() * 
 		GFX->getViewMatrix() * 
 		GFX->getWorldMatrix() );
-
-	ri->objectToWorld = renderManager->allocUniqueXform( mObjToWorld );
-   ri->worldToCamera = renderManager->allocSharedXform(RenderPassManager::View);
-   ri->projection    = renderManager->allocSharedXform(RenderPassManager::Projection);
 
 	// Update position on the matrix before multiplying it
 	mBBObjToWorld.setPosition(mLastPosition);

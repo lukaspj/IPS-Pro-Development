@@ -87,7 +87,7 @@ public:
 	virtual ParticleEmitterNodeData* getDataBlock() { return mDataBlock; }
 	void setmDataBlock(ParticleEmitterNodeData* dat) { mDataBlock = dat; }
 	virtual ParticleEmitter* createEmitter() = 0;
-protected:
+public:
 
 	F32 mVelocity;
 
