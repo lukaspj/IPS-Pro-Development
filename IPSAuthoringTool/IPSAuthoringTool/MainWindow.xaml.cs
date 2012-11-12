@@ -305,6 +305,8 @@ namespace IPSAuthoringTool
                     p.Height = 180;
                     p.Width = 180;
                     p.Margin = new Thickness(5);
+                    p.Tag = i;
+                    p.PreviewMouseDown += new MouseButtonEventHandler(valueGrid_PreviewMouseDown);
                     if (val.Ease == true)
                     {
                         ObservableCollection<double> Points = new ObservableCollection<double>();
@@ -330,6 +332,11 @@ namespace IPSAuthoringTool
                         l.Content = val.valueName;
                         l.Tag = i;
                         l.PreviewMouseDown += new MouseButtonEventHandler(LabelValue_PreviewMouseDown);
+                        l.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
+                        l.FontSize = 24;
+                        l.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+                        l.Height = 180;
+                        l.Width = 180;
                         p.Children.Add(l);
                     }
                     ValuePanels.Add(p);
@@ -337,11 +344,20 @@ namespace IPSAuthoringTool
             }
         }
 
+        void valueGrid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Value = emitter.Values[(int)((Grid)sender).Tag];
+            selValueTab.Header = Value.valueName;
+            selValueTab.IsEnabled = true;
+            ReloadValueTabContent();
+        }
+
         void ucGraph_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Value = emitter.Values[(int)((Chart.UCChartCurveGraph)sender).Tag];
             selValueTab.Header = Value.valueName;
             selValueTab.IsEnabled = true;
+            ReloadValueTabContent();
         }
 
         void LabelValue_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -349,6 +365,7 @@ namespace IPSAuthoringTool
             Value = emitter.Values[(int)((Label)sender).Tag];
             selValueTab.Header = Value.valueName;
             selValueTab.IsEnabled = true;
+            ReloadValueTabContent();
         }
 
         #region ButtonClicks
@@ -400,6 +417,235 @@ namespace IPSAuthoringTool
             return ret;
         }
 
+        private List<object> getEaseMethods()
+        {
+            List<object> ret = new List<object>();
+            List<string> strs = Tweener.GetEasingMethodNames();
+            foreach (string s in strs)
+                ret.Add((object)s);
+            return ret;
+        }
+
+        #endregion
+
+        #region EditValueTab
+
+        public void ReloadValueTabContent()
+        {
+            ResetValueComboBox();
+            if (Value.Ease)
+                EaseCheckBox.IsChecked = true;
+            else
+                EaseCheckBox.IsChecked = false;
+            DeltaTextBox.Text = Value.deltaValue.ToString();
+            reloadPoints();
+        }
+
+        public void ResetValueComboBox()
+        {
+            List<object> objs = getFieldList();
+            foreach(object o in objs)
+                ValueTypeBox.Items.Add(o);
+            foreach (object o in ValueTypeBox.Items)
+            {
+                if (((Label)o).Content.ToString() == Value.valueName)
+                    ValueTypeBox.SelectedItem = o;
+            }
+        }
+
+        public void reloadPoints()
+        {
+            PointList.Items.Clear();
+            GraphContainer.Children.Clear();
+            if (!Value.Ease)
+                return;
+            foreach (Emitter.PointOnValue p in Value.points)
+            {
+                Grid g = new Grid();
+                ColumnDefinition CD1 = new ColumnDefinition();
+                CD1.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD2 = new ColumnDefinition();
+                CD2.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD3 = new ColumnDefinition();
+                CD3.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD4 = new ColumnDefinition();
+                CD4.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD5 = new ColumnDefinition();
+                CD5.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD6 = new ColumnDefinition();
+                CD6.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD7 = new ColumnDefinition();
+                CD7.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD8 = new ColumnDefinition();
+                CD8.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD9 = new ColumnDefinition();
+                CD9.Width = new GridLength(2, GridUnitType.Auto);
+                ColumnDefinition CD10 = new ColumnDefinition();
+                CD10.Width = new GridLength(2, GridUnitType.Auto);
+                g.ColumnDefinitions.Add(CD1);
+                g.ColumnDefinitions.Add(CD2);
+                g.ColumnDefinitions.Add(CD3);
+                g.ColumnDefinitions.Add(CD4);
+                g.ColumnDefinitions.Add(CD5);
+                g.ColumnDefinitions.Add(CD6);
+                g.ColumnDefinitions.Add(CD7);
+                g.ColumnDefinitions.Add(CD8);
+                g.ColumnDefinitions.Add(CD9);
+                g.ColumnDefinitions.Add(CD10);
+                g.Height = 28;
+                g.Margin = new Thickness(0, 5, 0, 5);
+
+                Label xLBL = new Label();
+                xLBL.Content = "X:";
+                Grid.SetColumn(xLBL, 0);
+                g.Children.Add(xLBL);
+
+                TextBox xTB = new TextBox();
+                xTB.Text = p.point.X.ToString();
+                xTB.Width = 36;
+                xTB.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                xTB.TextChanged += Point_Value_TextChanged;
+                Grid.SetColumn(xTB, 1);
+                g.Children.Add(xTB);
+
+                Label yLBL = new Label();
+                yLBL.Content = "Y:";
+                Grid.SetColumn(yLBL, 2);
+                g.Children.Add(yLBL);
+
+                TextBox yTB = new TextBox();
+                yTB.Text = p.point.Y.ToString();
+                yTB.Width = 36;
+                yTB.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                yTB.TextChanged += Point_Value_TextChanged;
+                Grid.SetColumn(yTB, 3);
+                g.Children.Add(yTB);
+
+                Label easeLBL = new Label();
+                easeLBL.Content = "Easing:";
+                Grid.SetColumn(easeLBL, 4);
+                g.Children.Add(easeLBL);
+
+                ComboBox easeTB = new ComboBox();
+                easeTB.Text = p.point.Y.ToString();
+                easeTB.Width = 100;
+                easeTB.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                Grid.SetColumn(easeTB, 5);
+                g.Children.Add(easeTB);
+
+                List<object> objs = getEaseMethods();
+                foreach (object o in objs)
+                {
+                    easeTB.Items.Add(o);
+                    if ((string)o == p.Easing)
+                        easeTB.SelectedItem = o;
+                }
+                easeTB.SelectionChanged += easeTB_SelectionChanged;
+
+                Label easeInLBL = new Label();
+                easeInLBL.Content = "Ease in:";
+                Grid.SetColumn(easeInLBL, 6);
+                g.Children.Add(easeInLBL);
+
+                CheckBox eInCB = new CheckBox();
+                eInCB.IsChecked = p.EaseIn;
+                eInCB.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                eInCB.Width = 18;
+                eInCB.Checked += Point_CheckedChange;
+                eInCB.Unchecked += Point_CheckedChange;
+                Grid.SetColumn(eInCB, 7);
+                g.Children.Add(eInCB);
+
+                Label easeOutLBL = new Label();
+                easeOutLBL.Content = "Ease out:";
+                Grid.SetColumn(easeOutLBL, 8);
+                g.Children.Add(easeOutLBL);
+
+                CheckBox eOutCB = new CheckBox();
+                eOutCB.IsChecked = p.EaseOut;
+                eOutCB.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                eOutCB.Width = 18;
+                eOutCB.Checked += Point_CheckedChange;
+                eOutCB.Unchecked += Point_CheckedChange;
+                Grid.SetColumn(eOutCB, 9);
+                g.Children.Add(eOutCB);
+
+                PointList.Items.Add(g);
+            }
+            updateGraphContainer();
+        }
+
+        void Point_CheckedChange(object sender, RoutedEventArgs e)
+        {
+            getDataFromPointList();
+        }
+
+        void easeTB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            getDataFromPointList();
+        }
+
+        private void Point_Value_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            getDataFromPointList();
+        }
+
+        private void getDataFromPointList()
+        {
+            Value.points.Clear();
+            foreach (Grid g in PointList.Items)
+            {
+                Emitter.PointOnValue point = new Emitter.PointOnValue();
+                if (((TextBox)g.Children[1]).Text != "")
+                    point.point.X = float.Parse(((TextBox)g.Children[1]).Text);
+                else
+                    point.point.Y = 0.0f;
+
+                if (((TextBox)g.Children[3]).Text != "")
+                    point.point.Y = float.Parse(((TextBox)g.Children[3]).Text);
+                else
+                    point.point.Y = 0.0f;
+
+                if (((ComboBox)g.Children[5]).SelectedItem != null)
+                    point.Easing = (string)((ComboBox)g.Children[5]).SelectedItem;
+                else
+                    point.Easing = "";
+                point.EaseIn = ((CheckBox)g.Children[7]).IsChecked.Value;
+                point.EaseOut = ((CheckBox)g.Children[9]).IsChecked.Value;
+                Value.points.Add(point);
+            }
+            Value.points.Sort(new Emitter.PointXSorter());
+            updateGraphContainer();
+        }
+
+        private void updateGraphContainer()
+        {
+            GraphContainer.Children.Clear();
+            ObservableCollection<double> Points = new ObservableCollection<double>();
+            ComputeGraph(Points, emitter.Values.IndexOf(Value));
+            Chart.UCChartCurveGraph ucGraph = new Chart.UCChartCurveGraph();
+            ObservableCollection<Chart.ChartRequestInfo> ri = new ObservableCollection<Chart.ChartRequestInfo>();
+            ri.Add(new Chart.ChartRequestInfo(Brushes.Red, Points, Chart.ChartLineType.PolylineType, Value.valueName));
+            ucGraph.RequestData = ri;
+            ucGraph.ShowGridLines = true;
+            ucGraph.GraphTitle = Value.valueName;
+            ucGraph.ShowTitle = true;
+            ucGraph.ShowXTicks = false;
+            ucGraph.ShowYTicks = false;
+            ucGraph.Height = 164;
+            ucGraph.Width = 164;
+            GraphContainer.Children.Add(ucGraph);
+        }
+
+        private void EaseCheckBox_CheckChange(object sender, RoutedEventArgs e)
+        {
+            if (EaseCheckBox.IsChecked.HasValue)
+                Value.Ease = (bool)EaseCheckBox.IsChecked;
+            else
+                Value.Ease = false;
+            reloadPoints();
+        }
+
         #endregion
 
         #region GraphComputing
@@ -410,15 +656,21 @@ namespace IPSAuthoringTool
             for (int i = 0; i < 1000; i++)
             {
                 int[] newPoints = GetRelevantPointIndexes((float)i/1000, idx);
-                Points.Add(GetY(i, emitter.Values[idx].points[newPoints[0]], emitter.Values[idx].points[newPoints[1]], idx));
+                if (newPoints[0] == newPoints[1])
+                    Points.Add(emitter.Values[idx].points[newPoints[0]].point.Y * 1000);
+                else
+                    Points.Add(GetY(i, emitter.Values[idx].points[newPoints[0]], emitter.Values[idx].points[newPoints[1]], idx));
                 //Points.Add(new Point(i, GetY(i, emitter.Values[idx].points[newPoints[0]], emitter.Values[idx].points[newPoints[1]], idx)));
             }
         }
 
         private int GetY(int x, Emitter.PointOnValue p1, Emitter.PointOnValue p3, int idx)
         {
-            float ease = (float)Utility.Tweener.EaseFromString((float)x/1000 - p1.point.X, p1.point.Y, p3.point.Y - p1.point.Y, p3.point.X - p1.point.X, p3.Easing, p3.EaseIn, p3.EaseOut);
-            int ret = (int)(ease * 1000);
+            double ease = Utility.Tweener.EaseFromString((double)x / 1000.0f - p1.point.X, p1.point.Y, p3.point.Y - p1.point.Y, p3.point.X - p1.point.X, p3.Easing, p3.EaseIn, p3.EaseOut);
+            int ret = (int)(ease * 1000.0f);
+            int I;
+            if(ret > 1000)
+                I = 0;
             return ret;
         }
 
@@ -487,17 +739,11 @@ namespace IPSAuthoringTool
                 selValueTab.IsEnabled = false;
         }
 
-        private void selValueTab_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
         #endregion
 
         private void MetroWindow_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ParticleEffect.writeLatestFile(Effects);
         }
-
     }
 }

@@ -111,8 +111,24 @@
                         <Button Content="Save Emitter" Height="31" HorizontalAlignment="Left" Margin="58,94,0,0" Name="SaveEmitterButton" VerticalAlignment="Top" Width="83" Grid.Column="1" Click="SaveEmitterButton_Click" />
                     </Grid>
                 </TabItem>
-                <TabItem Header="Value" Name="selValueTab" IsEnabled="False" MouseDown="selValueTab_MouseDown">
-                    <Grid/>
+                <TabItem Header="Value" Name="selValueTab" IsEnabled="False" >
+                    <Grid Margin="0,2,0,-2">
+                        <ComboBox x:Name="ValueTypeBox" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Width="120"/>
+                        <Label Content="Value type:" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top"/>
+                        <Controls:ToggleSwitch x:Name="EaseCheckBox" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" Content="Ease: " Height="39" Checked="EaseCheckBox_CheckChange" Unchecked="EaseCheckBox_CheckChange" />
+                        <TextBox x:Name="DeltaTextBox" Controls:TextboxHelper.Watermark="Delta value" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="10,149,0,0" RenderTransformOrigin="0.025,-2.385"/>
+                        <ListView x:Name="PointList" HorizontalAlignment="Left" Height="428" Margin="221,41,0,0" VerticalAlignment="Top" Width="453">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Label Content="Points:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="221,5,0,0" FontSize="16"/>
+                        <Button Content="Add point" HorizontalAlignment="Left" VerticalAlignment="Top" Width="83" Margin="591,10,0,0"/>
+                        <Label Content="Raise value with:" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
+                        <Grid x:Name="GraphContainer" HorizontalAlignment="Left" Height="164" Margin="10,236,0,0" VerticalAlignment="Top" Width="164"/>
+                    </Grid>
                 </TabItem>
             </TabControl>
         </Grid>
