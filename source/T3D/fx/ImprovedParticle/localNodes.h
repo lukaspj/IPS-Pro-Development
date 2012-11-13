@@ -24,7 +24,7 @@
 #ifndef _H_LOCAL_NODES
 #define _H_LOCAL_NODES
 #include "graphEmitterNode.h"
-#include "../particleEmitterNode.h"
+#include "sphereEmitterNode.h"
 #include "maskEmitterNode.h"
 #include "groundEmitterNode.h"
 
@@ -35,11 +35,11 @@ public:
 	loc_GraphEmitterNode(){ mNetFlags.clear(Ghostable | ScopeAlways); mNetFlags.set(IsGhost);  };
 };
 
-class loc_ParticleEmitterNode : public ParticleEmitterNode
+class loc_SphereEmitterNode : public SphereEmitterNode
 {
-	typedef ParticleEmitterNode Parent;
+	typedef SphereEmitterNode Parent;
 public:
-	loc_ParticleEmitterNode(){ mNetFlags.clear(Ghostable | ScopeAlways); mNetFlags.set(IsGhost);  };
+	loc_SphereEmitterNode(){ mNetFlags.clear(Ghostable | ScopeAlways); mNetFlags.set(IsGhost);  };
 };
 
 class loc_GroundEmitterNode : public GroundEmitterNode
