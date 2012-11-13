@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #ifndef _H_PARTICLE_EMITTER
 #define _H_PARTICLE_EMITTER
 
@@ -565,4 +564,4 @@ class ParticleEmitter : public GameBase
 
 #endif // _H_PARTICLE_EMITTER
 
->>>>>>> 2190e5a3bcdb44a5f496b14f6226b46c12fa418b
+

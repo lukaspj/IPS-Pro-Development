@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //-----------------------------------------------------------------------------
 // PixelMask helper class
 // Copyright Lukas Joergensen, FuzzyVoidStudio 2012
@@ -154,4 +153,4 @@ public:
 
 #endif // _PEFFECTREADER_H_
 
->>>>>>> 2190e5a3bcdb44a5f496b14f6226b46c12fa418b
+

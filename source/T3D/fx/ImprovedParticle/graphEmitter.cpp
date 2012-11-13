@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //-----------------------------------------------------------------------------
 // IPS Pro
 // Copyright Lukas Jørgensen 2012 - FuzzyVoidStudio
@@ -3290,4 +3289,4 @@ DefineEngineMethod(GraphEmitterData, reload, void,(),,
 {
 	object->reload();
 }
->>>>>>> 2190e5a3bcdb44a5f496b14f6226b46c12fa418b
+

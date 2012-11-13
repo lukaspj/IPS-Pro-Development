@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "pEffectReader.h"
 #include "platform\profiler.h"
 #include "rapidxml.hpp"
@@ -340,4 +339,4 @@ char* pEffectReader::UpToLow(char* str) {
 		str[i] = tolower(str[i]);
     return str;
 }
->>>>>>> 2190e5a3bcdb44a5f496b14f6226b46c12fa418b
+

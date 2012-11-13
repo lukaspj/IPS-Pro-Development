@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "particleEmitterNode.h"
 #include "console/consoleTypes.h"
 #include "core/stream/bitStream.h"
@@ -1522,4 +1521,4 @@ DefineEngineMethod(ParticleEmitterNode, setActive, void, (bool active),,
 {
 	object->setActive( active );
 }
->>>>>>> 2190e5a3bcdb44a5f496b14f6226b46c12fa418b
+

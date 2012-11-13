@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #ifndef _PARTICLEEMITTERDUMMY_H_
 #define _PARTICLEEMITTERDUMMY_H_
 
@@ -324,4 +323,4 @@ public:
 
 #endif // _H_PARTICLEEMISSIONDUMMY
 
->>>>>>> 2190e5a3bcdb44a5f496b14f6226b46c12fa418b
+
