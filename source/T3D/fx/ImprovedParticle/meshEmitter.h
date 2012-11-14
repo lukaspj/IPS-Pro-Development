@@ -206,7 +206,7 @@ public:
 	std::vector<std::string> anotherValues;
 
 	void loadFaces();
-	bool isObjectCulled();
+	bool isObjectCulled;
 
 	void onStaticModified(const char* slotName, const char*newValue);
 	//void onDynamicModified(const char* slotName, const char*newValue);

@@ -715,7 +715,6 @@ void GraphEmitterNode::onDynamicModified(const char* slotName, const char*newVal
 void GraphEmitterNode::advanceTime(F32 dt)
 {
 	Parent::advanceTime(dt);
-
 	GraphEmitterNodeData* DataBlock = getDataBlock();
 	if(!mActive || !mEmitter->isProperlyAdded() || !DataBlock)
 		return;

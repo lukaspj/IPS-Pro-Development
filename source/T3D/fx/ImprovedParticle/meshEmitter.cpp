@@ -1134,6 +1134,11 @@ void MeshEmitter::prepRenderImage(SceneRenderState* state)
 	if (state->isShadowPass())
 		return;
 
+	if(state->getCullingState().isCulled(this))
+		isObjectCulled = true;
+	else
+		isObjectCulled = false;
+
 	PROFILE_SCOPE(MeshEmitter_prepRenderImage);
 
 	if (  mDead ||
@@ -1974,13 +1979,14 @@ void MeshEmitter::processTick(const Move* move)
 
 	// If the object has been culled out we don't want to render the particles. 
 	// If it haven't, set the bounds to global so the particles will always be rendered regardless of whether the object is seen or not.
-	if(isObjectCulled())
+	if(isObjectCulled)
 	{
 		mGlobalBounds = false;
 		setRenderEnabled(false);
 
 		if( mSceneManager )
 			mSceneManager->notifyObjectDirty( this );
+		
 	}
 	else
 	{
@@ -1996,8 +2002,9 @@ void MeshEmitter::processTick(const Move* move)
 // This code is from guiShapeNameHud
 // Needs to get better, should simply do a isRendered test but
 // Didn't find any method for that.
-// Custom
+// Custom -- Deprecated --
 //-----------------------------------------------------------------------------
+/*
 bool MeshEmitter::isObjectCulled()
 {
 	PROFILE_SCOPE(isObjectCulled);
@@ -2076,22 +2083,6 @@ bool MeshEmitter::isObjectCulled()
 		// Don't raytest, if the object is slightly below the terrain (houses etc)
 		//  - then a ray test will exclude it, ruining the effect.
 
-		// Test to see if it's behind something, and we want to
-		// ignore anything it's mounted on when we run the LOS.
-		/*RayInfo info;
-		shape->disableCollision();
-		control->disableCollision();
-		SceneObject *mount = shape->getObjectMount();
-		if (mount)
-		mount->disableCollision();
-		bool los = !gClientContainer.castRay(camPos, shapePos,losMask, &info);
-		shape->enableCollision();
-		control->enableCollision();
-		if (mount)
-		mount->enableCollision();
-		if (!los)
-		return true;*/
-
 		// The object is not culled
 		return false;
 	}
@@ -2125,26 +2116,13 @@ bool MeshEmitter::isObjectCulled()
 
 		// Test to see if it's behind something, and we want to
 		// ignore anything it's mounted on when we run the LOS.
-		/*RayInfo info;
-		TSshape->disableCollision();
-		control->disableCollision();
-		SceneObject *mount = TSshape->getObjectMount();
-		if (mount)
-		mount->disableCollision();
-		bool los = !gClientContainer.castRay(camPos, shapePos,losMask, &info);
-		TSshape->enableCollision();
-		control->enableCollision();
-		if (mount)
-		mount->enableCollision();
-		if (!los)
-		return true;*/
 
 		// The object is not culled
 		return false;
 	}
 	return true;
 }
-
+*/
 //-----------------------------------------------------------------------------
 // advanceTime
 // Not changed

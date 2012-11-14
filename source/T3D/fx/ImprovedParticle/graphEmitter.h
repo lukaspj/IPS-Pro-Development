@@ -183,4 +183,4 @@ public:
 	DECLARE_CONOBJECT(CallbackEvent);
 };
 
-#endif // GRAPH_EMITTER_H
+#endif // GRAPH_EMITTER_H_
