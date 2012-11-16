@@ -19,7 +19,7 @@ namespace IPSAuthoringTool.Utility
         public float Start = 0;
         public float End = 0;
 
-        public struct value
+        public class value
         {
             public string valueName;
             public float deltaValue;
@@ -41,6 +41,16 @@ namespace IPSAuthoringTool.Utility
             public string Easing;
             public bool EaseIn;
             public bool EaseOut;
+
+            public PointOnValue()
+            {
+                point = new PointF();
+                point.X = 0;
+                point.Y = 0;
+                Easing = "Linear";
+                EaseIn = true;
+                EaseOut = true;
+            }
         }
 
         public enum EmitterType

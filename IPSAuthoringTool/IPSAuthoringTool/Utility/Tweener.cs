@@ -36,7 +36,7 @@ namespace IPSAuthoringTool.Utility
         public static double EaseOutQuad(double Time, double Start, double Delta, double Duration)
         {
             Time /= Duration;
-            return -Duration * Time * (Time - 2) + Start;
+            return -Delta * Time * (Time - 2) + Start;
         }
 
         /**
@@ -96,7 +96,7 @@ namespace IPSAuthoringTool.Utility
          */
         public static double EaseOutQuart(double Time, double Start, double Delta, double Duration)
         {
-            Time /= Delta;
+            Time /= Duration;
             Time--;
             return -Delta * (Time * Time * Time * Time - 1) + Start;
         }
@@ -179,7 +179,7 @@ namespace IPSAuthoringTool.Utility
          */
         public static double EaseOutExpo(double Time, double Start, double Delta, double Duration)
         {
-            return Delta * ((double)-Math.Pow(2, -10 * Time / Duration)) + Start;
+            return Delta * ((double)-Math.Pow(2, -10 * Time / Duration) + 1) + Start;
         }
 
         /**

@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using IPSAuthoringTool.Utility;
 
 namespace IPSAuthoringTool
@@ -378,6 +379,7 @@ namespace IPSAuthoringTool
             {
                 Emitter.value val = new Emitter.value();
                 val.valueName = fields.ElementAt((int)o);
+                val.points = new List<Emitter.PointOnValue>();
                 emitter.Values.Add(val);
                 reloadValues();
             }
@@ -385,7 +387,7 @@ namespace IPSAuthoringTool
 
         private void RemoveValueButton_Click(object sender, RoutedEventArgs e)
         {
-            if ((Value.Ease == false && Value.setTime != null) || ( Value.Ease == true && Value.points.Count > 0 ))
+            if (Value != null && ((Value.Ease == false && Value.setTime != null) || ( Value.Ease == true && Value.points.Count > 0 )))
             {
                 emitter.Values.Remove(Value);
                 reloadValues();
@@ -396,7 +398,9 @@ namespace IPSAuthoringTool
 
         private void SaveValueButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Value.deltaValue = float.Parse(DeltaTextBox.Text, CultureInfo.InvariantCulture);
+            Value.valueName = ValueTypeBox.Text;
+            Value.setTime = float.Parse(SetTimeBox.Text, CultureInfo.InvariantCulture);
         }
 
         #endregion
@@ -437,7 +441,8 @@ namespace IPSAuthoringTool
                 EaseCheckBox.IsChecked = true;
             else
                 EaseCheckBox.IsChecked = false;
-            DeltaTextBox.Text = Value.deltaValue.ToString();
+            DeltaTextBox.Text = Value.deltaValue.ToString(CultureInfo.InvariantCulture);
+            SetTimeBox.Text = Value.setTime.ToString(CultureInfo.InvariantCulture);
             reloadPoints();
         }
 
@@ -455,6 +460,7 @@ namespace IPSAuthoringTool
 
         public void reloadPoints()
         {
+            Value.points.Sort(new Emitter.PointXSorter());
             PointList.Items.Clear();
             GraphContainer.Children.Clear();
             if (!Value.Ease)
@@ -501,7 +507,7 @@ namespace IPSAuthoringTool
                 g.Children.Add(xLBL);
 
                 TextBox xTB = new TextBox();
-                xTB.Text = p.point.X.ToString();
+                xTB.Text = p.point.X.ToString(CultureInfo.InvariantCulture);
                 xTB.Width = 36;
                 xTB.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 xTB.TextChanged += Point_Value_TextChanged;
@@ -514,7 +520,7 @@ namespace IPSAuthoringTool
                 g.Children.Add(yLBL);
 
                 TextBox yTB = new TextBox();
-                yTB.Text = p.point.Y.ToString();
+                yTB.Text = p.point.Y.ToString(CultureInfo.InvariantCulture);
                 yTB.Width = 36;
                 yTB.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 yTB.TextChanged += Point_Value_TextChanged;
@@ -527,7 +533,7 @@ namespace IPSAuthoringTool
                 g.Children.Add(easeLBL);
 
                 ComboBox easeTB = new ComboBox();
-                easeTB.Text = p.point.Y.ToString();
+                easeTB.Text = p.point.Y.ToString(CultureInfo.InvariantCulture);
                 easeTB.Width = 100;
                 easeTB.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 Grid.SetColumn(easeTB, 5);
@@ -597,12 +603,12 @@ namespace IPSAuthoringTool
             {
                 Emitter.PointOnValue point = new Emitter.PointOnValue();
                 if (((TextBox)g.Children[1]).Text != "")
-                    point.point.X = float.Parse(((TextBox)g.Children[1]).Text);
+                    point.point.X = float.Parse(((TextBox)g.Children[1]).Text, CultureInfo.InvariantCulture);
                 else
                     point.point.Y = 0.0f;
 
                 if (((TextBox)g.Children[3]).Text != "")
-                    point.point.Y = float.Parse(((TextBox)g.Children[3]).Text);
+                    point.point.Y = float.Parse(((TextBox)g.Children[3]).Text, CultureInfo.InvariantCulture);
                 else
                     point.point.Y = 0.0f;
 
@@ -646,12 +652,37 @@ namespace IPSAuthoringTool
             reloadPoints();
         }
 
+        private void AddPointButton(object sender, RoutedEventArgs e)
+        {
+            Emitter.PointOnValue POV = new Emitter.PointOnValue();
+            POV.EaseIn = false;
+            POV.EaseOut = false;
+            POV.Easing = "Linear";
+            POV.point.X = 0.5f;
+            POV.point.Y = 0.5f;
+            Value.points.Add(POV);
+            reloadPoints();
+        }
+
         #endregion
 
         #region GraphComputing
 
         protected void ComputeGraph(ObservableCollection<double> Points, int idx)
         {
+            if (emitter.Values[idx].points.Count < 2)
+            {
+                Emitter.PointOnValue POV1 = new Emitter.PointOnValue();
+                Emitter.PointOnValue POV2 = new Emitter.PointOnValue();
+                POV1.point.X = 0;
+                POV1.point.Y = 0;
+                POV2.point.X = 1;
+                POV2.point.Y = 1;
+                emitter.Values[idx].points.Add(POV1);
+                emitter.Values[idx].points.Add(POV2);
+                reloadPoints();
+                updateGraphContainer();
+            }
             int[] relPoints = GetRelevantPointIndexes(0, idx);
             for (int i = 0; i < 1000; i++)
             {
@@ -711,7 +742,7 @@ namespace IPSAuthoringTool
             else
                 selEmitterTab.IsEnabled = false;
 
-            if (Value.valueName != null)
+            if (Value != null)
                 selValueTab.IsEnabled = true;
             else
                 selValueTab.IsEnabled = false;
@@ -725,7 +756,7 @@ namespace IPSAuthoringTool
             else
                 selEmitterTab.IsEnabled = false;
 
-            if (Value.valueName != null)
+            if (Value != null)
                 selValueTab.IsEnabled = true;
             else
                 selValueTab.IsEnabled = false;
@@ -733,7 +764,7 @@ namespace IPSAuthoringTool
 
         private void selEmitterTab_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Value.valueName != null)
+            if (Value != null)
                 selValueTab.IsEnabled = true;
             else
                 selValueTab.IsEnabled = false;

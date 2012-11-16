@@ -51,7 +51,7 @@
                         <Button Content="Delete Effect" Height="31" HorizontalAlignment="Left" Margin="57,87,0,0" Name="DeleteEffectButton" VerticalAlignment="Top" Width="83" Grid.Column="1" Click="DeleteEffectButton_Click" />
                     </Grid>
                 </TabItem>
-                <TabItem Header="Emitters" Name="EmittersTab" IsEnabled="False" PreviewMouseDown="EmittersTab_MouseDown" MouseDown="EmittersTab_MouseDown" Margin="0,2,0,-2">
+                <TabItem Header="Emitters" Name="EmittersTab" IsEnabled="False" PreviewMouseDown="EmittersTab_MouseDown" MouseDown="EmittersTab_MouseDown" Margin="3,0,-3,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="44*" />
@@ -81,7 +81,7 @@
                         <Button Content="Save Effect" Height="31" HorizontalAlignment="Left" Margin="57,92,0,0" Name="SaveEffectButton" VerticalAlignment="Top" Width="91" Grid.Column="1" Click="SaveEffectButton_Click" />
                     </Grid>
                 </TabItem>
-                <TabItem Header="EmitterType" Name="selEmitterTab" IsEnabled="False" PreviewMouseDown="selEmitterTab_MouseDown" MouseDown="selEmitterTab_MouseDown" Margin="0,3,0,-3">
+                <TabItem Header="EmitterType" Name="selEmitterTab" IsEnabled="False" PreviewMouseDown="selEmitterTab_MouseDown" MouseDown="selEmitterTab_MouseDown" Margin="5,0,-5,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="44*" />
@@ -103,15 +103,9 @@
                         </Rectangle>
                         <Button Content="Add Value" Grid.Column="1" Height="31" HorizontalAlignment="Left" Margin="57,15,0,0" Name="CreateValueButton" VerticalAlignment="Top" Width="83" Click="AddValueButton_Click" />
                         <Button Content="Delete Value" Height="31" HorizontalAlignment="Left" Margin="58,55,0,0" Name="DeleteValueButton" VerticalAlignment="Top" Width="83" Grid.Column="1" Click="RemoveValueButton_Click" />
-                        <Rectangle Fill="Black" Margin="20,95,0,354" Style="{Binding Source={StaticResource AccentColor4}}" Width="32" Height="32" Grid.Column="1" HorizontalAlignment="Left">
-                            <Rectangle.OpacityMask>
-                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
-                            </Rectangle.OpacityMask>
-                        </Rectangle>
-                        <Button Content="Save Emitter" Height="31" HorizontalAlignment="Left" Margin="58,94,0,0" Name="SaveEmitterButton" VerticalAlignment="Top" Width="83" Grid.Column="1" Click="SaveEmitterButton_Click" />
                     </Grid>
                 </TabItem>
-                <TabItem Header="Value" Name="selValueTab" IsEnabled="False" >
+                <TabItem Header="Value" Name="selValueTab" IsEnabled="False" Margin="7,0,-7,0" >
                     <Grid Margin="0,2,0,-2">
                         <ComboBox x:Name="ValueTypeBox" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Width="120"/>
                         <Label Content="Value type:" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top"/>
@@ -125,9 +119,12 @@
                             </ListView.View>
                         </ListView>
                         <Label Content="Points:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="221,5,0,0" FontSize="16"/>
-                        <Button Content="Add point" HorizontalAlignment="Left" VerticalAlignment="Top" Width="83" Margin="591,10,0,0"/>
+                        <Button Content="Add point" HorizontalAlignment="Left" VerticalAlignment="Top" Width="83" Margin="591,10,0,0" Click="AddPointButton"/>
                         <Label Content="Raise value with:" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
-                        <Grid x:Name="GraphContainer" HorizontalAlignment="Left" Height="164" Margin="10,236,0,0" VerticalAlignment="Top" Width="164"/>
+                        <Grid x:Name="GraphContainer" HorizontalAlignment="Left" Height="164" Margin="10,272,0,0" VerticalAlignment="Top" Width="164"/>
+                        <Button x:Name="SaveValueButton" Content="Save Value" HorizontalAlignment="Left" Margin="10,242,0,0" Click="SaveValueButton_Click" VerticalAlignment="Top" Width="120"/>
+                        <TextBox x:Name="SetTimeBox" Controls:TextboxHelper.Watermark="SetTime" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="10,211,0,0" RenderTransformOrigin="0.025,-2.385"/>
+                        <Label Content="SetTime:" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>
             </TabControl>

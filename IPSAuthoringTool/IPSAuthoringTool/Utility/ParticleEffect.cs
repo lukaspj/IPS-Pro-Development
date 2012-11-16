@@ -37,9 +37,9 @@ namespace IPSAuthoringTool.Utility
                 {
                     writer.WriteStartElement("Emitter");
                     writer.WriteAttributeString("Type", emi.Type.ToString());
-                    writer.WriteAttributeString("x", emi.x.ToString());
-                    writer.WriteAttributeString("y", emi.y.ToString());
-                    writer.WriteAttributeString("z", emi.z.ToString());
+                    writer.WriteAttributeString("x", emi.x.ToString(CultureInfo.InvariantCulture));
+                    writer.WriteAttributeString("y", emi.y.ToString(CultureInfo.InvariantCulture));
+                    writer.WriteAttributeString("z", emi.z.ToString(CultureInfo.InvariantCulture));
                     writer.WriteAttributeString("datablock", emi.datablock);
                     writer.WriteAttributeString("emitter", emi.emitter);
                     writer.WriteAttributeString("Start", emi.Start.ToString());
@@ -49,13 +49,13 @@ namespace IPSAuthoringTool.Utility
                         writer.WriteStartElement("Value");
                         writer.WriteAttributeString("Ease", val.Ease.ToString());
                         writer.WriteAttributeString("Name", val.valueName);
-                        writer.WriteAttributeString("DeltaValue", val.deltaValue.ToString());
-                        writer.WriteAttributeString("setTime", val.setTime.ToString());
+                        writer.WriteAttributeString("DeltaValue", val.deltaValue.ToString(CultureInfo.InvariantCulture));
+                        writer.WriteAttributeString("setTime", val.setTime.ToString(CultureInfo.InvariantCulture));
                         foreach (Emitter.PointOnValue p in val.points)
                         {
                             writer.WriteStartElement("Point");
-                            writer.WriteAttributeString("X", p.point.X.ToString());
-                            writer.WriteAttributeString("Y", p.point.Y.ToString());
+                            writer.WriteAttributeString("X", p.point.X.ToString(CultureInfo.InvariantCulture));
+                            writer.WriteAttributeString("Y", p.point.Y.ToString(CultureInfo.InvariantCulture));
                             writer.WriteAttributeString("Easing", p.Easing);
                             writer.WriteAttributeString("EaseIn", p.EaseIn.ToString());
                             writer.WriteAttributeString("EaseOut", p.EaseOut.ToString());
@@ -156,9 +156,10 @@ namespace IPSAuthoringTool.Utility
                 val.valueName = subReader.Value;
                 subReader.MoveToAttribute("DeltaValue");
                 val.deltaValue = float.Parse(subReader.Value, CultureInfo.InvariantCulture);
+                subReader.MoveToAttribute("setTime");
+                val.setTime = float.Parse(subReader.Value, CultureInfo.InvariantCulture);
                 subReader.MoveToAttribute("Ease");
                 val.Ease = bool.Parse(subReader.Value);
-                subReader.MoveToAttribute("DeltaValue");
                 subReader.MoveToElement();
                 string innerXML2 = subReader.ReadInnerXml();
                 XmlReader subReader2 = XmlReader.Create(new StringReader("<root>"+innerXML2+"</root>"));
