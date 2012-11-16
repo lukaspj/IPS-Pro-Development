@@ -26,6 +26,41 @@
 #include "core\color.h"
 #include "math/mRandom.h"
 #include "platform\profiler.h"
+#include "console/consoleTypes.h"
+
+IMPLEMENT_CO_DATABLOCK_V1(PixelMask);
+
+PixelMask::PixelMask()
+{
+	thePath = Torque::Path();
+}
+
+PixelMask::~PixelMask()
+{
+
+}
+
+bool PixelMask::onAdd()
+{
+	if( !Parent::onAdd() )
+      return false;
+
+	loadFromImage(Torque::Path(thePath), Treshold);
+
+   return true;
+}
+
+void PixelMask::onRemove()
+{
+	Parent::onRemove();
+}
+
+void PixelMask::initPersistFields()
+{
+	addField("MaskPath", TypeStringFilename, Offset(thePath, PixelMask), "Some description");
+	addField("Treshold", TypeS8 , Offset(Treshold, PixelMask), "Some description");
+	Parent::initPersistFields();
+}
 
 void PixelMask::loadFromImage(const Torque::Path &path, U8 Treshold)
 {

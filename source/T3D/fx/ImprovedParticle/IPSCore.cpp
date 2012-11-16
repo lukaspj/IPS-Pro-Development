@@ -31,6 +31,7 @@
 #include "T3D\tsStatic.h"
 #include "T3D\staticShape.h"
 #include "ts\TSMeshIntrinsics.h"
+#include <fstream>
 
 
 // http://realtimecollisiondetection.net/blog/?p=103ds
@@ -456,3 +457,9 @@ Point3F IPSCore::TopOfCircularSegment(Point3F center, F32 radius, Point3F chordS
 	top *= radius;
 	return center+top;
 }
+
+DefineConsoleFunction(DumpIPSBenchmark, void,(),, "Null")
+{
+	PrintBenchMarks;
+	return;
+};

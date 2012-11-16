@@ -24,6 +24,7 @@
 #include "ParticleEffect.h"
 #include "../particleEmitterNode.h"
 #include "../particleEmitter.h"
+#include "sphereEmitterNode.h"
 #include "meshEmitter.h"
 #include "radiusMeshEmitter.h"
 #include "groundEmitterNode.h"
@@ -32,6 +33,7 @@
 #include "maskEmitter.h"
 #include "graphEmitterNode.h"
 #include "graphEmitter.h"
+#include "IPSCore.h"
 #include "localNodes.h"
 #include "console/consoleTypes.h"
 #include "core/stream/bitStream.h"
@@ -209,11 +211,11 @@ bool ParticleEffect::onAdd()
 			{
 			case pEffectReader::emitterType::stockEmitter:
 				{
-					eN.node = new loc_ParticleEmitterNode();
+					eN.node = new loc_SphereEmitterNode();
 					ParticleEmitterNodeData *nodeDat = dynamic_cast<ParticleEmitterNodeData*>(Sim::findObject(emitter.datablock.c_str()));
 					ParticleEmitterData *emitDat = dynamic_cast<ParticleEmitterData*>(Sim::findObject(emitter.emitterblock.c_str()));
 					eN.node->onNewDataBlock(nodeDat, true);
-					((loc_ParticleEmitterNode*)eN.node)->setEmitterDataBlock(emitDat);
+					((loc_SphereEmitterNode*)eN.node)->setEmitterDataBlock(emitDat);
 					if(!eN.node->registerObject())
 					{
 						delete eN.node;
@@ -224,9 +226,10 @@ bool ParticleEffect::onAdd()
 					((ParticleEmitterNode*)eN.node)->setActive(false);
 					for(int idx = 0; idx < eN.emitterData.values.size(); idx++)
 					{
-						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].name);
+						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].type);
+						Con::printf("Value %i = %f", idx, eN.emitterData.values[idx].initialValue);
 					}
-					((loc_ParticleEmitterNode*)eN.node)->standAloneEmitter = true;
+					((loc_SphereEmitterNode*)eN.node)->standAloneEmitter = true;
 					break;
 				}
 			case pEffectReader::emitterType::GraphEmitter:
@@ -247,7 +250,7 @@ bool ParticleEffect::onAdd()
 					pEffectReader::value val1 = eN.emitterData.values[0];
 					for(int idx = 0; idx < eN.emitterData.values.size(); idx++)
 					{
-						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].name);
+						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].type);
 					}
 					((loc_GraphEmitterNode*)eN.node)->Loop = true;
 					break;
@@ -299,7 +302,7 @@ bool ParticleEffect::onAdd()
 					((GroundEmitterNode*)eN.node)->setActive(false);
 					for(int idx = 0; idx < eN.emitterData.values.size(); idx++)
 					{
-						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].name);
+						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].type);
 					}
 					((GroundEmitterNode*)eN.node)->standAloneEmitter = true;
 					break;
@@ -321,7 +324,7 @@ bool ParticleEffect::onAdd()
 					((MaskEmitterNode*)eN.node)->setActive(false);
 					for(int idx = 0; idx < eN.emitterData.values.size(); idx++)
 					{
-						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].name);
+						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].type);
 					}
 					((MaskEmitterNode*)eN.node)->standAloneEmitter = true;
 					break;
@@ -453,10 +456,11 @@ void ParticleEffect::unpackUpdate(NetConnection* con, BitStream* stream)
 	{
 		for(int idx = 0; idx < mEmitterNodes.size(); idx++)
 		{
-			emitterNode eN = mEmitterNodes[idx];
-			for(int ivx = 0; ivx < eN.emitterData.values.size(); ivx++)
+			emitterNode *eN = &mEmitterNodes[idx];
+			eN->state = eN->notActivated;
+			for(int ivx = 0; ivx < eN->emitterData.values.size(); ivx++)
 			{
-				setValue(eN,eN.emitterData.values[ivx].name,eN.emitterData.values[ivx].initialValue);
+				setValue(eN,eN->emitterData.values[ivx].type, eN->emitterData.values[ivx].initialValue);
 			}
 		}
 		startTime = Platform::getVirtualMilliseconds();
@@ -488,7 +492,11 @@ void ParticleEffect::processTick(const Move* move)
 	{
 		emitterNode node = mEmitterNodes[i];
 		if(node.node != NULL){
-			node.node->setTransform(getTransform());
+			Point3F nodePos = Point3F(node.emitterData.x, node.emitterData.y, node.emitterData.z);
+			MatrixF mat = getTransform();
+			mat.mulP(nodePos);
+			mat.setPosition(nodePos);
+			node.node->setTransform(mat);
 		}
 	}
 
@@ -503,24 +511,25 @@ void ParticleEffect::processTick(const Move* move)
 void ParticleEffect::advanceTime(F32 dt)
 {
 	PROFILE_SCOPE(pEffectAdvanceTime);
+	//IPSBenchmarkBegin;
 	Parent::advanceTime(dt);
 	U32 timeSpent = Platform::getVirtualMilliseconds() - startTime;
 	if(!mDataBlock || !isClientObject())
 		return;
 	for(int i = 0; i < mEmitterNodes.size(); i++)
 	{
-		emitterNode emitter = mEmitterNodes[i];
-		if(emitter.node == NULL || !emitter.node->isProperlyAdded())
+		emitterNode *emitter = &mEmitterNodes[i];
+		if(emitter->node == NULL || !emitter->node->isProperlyAdded())
 			continue;
-		if(emitter.state == emitterNode::notActivated && timeSpent >= mDataBlock->lifeTimeMS * emitter.emitterData.start){
-			emitter.state = emitterNode::Activated; setValue(emitter,"Active",1);}
-		if(emitter.state == emitterNode::Activated && timeSpent >= mDataBlock->lifeTimeMS * emitter.emitterData.end){
-			emitter.state = emitterNode::hasActivated; setValue(emitter,"Active",0); }
-		if(emitter.state == emitterNode::Activated)
+		if(emitter->state == emitterNode::notActivated && timeSpent >= mDataBlock->lifeTimeMS * emitter->emitterData.start){
+			emitter->state = emitterNode::Activated; setValue(emitter, pEffectReader::Active, 1);}
+		if(emitter->state == emitterNode::Activated && timeSpent >= mDataBlock->lifeTimeMS * emitter->emitterData.end){
+			emitter->state = emitterNode::hasActivated; setValue(emitter, pEffectReader::Active, 0); }
+		if(emitter->state == emitterNode::Activated)
 		{
-			for(int idv = 0; idv < emitter.emitterData.values.size(); idv++)
+			for(int idv = 0; idv < emitter->emitterData.values.size(); idv++)
 			{
-				pEffectReader::value val = emitter.emitterData.values[idv];
+				pEffectReader::value val = emitter->emitterData.values[idv];
 				if(val.ease)
 				{
 					pEffectReader::point theP;
@@ -535,131 +544,85 @@ void ParticleEffect::advanceTime(F32 dt)
 					{
 						EaseF ease = EaseF(pEffectReader::inOutCompose(theP.easeIn, theP.easeOut), pEffectReader::stringToEase(const_cast<char*>(theP.easing.c_str())));
 						// t: current time, b: beginning value, c: change in value, d: duration
-						F32 t = timeSpent - (mDataBlock->lifeTimeMS * emitter.emitterData.start);
+						F32 t = timeSpent - (mDataBlock->lifeTimeMS * emitter->emitterData.start);
 						F32 b = val.initialValue;
 						F32 c = val.DeltaValue;
-						F32 d = mDataBlock->lifeTimeMS * (emitter.emitterData.end - emitter.emitterData.start);
-						setValue(emitter, val.name, ease.getValue(t,b,c,d));
+						F32 d = mDataBlock->lifeTimeMS * (emitter->emitterData.end - emitter->emitterData.start);
+						setValue(emitter, val.type, ease.getValue(t,b,c,d));
 					}
 				}
 				else
 					if(timeSpent >= mDataBlock->lifeTimeMS * val.setTime)
-						setValue(emitter, val.name, val.DeltaValue);
+						setValue(emitter, val.type, val.DeltaValue);
 			}
 		}
-		if(emitter.state == emitterNode::hasActivated)
+		if(emitter->state == emitterNode::hasActivated)
 		{
 			//Stop emitting particles and stuff
 		}
 	}
+	//IPSBenchmarkEnd("----pEffect---- advanceTime");
 }
 
-void ParticleEffect::setValue(emitterNode node, std::string value, F32 newValue)
+void ParticleEffect::setValue(emitterNode *node, pEffectReader::valueType value, F32 newValue)
 {
 	PROFILE_SCOPE(pEffectSetValue);
-	if(value.compare("xPosition") == 0)
-		node.emitterData.x = newValue;
-	if(value.compare("yPosition") == 0)
-		node.emitterData.y = newValue;
-	if(value.compare("zPosition") == 0)
-		node.emitterData.z = newValue;
-	switch(node.emitterData.type)
+	switch(node->emitterData.type)
 	{
 	case pEffectReader::emitterType::stockEmitter:
-		if(value.compare("Active") == 0)
-			((ParticleEmitterNode*)node.node)->setActive(newValue);
-		if(value.compare("EjectionOffset") == 0)
-			((ParticleEmitterNode*)node.node)->sa_ejectionOffset = newValue;
-		if(value.compare("EjectionPeriod") == 0)
-			((ParticleEmitterNode*)node.node)->sa_ejectionPeriodMS = newValue;
+		switch(value)
+		{
+		case pEffectReader::xPosition:
+			node->emitterData.x = F32(newValue);
+			return;
+		case pEffectReader::yPosition:
+			node->emitterData.y = newValue;
+			return;
+		case pEffectReader::zPosition:
+			node->emitterData.y = newValue;
+			return;
+		case pEffectReader::Active:
+			((ParticleEmitterNode*)node->node)->setActive(newValue);
+			return;
+		case pEffectReader::EjectionPeriod:
+			((SphereEmitterNode*)node->node)->sa_ejectionPeriodMS = newValue;
+			return;
+		case pEffectReader::EjectionOffset:
+			((SphereEmitterNode*)node->node)->sa_ejectionOffset = newValue;
+			return;
+		}
 		break;
 	case pEffectReader::emitterType::GraphEmitter:
-		if(value.compare("UpperBoundary") == 0)
-			((GraphEmitterNode*)node.node)->funcMax = newValue;
-		if(value.compare("LowerBoundary") == 0)
-			((GraphEmitterNode*)node.node)->funcMin = newValue;
-		if(value.compare("TimeScale") == 0)
-			((GraphEmitterNode*)node.node)->timeScale = newValue;
-		if(value.compare("EjectionPeriod") == 0)
-			((GraphEmitterNode*)node.node)->sa_ejectionPeriodMS = newValue;
-		if(value.compare("EjectionOffset") == 0)
-			((GraphEmitterNode*)node.node)->sa_ejectionOffset = newValue;
-		if(value.compare("Active") == 0)
-			((GraphEmitterNode*)node.node)->setActive(newValue);
-		break;
-	case pEffectReader::emitterType::MeshEmitter:
-		/*if(value.compare("EjectionPeriod") == 0)
-		((MeshEmitter*)node.node)->ejectionPeriodMS = newValue;
-		if(value.compare("EjectionOffset") == 0)
-		((MeshEmitter*)node.node)->ejectionOffset = newValue;**/
-		break;
-	case pEffectReader::emitterType::RadiusMeshEmitter:
-		/*if(value.compare("Radius") == 0)
-		((GraphEmitterNode*)node.node)->timeScale = newValue;
-		if(value.compare("EjectionPeriod") == 0)
-		((RadiusMeshEmitter*)node.node)->ejectionPeriodMS = newValue;
-		if(value.compare("EjectionOffset") == 0)
-		((RadiusMeshEmitter*)node.node)->ejectionOffset = newValue;*/
-		break;
-	case pEffectReader::emitterType::GroundEmitter:
-		if(value.compare("Radius") == 0)
-			((GroundEmitterNode*)node.node)->sa_radius = newValue;
-		if(value.compare("EjectionPeriod") == 0)
-			((GroundEmitterNode*)node.node)->sa_ejectionPeriodMS = newValue;
-		if(value.compare("EjectionOffset") == 0)
-			((GroundEmitterNode*)node.node)->sa_ejectionOffset = newValue;
-		if(value.compare("Active") == 0)
-			((GroundEmitterNode*)node.node)->setActive(newValue);
-		break;
-	case pEffectReader::emitterType::MaskEmitter:
-		if(value.compare("Scale") == 0)
-			((MaskEmitterNode*)node.node)->sa_radius = newValue;
-		if(value.compare("EjectionPeriod") == 0)
-			((MaskEmitterNode*)node.node)->sa_ejectionPeriodMS = newValue;
-		if(value.compare("EjectionOffset") == 0)
-			((MaskEmitterNode*)node.node)->sa_ejectionOffset = newValue;
-		if(value.compare("Active") == 0)
-			((MaskEmitterNode*)node.node)->setActive(newValue);
-		break;
-	case pEffectReader::emitterType::PathEmitter:
-		/*if(value.compare("Travelspeed"))
-		return ((GraphEmitterNode*)node.node)->timeScale;
-		if(value.compare("EjectionPeriod"))
-		((GraphEmitterNode*)node.node)->sa_ejectionPeriodMS = newValue;
-		if(value.compare("EjectionOffset"))
-		((GraphEmitterNode*)node.node)->sa_ejectionOffset = newValue;*/
-		break;
-	}
-}
-
-F32 ParticleEffect::getValue(emitterNode node, std::string value)
-{
-	PROFILE_SCOPE(pEffectGetValue);
-	if(value.compare("xPosition") == 0)
-		return node.emitterData.x;
-	if(value.compare("yPosition") == 0)
-		return node.emitterData.y;
-	if(value.compare("zPosition") == 0)
-		return node.emitterData.z;
-	switch(node.emitterData.type)
-	{
-	case pEffectReader::emitterType::stockEmitter:
-		if(value.compare("EjectionPeriod") == 0)
-			return ((ParticleEmitterNode*)node.node)->sa_ejectionPeriodMS;
-		if(value.compare("EjectionOffset") == 0)
-			return ((ParticleEmitterNode*)node.node)->sa_ejectionOffset;
-		break;
-	case pEffectReader::emitterType::GraphEmitter:
-		if(value.compare("UpperBoundary") == 0)
-			return ((GraphEmitterNode*)node.node)->funcMax;
-		if(value.compare("LowerBoundary") == 0)
-			return ((GraphEmitterNode*)node.node)->funcMin;
-		if(value.compare("TimeScale") == 0)
-			return ((GraphEmitterNode*)node.node)->timeScale;
-		if(value.compare("EjectionPeriod") == 0)
-			return ((GraphEmitterNode*)node.node)->sa_ejectionPeriodMS;
-		if(value.compare("EjectionOffset") == 0)
-			return ((GraphEmitterNode*)node.node)->sa_ejectionOffset;
+		switch(value)
+		{
+		case pEffectReader::UpperBoundary:
+			((GraphEmitterNode*)node->node)->funcMax = newValue;
+			return;
+		case pEffectReader::LowerBoundary:
+			((GraphEmitterNode*)node->node)->funcMin = newValue;
+			return;
+		case pEffectReader::TimeScale:
+			((GraphEmitterNode*)node->node)->timeScale = newValue;
+			return;
+		case pEffectReader::xPosition:
+			node->emitterData.x = newValue;
+			return;
+		case pEffectReader::yPosition:
+			node->emitterData.y = newValue;
+			return;
+		case pEffectReader::zPosition:
+			node->emitterData.y = newValue;
+			return;
+		case pEffectReader::Active:
+			((GraphEmitterNode*)node->node)->setActive(newValue);
+			return;
+		case pEffectReader::EjectionPeriod:
+			((GraphEmitterNode*)node->node)->sa_ejectionPeriodMS = newValue;
+			return;
+		case pEffectReader::EjectionOffset:
+			((GraphEmitterNode*)node->node)->sa_ejectionOffset = newValue;
+			return;
+		}
 		break;
 	case pEffectReader::emitterType::MeshEmitter:
 		break;
@@ -668,20 +631,137 @@ F32 ParticleEffect::getValue(emitterNode node, std::string value)
 		//return ((RadiusMeshEmitter*)node.node)->radius;
 		break;
 	case pEffectReader::emitterType::GroundEmitter:
-		if(value.compare("Radius") == 0)
-			return ((GroundEmitterNode*)node.node)->sa_radius;
-		if(value.compare("EjectionPeriod") == 0)
-			return ((GroundEmitterNode*)node.node)->sa_ejectionPeriodMS;
-		if(value.compare("EjectionOffset") == 0)
-			return ((GroundEmitterNode*)node.node)->sa_ejectionOffset;
+		switch(value)
+		{
+		case pEffectReader::Radius:
+			//((GroundEmitterNode*)node->node)->sa_radius = newValue;
+			return;
+		case pEffectReader::xPosition:
+			node->emitterData.x = newValue;
+			return;
+		case pEffectReader::yPosition:
+			node->emitterData.y = newValue;
+			return;
+		case pEffectReader::zPosition:
+			node->emitterData.y = newValue;
+			return;
+		case pEffectReader::Active:
+			((GroundEmitterNode*)node->node)->setActive(newValue);
+			return;
+		case pEffectReader::EjectionPeriod:
+			((GroundEmitterNode*)node->node)->sa_ejectionPeriodMS = newValue;
+			return;
+		case pEffectReader::EjectionOffset:
+			((GroundEmitterNode*)node->node)->sa_ejectionOffset = newValue;
+			return;
+		}
 		break;
 	case pEffectReader::emitterType::MaskEmitter:
-		if(value.compare("Scale") == 0)
+		switch(value)
+		{
+		case pEffectReader::Scale:
+			((MaskEmitterNode*)node->node)->sa_radius = newValue;
+			return;
+		case pEffectReader::xPosition:
+			node->emitterData.x = newValue;
+			return;
+		case pEffectReader::yPosition:
+			node->emitterData.y = newValue;
+			return;
+		case pEffectReader::zPosition:
+			node->emitterData.y = newValue;
+			return;
+		case pEffectReader::Active:
+			((MaskEmitterNode*)node->node)->setActive(newValue);
+			return;
+		case pEffectReader::EjectionPeriod:
+			((MaskEmitterNode*)node->node)->sa_ejectionPeriodMS = newValue;
+			return;
+		case pEffectReader::EjectionOffset:
+			((MaskEmitterNode*)node->node)->sa_ejectionOffset = newValue;
+			return;
+		}
+		break;
+	case pEffectReader::emitterType::PathEmitter:
+		/*if(value.compare("Travelspeed"))
+		return ((GraphEmitterNode*)node.node)->timeScale;*/
+		break;
+	}
+}
+
+F32 ParticleEffect::getValue(emitterNode node, pEffectReader::valueType value)
+{
+	PROFILE_SCOPE(pEffectGetValue);
+	switch(value)
+	{
+	case pEffectReader::xPosition:
+		return node.emitterData.x;
+	case pEffectReader::yPosition:
+		return node.emitterData.y;
+	case pEffectReader::zPosition:
+		return node.emitterData.z;
+	}
+	switch(node.emitterData.type)
+	{
+	case pEffectReader::emitterType::stockEmitter:
+		switch(value)
+		{
+		case pEffectReader::Active:
+			return ((SphereEmitterNode*)node.node)->getActive();
+		case pEffectReader::EjectionPeriod:
+			return ((SphereEmitterNode*)node.node)->sa_ejectionPeriodMS;
+		case pEffectReader::EjectionOffset:
+			return ((SphereEmitterNode*)node.node)->sa_ejectionOffset;
+		}
+		break;
+	case pEffectReader::emitterType::GraphEmitter:
+		switch(value)
+		{
+		case pEffectReader::UpperBoundary:
+			return ((GraphEmitterNode*)node.node)->funcMax;
+		case pEffectReader::LowerBoundary:
+			return ((GraphEmitterNode*)node.node)->funcMin;
+		case pEffectReader::TimeScale:
+			return ((GraphEmitterNode*)node.node)->timeScale;
+		case pEffectReader::Active:
+			return ((MaskEmitterNode*)node.node)->getActive();
+		case pEffectReader::EjectionPeriod:
+			return ((GraphEmitterNode*)node.node)->sa_ejectionPeriodMS;
+		case pEffectReader::EjectionOffset:
+			return ((GraphEmitterNode*)node.node)->sa_ejectionOffset;
+		}
+		break;
+	case pEffectReader::emitterType::MeshEmitter:
+		break;
+	case pEffectReader::emitterType::RadiusMeshEmitter:
+		//if(value.compare("Radius") == 0)
+		//return ((RadiusMeshEmitter*)node.node)->radius;
+		break;
+	case pEffectReader::emitterType::GroundEmitter:
+		switch(value)
+		{
+		case pEffectReader::Radius:
+			return ((GroundEmitterNode*)node.node)->sa_radius;
+		case pEffectReader::Active:
+			return ((MaskEmitterNode*)node.node)->getActive();
+		case pEffectReader::EjectionPeriod:
+			return ((GroundEmitterNode*)node.node)->sa_ejectionPeriodMS;
+		case pEffectReader::EjectionOffset:
+			return ((GroundEmitterNode*)node.node)->sa_ejectionOffset;
+		}
+		break;
+	case pEffectReader::emitterType::MaskEmitter:
+		switch(value)
+		{
+		case pEffectReader::Scale:
 			return ((MaskEmitterNode*)node.node)->sa_radius;
-		if(value.compare("EjectionPeriod") == 0)
+		case pEffectReader::Active:
+			return ((MaskEmitterNode*)node.node)->getActive();
+		case pEffectReader::EjectionPeriod:
 			return ((MaskEmitterNode*)node.node)->sa_ejectionPeriodMS;
-		if(value.compare("EjectionOffset") == 0)
+		case pEffectReader::EjectionOffset:
 			return ((MaskEmitterNode*)node.node)->sa_ejectionOffset;
+		}
 		break;
 	case pEffectReader::emitterType::PathEmitter:
 		/*if(value.compare("Travelspeed"))

@@ -21,178 +21,70 @@
 // http://fuzzyvoidstudio.com
 //-----------------------------------------------------------------------------
 
-#ifndef _MASKEMITTERNODE_H_
-#define _MASKEMITTERNODE_H_
+#ifndef MASK_EMITTERNODE_H_
+#define MASK_EMITTERNODE_H_
 
-#ifndef _GAMEBASE_H_
-#include "T3D/gameBase/gameBase.h"
-#endif
-
-#include "math/muParser/muParser.h"
-
-#ifndef _NETCONNECTION_H_
-#include "sim/netConnection.h"
-#endif
-
-#ifndef _BITSTREAM_H_
-#include "core/stream/bitStream.h"
-#endif
-
-using namespace mu;
-#ifndef attrobjectCount
-#define attrobjectCount (U8)2
-#endif
+#include "T3D\fx\particleEmitterNode.h"
+#include "maskEmitter.h"
 
 class MaskEmitterData;
 class MaskEmitter;
 
-//*****************************************************************************
-// MaskEmitterNodeData
-//*****************************************************************************
-class MaskEmitterNodeData : public GameBaseData
+class MaskEmitterNodeData : public ParticleEmitterNodeData
 {
-	typedef GameBaseData Parent;
+	typedef ParticleEmitterNodeData Parent;
 
-protected:
-	bool onAdd();
-
-	//-------------------------------------- Console set variables
-public:
-	F32					timeMultiple;
-
-	bool				standAloneEmitter;
-	S32					sa_ejectionPeriodMS;					///< Time, in Milliseconds, between particle ejection
-	S32					sa_periodVarianceMS;					///< Varience in ejection peroid between 0 and n
-
-	F32					sa_ejectionVelocity;					///< Ejection velocity
-	F32					sa_velocityVariance;					///< Variance for velocity between 0 and n
-
-	F32					sa_ejectionOffset;						///< Z offset from emitter point to eject from
-
-	F32					sa_radius;
-
-	S32					AttractionMode[attrobjectCount];		///< How the objects should interact with the associated objects.
-	bool				sticky;
-	bool				grounded;
-	F32					attractionrange;
-	F32					Amount[attrobjectCount];
-	StringTableEntry	Attraction_offset[attrobjectCount];
-	bool				ParticleCollision;
-
-	//-------------------------------------- load set variables
-public:
-
+	//------- Functions -------
 public:
 	MaskEmitterNodeData();
-	~MaskEmitterNodeData();
+	DECLARE_CONOBJECT(MaskEmitterNodeData);
 
+	static void initPersistFields();
+	bool onAdd();
 	void packData(BitStream*);
 	void unpackData(BitStream*);
-	bool preload(bool server, String &errorStr);
 
-	DECLARE_CONOBJECT(MaskEmitterNodeData);
-	static void initPersistFields();
+	//------- Variables -------
+public:
+	F32		sa_radius;
+	bool	grounded;
 };
 
-//*****************************************************************************
-// MaskEmitterNode
-//*****************************************************************************
-class MaskEmitterNode : public GameBase
+class MaskEmitterNode : public ParticleEmitterNode
 {
-	typedef GameBase Parent;
+	typedef ParticleEmitterNode Parent;
 
+	//------- Enums -------
 	enum MaskBits
 	{
-		StateMask		= Parent::NextFreeMask << 0,
-		EmitterDBMask	= Parent::NextFreeMask << 1,
-		NextFreeMask	= Parent::NextFreeMask << 2,
-		emitterEdited	= Parent::NextFreeMask << 3,
-		exprEdited		= Parent::NextFreeMask << 4,
-		dynamicMod		= Parent::NextFreeMask << 5,
+		NextFreeMask	= Parent::NextFreeMask << 0,
 	};
 
-	char* UpToLow(char* c);
-
-	bool cb_Max;
-
-private:
-	MaskEmitterNodeData* mDataBlock;
-
-	bool shuttingDown;
+	//------- Functions -------
+public:
+	MaskEmitterNode();
+	DECLARE_CONOBJECT(MaskEmitterNode);
+	U32  packUpdate  (NetConnection *conn, U32 mask, BitStream* stream);
+	void unpackUpdate(NetConnection *conn,           BitStream* stream);
+	static void initPersistFields();
+	void advanceTime(F32 dt);
 
 
 protected:
-	bool onAdd();
-	void onRemove();
 	bool onNewDataBlock( GameBaseData *dptr, bool reload );
-	void inspectPostApply();
-
-	void MaskEmitterNode::onStaticModified(const char* slotName, const char*newValue);
-	void MaskEmitterNode::onDynamicModified(const char* slotName, const char*newValue);
-
-	MaskEmitterData* mEmitterDatablock;
-	S32                  mEmitterDatablockId;
-
-	bool             mActive;
-
-	SimObjectPtr<MaskEmitter> mEmitter;
-	F32              mVelocity;
+	void onStaticModified(const char* slotName, const char*newValue);
 
 public:
+	virtual MaskEmitterNodeData* getDataBlock() { return static_cast<MaskEmitterNodeData*>(Parent::getDataBlock()); };
+	virtual MaskEmitter* getEmitter() { return static_cast<MaskEmitter*>(Parent::getEmitter()); };
+	virtual ParticleEmitter* createEmitter() { return new MaskEmitter; };
+	void setEmitterDataBlock(ParticleEmitterData* data);
 
-	//------------------------- Stand alone variables
-	bool	standAloneEmitter;
-	S32		sa_ejectionPeriodMS;                   ///< Time, in Milliseconds, between particle ejection
-	S32		sa_periodVarianceMS;                   ///< Varience in ejection peroid between 0 and n
-
-	F32		sa_ejectionVelocity;                   ///< Ejection velocity
-	F32		sa_velocityVariance;                   ///< Variance for velocity between 0 and n
-	F32		sa_ejectionOffset;						///< Z offset from emitter point to eject from
+	//------- Variables -------
+public:
 
 	F32		sa_radius;
-
-	S32	AttractionMode[attrobjectCount];		///< How the objects should interact with the associated objects.
-
 	bool	grounded;
-	bool	sticky;
-	bool	ParticleCollision;
-	F32		attractionrange;
-	StringTableEntry attractedObjectID[attrobjectCount];
-	F32		Amount[attrobjectCount];
-	StringTableEntry	Attraction_offset[attrobjectCount];
-
-	std::vector<std::string> initialValues;
-
-	void safeDelete(); //Not used
-	bool currentlyShuttingDown() { return shuttingDown; }; ///< For shutting down the viual effects immediately
-
-
-	MaskEmitterNode();
-	~MaskEmitterNode();
-
-	MaskEmitter *getMaskEmitter() {return mEmitter;}
-
-	// Time/Move Management
-public:
-	void processTick(const Move* move);
-	void advanceTime(F32 dt);
-
-	enum EnumAttractionMode{
-		none = 0,
-		attract = 1,
-		repulse = 2,
-	};
-
-	DECLARE_CONOBJECT(MaskEmitterNode);
-	static void initPersistFields();
-
-	U32  packUpdate  (NetConnection *conn, U32 mask, BitStream* stream);
-	void unpackUpdate(NetConnection *conn,           BitStream* stream);
-
-	inline bool getActive( void )        { return mActive;                             };
-	inline void setActive( bool active ) { mActive = active; setMaskBits( StateMask ); };
-
-	void setEmitterDataBlock(MaskEmitterData* data);
 };
 
-#endif // _MASKEMITTERNODE_H_
+#endif // MASK_EMITTERNODE_H_

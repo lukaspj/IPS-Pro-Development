@@ -50,7 +50,7 @@ void pEffectReader::readFile(Torque::Path &path, Vector<emitter> &loadedEmitters
 			attr = valnode->first_attribute("Ease");
 			val.ease = stringToBoolean(attr->value());
 			attr = valnode->first_attribute("Name");
-			val.name = std::string(attr->value());
+			val.type = (valueType)stringToValueType(attr->value());
 			attr = valnode->first_attribute("DeltaValue");
 			val.DeltaValue = atof(attr->value());
 			if(!val.ease)
@@ -87,46 +87,76 @@ void pEffectReader::readFile(Torque::Path &path, Vector<emitter> &loadedEmitters
 
 int pEffectReader::stringToEmitterType(char* str)
 {
-	if(!strcmp(UpToLow(str), "stockemitter"))
+	UpToLow(str);
+	if(!strcmp(str, "stockemitter"))
 		return 0;
-	if(!strcmp(UpToLow(str), "graphemitter"))
+	if(!strcmp(str, "graphemitter"))
 		return 1;
-	if(!strcmp(UpToLow(str), "meshemitter"))
+	if(!strcmp(str, "meshemitter"))
 		return 2;
-	if(!strcmp(UpToLow(str), "radiusmeshemitter"))
+	if(!strcmp(str, "radiusmeshemitter"))
 		return 3;
-	if(!strcmp(UpToLow(str), "groundemitter"))
+	if(!strcmp(str, "groundemitter"))
 		return 4;
-	if(!strcmp(UpToLow(str), "maskemitter"))
+	if(!strcmp(str, "maskemitter"))
 		return 5;
-	if(!strcmp(UpToLow(str), "pathemitter"))
+	if(!strcmp(str, "pathemitter"))
 		return 7;
 	return 8;
 }
 
+int pEffectReader::stringToValueType(char* str)
+{
+	UpToLow(str);
+	if(!strcmp(str, "xposition"))
+		return 0;
+	if(!strcmp(str, "yposition"))
+		return 1;
+	if(!strcmp(str, "zposition"))
+		return 2;
+	if(!strcmp(str, "active"))
+		return 3;
+	if(!strcmp(str, "ejectionoffset"))
+		return 4;
+	if(!strcmp(str, "ejectionperiod"))
+		return 5;
+	if(!strcmp(str, "radius"))
+		return 7;
+	if(!strcmp(str, "upperboundary"))
+		return 8;
+	if(!strcmp(str, "lowerboundary"))
+		return 9;
+	if(!strcmp(str, "timescale"))
+		return 10;
+	if(!strcmp(str, "scale"))
+		return 11;
+	return 12;
+}
+
 S32 pEffectReader::stringToEase(char* str)
 {
-	if(!strcmp(UpToLow(str), "linear"))
+	UpToLow(str);
+	if(!strcmp(str, "linear"))
 		return 0;
-	if(!strcmp(UpToLow(str), "quadratic"))
+	if(!strcmp(str, "quadratic"))
 		return 1;
-	if(!strcmp(UpToLow(str), "cubic"))
+	if(!strcmp(str, "cubic"))
 		return 2;
-	if(!strcmp(UpToLow(str), "quartic"))
+	if(!strcmp(str, "quartic"))
 		return 3;
-	if(!strcmp(UpToLow(str), "quintic"))
+	if(!strcmp(str, "quintic"))
 		return 4;
-	if(!strcmp(UpToLow(str), "sinusoidal"))
+	if(!strcmp(str, "sinusoidal"))
 		return 5;
-	if(!strcmp(UpToLow(str), "exponential"))
+	if(!strcmp(str, "exponential"))
 		return 7;
-	if(!strcmp(UpToLow(str), "circular"))
+	if(!strcmp(str, "circular"))
 		return 7;
-	if(!strcmp(UpToLow(str), "elastic"))
+	if(!strcmp(str, "elastic"))
 		return 7;
-	if(!strcmp(UpToLow(str), "back"))
+	if(!strcmp(str, "back"))
 		return 7;
-	if(!strcmp(UpToLow(str), "bounce"))
+	if(!strcmp(str, "bounce"))
 		return 7;
 }
 

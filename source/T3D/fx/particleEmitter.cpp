@@ -1,8 +1,3 @@
-//-----------------------------------------------------------------------------
-// Torque
-// Copyright GarageGames, LLC 2011
-//-----------------------------------------------------------------------------
-
 #include "platform/platform.h"
 #include "T3D/fx/particleEmitter.h"
 
@@ -19,76 +14,31 @@
 #include "T3D/gameBase/gameProcess.h"
 #include "lighting/lightInfo.h"
 #include "console/engineAPI.h"
-
-#if defined(TORQUE_OS_XENON)
-#  include "gfx/D3D9/360/gfx360MemVertexBuffer.h"
-#endif
+#include "materials/materialManager.h"
 
 Point3F ParticleEmitter::mWindVelocity( 0.0, 0.0, 0.0 );
 const F32 ParticleEmitter::AgedSpinToRadians = (1.0f/1000.0f) * (1.0f/360.0f) * M_PI_F * 2.0f;
-
-IMPLEMENT_CO_DATABLOCK_V1(ParticleEmitterData);
-IMPLEMENT_CONOBJECT(ParticleEmitter);
-
-ConsoleDocClass( ParticleEmitter,
-	"@brief This object is responsible for spawning particles.\n\n"
-
-	"@note This class is not normally instantiated directly - to place a simple "
-	"particle emitting object in the scene, use a ParticleEmitterNode instead.\n\n"
-
-	"This class is the main interface for creating particles - though it is "
-	"usually only accessed from within another object like ParticleEmitterNode "
-	"or WheeledVehicle. If using this object class (via C++) directly, be aware "
-	"that it does <b>not</b> track changes in source axis or velocity over the "
-	"course of a single update, so emitParticles should be called at a fairly "
-	"fine grain.  The emitter will potentially track the last particle to be "
-	"created into the next call to this function in order to create a uniformly "
-	"random time distribution of the particles.\n\n"
-
-	"If the object to which the emitter is attached is in motion, it should try "
-	"to ensure that for call (n+1) to this function, start is equal to the end "
-	"from call (n). This will ensure a uniform spatial distribution.\n\n"
-
-	"@ingroup FX\n"
-	"@see ParticleEmitterData\n"
-	"@see ParticleEmitterNode\n"
-	);
-
-ConsoleDocClass( ParticleEmitterData,
-	"@brief Defines particle emission properties such as ejection angle, period "
-	"and velocity for a ParticleEmitter.\n\n"
-
-	"@tsexample\n"
-	"datablock ParticleEmitterData( GrenadeExpDustEmitter )\n"
-	"{\n"
-	"   ejectionPeriodMS = 1;\n"
-	"   periodVarianceMS = 0;\n"
-	"   ejectionVelocity = 15;\n"
-	"   velocityVariance = 0.0;\n"
-	"   ejectionOffset = 0.0;\n"
-	"   thetaMin = 85;\n"
-	"   thetaMax = 85;\n"
-	"   phiReferenceVel = 0;\n"
-	"   phiVariance = 360;\n"
-	"   overrideAdvance = false;\n"
-	"   lifetimeMS = 200;\n"
-	"   particles = \"GrenadeExpDust\";\n"
-	"};\n"
-	"@endtsexample\n\n"
-
-	"@ingroup FX\n"
-	"@see ParticleEmitter\n"
-	"@see ParticleData\n"
-	"@see ParticleEmitterNode\n"
-	);
 
 static const float sgDefaultEjectionOffset = 0.f;
 static const float sgDefaultPhiReferenceVel = 0.f;
 static const float sgDefaultPhiVariance = 360.f;
 
+typedef ParticleRenderInst::BlendStyle ParticleBlendStyle;
+DefineEnumType( ParticleBlendStyle );
+
+ImplementEnumType( ParticleBlendStyle,
+	"The type of visual blending style to apply to the particles.\n"
+	"@ingroup FX\n\n")
+{ ParticleRenderInst::BlendNormal,         "NORMAL",        "No blending style.\n" },
+{ ParticleRenderInst::BlendAdditive,       "ADDITIVE",      "Adds the color of the pixel to the frame buffer with full alpha for each pixel.\n" },
+{ ParticleRenderInst::BlendSubtractive,    "SUBTRACTIVE",   "Subtractive Blending. Reverses the color model, causing dark colors to have a stronger visual effect.\n" },
+{ ParticleRenderInst::BlendPremultAlpha,   "PREMULTALPHA",  "Color blends with the colors of the imagemap rather than the alpha.\n" },
+EndImplementEnumType;
+
 //-----------------------------------------------------------------------------
 // ParticleEmitterData
 //-----------------------------------------------------------------------------
+
 ParticleEmitterData::ParticleEmitterData()
 {
 	VECTOR_SET_ASSOCIATION(particleDataBlocks);
@@ -100,12 +50,6 @@ ParticleEmitterData::ParticleEmitterData()
 	ejectionVelocity = 2.0f;   // From 1.0 - 3.0 meters per sec
 	velocityVariance = 1.0f;
 	ejectionOffset   = sgDefaultEjectionOffset;   // ejection from the emitter point
-
-	thetaMin         = 0.0f;   // All heights
-	thetaMax         = 90.0f;
-
-	phiReferenceVel  = sgDefaultPhiReferenceVel;   // All directions
-	phiVariance      = sgDefaultPhiVariance;
 
 	softnessDistance = 1.0f;
 	ambientFactor = 0.0f;
@@ -135,27 +79,6 @@ ParticleEmitterData::ParticleEmitterData()
 	alignDirection = Point3F(0.0f, 1.0f, 0.0f);
 }
 
-
-
-// Enum tables used for fields blendStyle, srcBlendFactor, dstBlendFactor.
-// Note that the enums for srcBlendFactor and dstBlendFactor are consistent
-// with the blending enums used in Torque Game Builder.
-
-typedef ParticleRenderInst::BlendStyle ParticleBlendStyle;
-DefineEnumType( ParticleBlendStyle );
-
-ImplementEnumType( ParticleBlendStyle,
-	"The type of visual blending style to apply to the particles.\n"
-	"@ingroup FX\n\n")
-{ ParticleRenderInst::BlendNormal,         "NORMAL",        "No blending style.\n" },
-{ ParticleRenderInst::BlendAdditive,       "ADDITIVE",      "Adds the color of the pixel to the frame buffer with full alpha for each pixel.\n" },
-{ ParticleRenderInst::BlendSubtractive,    "SUBTRACTIVE",   "Subtractive Blending. Reverses the color model, causing dark colors to have a stronger visual effect.\n" },
-{ ParticleRenderInst::BlendPremultAlpha,   "PREMULTALPHA",  "Color blends with the colors of the imagemap rather than the alpha.\n" },
-EndImplementEnumType;
-
-//-----------------------------------------------------------------------------
-// initPersistFields
-//-----------------------------------------------------------------------------
 void ParticleEmitterData::initPersistFields()
 {
 	addGroup( "ParticleEmitterData" );
@@ -165,7 +88,7 @@ void ParticleEmitterData::initPersistFields()
 
 	addField("periodVarianceMS", TYPEID< S32 >(), Offset(periodVarianceMS,   ParticleEmitterData),
 		"Variance in ejection period, from 1 - ejectionPeriodMS." );
-
+	
 	addField( "ejectionVelocity", TYPEID< F32 >(), Offset(ejectionVelocity, ParticleEmitterData),
 		"Particle ejection velocity." );
 
@@ -174,18 +97,6 @@ void ParticleEmitterData::initPersistFields()
 
 	addField( "ejectionOffset", TYPEID< F32 >(), Offset(ejectionOffset, ParticleEmitterData),
 		"Distance along ejection Z axis from which to eject particles." );
-
-	addField( "thetaMin", TYPEID< F32 >(), Offset(thetaMin, ParticleEmitterData),
-		"Minimum angle, from the horizontal plane, to eject from." );
-
-	addField( "thetaMax", TYPEID< F32 >(), Offset(thetaMax, ParticleEmitterData),
-		"Maximum angle, from the horizontal plane, to eject particles from." );
-
-	addField( "phiReferenceVel", TYPEID< F32 >(), Offset(phiReferenceVel, ParticleEmitterData),
-		"Reference angle, from the vertical plane, to eject particles from." );
-
-	addField( "phiVariance", TYPEID< F32 >(), Offset(phiVariance, ParticleEmitterData),
-		"Variance from the reference angle, from 0 - 360." );
 
 	addField( "softnessDistance", TYPEID< F32 >(), Offset(softnessDistance, ParticleEmitterData),
 		"For soft particles, the distance (in meters) where particles will be "
@@ -269,139 +180,10 @@ void ParticleEmitterData::initPersistFields()
 	Parent::initPersistFields();
 }
 
-bool ParticleEmitterData::_setAlignDirection( void *object, const char *index, const char *data )
-{
-	ParticleEmitterData *p = static_cast<ParticleEmitterData*>( object );
-
-	Con::setData( TypePoint3F, &p->alignDirection, 0, 1, &data );
-	p->alignDirection.normalizeSafe();
-
-	// we already set the field
-	return false;
-}
-
-//-----------------------------------------------------------------------------
-// packData
-//-----------------------------------------------------------------------------
-void ParticleEmitterData::packData(BitStream* stream)
-{
-	Parent::packData(stream);
-
-	stream->writeInt(ejectionPeriodMS, 10);
-	stream->writeInt(periodVarianceMS, 10);
-	stream->writeInt((S32)(ejectionVelocity * 100), 16);
-	stream->writeInt((S32)(velocityVariance * 100), 14);
-	if( stream->writeFlag( ejectionOffset != sgDefaultEjectionOffset ) )
-		stream->writeInt((S32)(ejectionOffset * 100), 16);
-	stream->writeRangedU32((U32)thetaMin, 0, 180);
-	stream->writeRangedU32((U32)thetaMax, 0, 180);
-	if( stream->writeFlag( phiReferenceVel != sgDefaultPhiReferenceVel ) )
-		stream->writeRangedU32((U32)phiReferenceVel, 0, 360);
-	if( stream->writeFlag( phiVariance != sgDefaultPhiVariance ) )
-		stream->writeRangedU32((U32)phiVariance, 0, 360);
-
-	stream->write( softnessDistance );
-	stream->write( ambientFactor );
-
-	stream->writeFlag(overrideAdvance);
-	stream->writeFlag(orientParticles);
-	stream->writeFlag(orientOnVelocity);
-	stream->write( lifetimeMS );
-	stream->write( lifetimeVarianceMS );
-	stream->writeFlag(useEmitterSizes);
-	stream->writeFlag(useEmitterColors);
-
-	stream->write(dataBlockIds.size());
-	for (U32 i = 0; i < dataBlockIds.size(); i++)
-		stream->write(dataBlockIds[i]);
-	stream->writeFlag(sortParticles);
-	stream->writeFlag(reverseOrder);
-	if (stream->writeFlag(textureName != 0))
-		stream->writeString(textureName);
-
-	if (stream->writeFlag(alignParticles))
-	{
-		stream->write(alignDirection.x);
-		stream->write(alignDirection.y);
-		stream->write(alignDirection.z);
-	}
-	stream->writeFlag(highResOnly);
-	stream->writeFlag(renderReflection);
-	stream->writeInt( blendStyle, 4 );
-}
-
-//-----------------------------------------------------------------------------
-// unpackData
-//-----------------------------------------------------------------------------
-void ParticleEmitterData::unpackData(BitStream* stream)
-{
-	Parent::unpackData(stream);
-
-	ejectionPeriodMS = stream->readInt(10);
-	periodVarianceMS = stream->readInt(10);
-	ejectionVelocity = stream->readInt(16) / 100.0f;
-	velocityVariance = stream->readInt(14) / 100.0f;
-	if( stream->readFlag() )
-		ejectionOffset = stream->readInt(16) / 100.0f;
-	else
-		ejectionOffset = sgDefaultEjectionOffset;
-
-	thetaMin = (F32)stream->readRangedU32(0, 180);
-	thetaMax = (F32)stream->readRangedU32(0, 180);
-	if( stream->readFlag() )
-		phiReferenceVel = (F32)stream->readRangedU32(0, 360);
-	else
-		phiReferenceVel = sgDefaultPhiReferenceVel;
-
-	if( stream->readFlag() )
-		phiVariance = (F32)stream->readRangedU32(0, 360);
-	else
-		phiVariance = sgDefaultPhiVariance;
-
-	stream->read( &softnessDistance );
-	stream->read( &ambientFactor );
-
-	overrideAdvance = stream->readFlag();
-	orientParticles = stream->readFlag();
-	orientOnVelocity = stream->readFlag();
-	stream->read( &lifetimeMS );
-	stream->read( &lifetimeVarianceMS );
-	useEmitterSizes = stream->readFlag();
-	useEmitterColors = stream->readFlag();
-
-	U32 size; stream->read(&size);
-	dataBlockIds.setSize(size);
-	for (U32 i = 0; i < dataBlockIds.size(); i++)
-		stream->read(&dataBlockIds[i]);
-	sortParticles = stream->readFlag();
-	reverseOrder = stream->readFlag();
-	textureName = (stream->readFlag()) ? stream->readSTString() : 0;
-
-	alignParticles = stream->readFlag();
-	if (alignParticles)
-	{
-		stream->read(&alignDirection.x);
-		stream->read(&alignDirection.y);
-		stream->read(&alignDirection.z);
-	}
-	highResOnly = stream->readFlag();
-	renderReflection = stream->readFlag();
-	blendStyle = stream->readInt( 4 );
-}
-
-//-----------------------------------------------------------------------------
-// onAdd
-//-----------------------------------------------------------------------------
 bool ParticleEmitterData::onAdd()
 {
-	if( Parent::onAdd() == false )
+	if( !Parent::onAdd() )
 		return false;
-
-	//   if (overrideAdvance == true) {
-	//      Con::errorf(ConsoleLogEntry::General, "ParticleEmitterData: Not going to work.  Fix it!");
-	//      return false;
-	//   }
-
 	// Validate the parameters...
 	//
 	if( ejectionPeriodMS < 1 )
@@ -434,27 +216,7 @@ bool ParticleEmitterData::onAdd()
 		Con::warnf(ConsoleLogEntry::General, "ParticleEmitterData(%s) ejectionOffset < 0", getName());
 		ejectionOffset = 0.0f;
 	}
-	if( thetaMin < 0.0f )
-	{
-		Con::warnf(ConsoleLogEntry::General, "ParticleEmitterData(%s) thetaMin < 0.0", getName());
-		thetaMin = 0.0f;
-	}
-	if( thetaMax > 180.0f )
-	{
-		Con::warnf(ConsoleLogEntry::General, "ParticleEmitterData(%s) thetaMax > 180.0", getName());
-		thetaMax = 180.0f;
-	}
-	if( thetaMin > thetaMax )
-	{
-		Con::warnf(ConsoleLogEntry::General, "ParticleEmitterData(%s) thetaMin > thetaMax", getName());
-		thetaMin = thetaMax;
-	}
-	if( phiVariance < 0.0f || phiVariance > 360.0f )
-	{
-		Con::warnf(ConsoleLogEntry::General, "ParticleEmitterData(%s) invalid phiVariance", getName());
-		phiVariance = phiVariance < 0.0f ? 0.0f : 360.0f;
-	}
-
+	
 	if ( softnessDistance < 0.0f )
 	{
 		Con::warnf( ConsoleLogEntry::General, "ParticleEmitterData(%s) invalid softnessDistance", getName() );
@@ -487,7 +249,6 @@ bool ParticleEmitterData::onAdd()
 		Con::warnf(ConsoleLogEntry::General, "ParticleEmitterData(%s) lifetimeVarianceMS >= lifetimeMS", getName());
 		lifetimeVarianceMS = lifetimeMS;
 	}
-
 
 	// load the particle datablocks...
 	//
@@ -546,9 +307,6 @@ bool ParticleEmitterData::onAdd()
 	return true;
 }
 
-//-----------------------------------------------------------------------------
-// preload
-//-----------------------------------------------------------------------------
 bool ParticleEmitterData::preload(bool server, String &errorStr)
 {
 	if( Parent::preload(server, errorStr) == false )
@@ -616,6 +374,104 @@ bool ParticleEmitterData::preload(bool server, String &errorStr)
 	return true;
 }
 
+void ParticleEmitterData::packData(BitStream* stream)
+{
+	Parent::packData(stream);
+
+	stream->writeInt(ejectionPeriodMS, 10);
+	stream->writeInt(periodVarianceMS, 10);
+
+	stream->writeInt((S32)(ejectionVelocity * 100), 16);
+	stream->writeInt((S32)(velocityVariance * 100), 14);
+	if( stream->writeFlag( ejectionOffset != sgDefaultEjectionOffset ) )
+		stream->writeInt((S32)(ejectionOffset * 100), 16);
+
+	stream->write( softnessDistance );
+	stream->write( ambientFactor );
+
+	stream->writeFlag(overrideAdvance);
+	stream->writeFlag(orientParticles);
+	stream->writeFlag(orientOnVelocity);
+	stream->write( lifetimeMS );
+	stream->write( lifetimeVarianceMS );
+	stream->writeFlag(useEmitterSizes);
+	stream->writeFlag(useEmitterColors);
+
+	stream->write(dataBlockIds.size());
+	for (U32 i = 0; i < dataBlockIds.size(); i++)
+		stream->write(dataBlockIds[i]);
+	stream->writeFlag(sortParticles);
+	stream->writeFlag(reverseOrder);
+	if (stream->writeFlag(textureName != 0))
+		stream->writeString(textureName);
+
+	if (stream->writeFlag(alignParticles))
+	{
+		stream->write(alignDirection.x);
+		stream->write(alignDirection.y);
+		stream->write(alignDirection.z);
+	}
+	stream->writeFlag(highResOnly);
+	stream->writeFlag(renderReflection);
+	stream->writeInt( blendStyle, 4 );
+}
+
+void ParticleEmitterData::unpackData(BitStream* stream)
+{
+	Parent::unpackData(stream);
+
+	ejectionPeriodMS = stream->readInt(10);
+	periodVarianceMS = stream->readInt(10);
+
+	ejectionVelocity = stream->readInt(16) / 100.0f;
+	velocityVariance = stream->readInt(14) / 100.0f;
+	if( stream->readFlag() )
+		ejectionOffset = stream->readInt(16) / 100.0f;
+	else
+		ejectionOffset = sgDefaultEjectionOffset;
+
+	stream->read( &softnessDistance );
+	stream->read( &ambientFactor );
+
+	overrideAdvance = stream->readFlag();
+	orientParticles = stream->readFlag();
+	orientOnVelocity = stream->readFlag();
+	stream->read( &lifetimeMS );
+	stream->read( &lifetimeVarianceMS );
+	useEmitterSizes = stream->readFlag();
+	useEmitterColors = stream->readFlag();
+
+	U32 size; stream->read(&size);
+	dataBlockIds.setSize(size);
+	for (U32 i = 0; i < dataBlockIds.size(); i++)
+		stream->read(&dataBlockIds[i]);
+	sortParticles = stream->readFlag();
+	reverseOrder = stream->readFlag();
+	textureName = (stream->readFlag()) ? stream->readSTString() : 0;
+
+	alignParticles = stream->readFlag();
+	if (alignParticles)
+	{
+		stream->read(&alignDirection.x);
+		stream->read(&alignDirection.y);
+		stream->read(&alignDirection.z);
+	}
+	highResOnly = stream->readFlag();
+	renderReflection = stream->readFlag();
+	blendStyle = stream->readInt( 4 );
+}
+
+bool ParticleEmitterData::_setAlignDirection( void *object, const char *index, const char *data )
+{
+	ParticleEmitterData *p = static_cast<ParticleEmitterData*>( object );
+
+	Con::setData( TypePoint3F, &p->alignDirection, 0, 1, &data );
+	p->alignDirection.normalizeSafe();
+
+	// we already set the field
+	return false;
+}
+
 //-----------------------------------------------------------------------------
 // alloc PrimitiveBuffer
 // The datablock allocates this static index buffer because it's the same
@@ -676,12 +532,14 @@ void ParticleEmitterData::allocPrimBuffer( S32 overrideSize )
 	delete [] indices;
 }
 
-
 //-----------------------------------------------------------------------------
 // ParticleEmitter
 //-----------------------------------------------------------------------------
 ParticleEmitter::ParticleEmitter()
 {
+	// ParticleEmitter should be allocated on the client only.
+	mNetFlags.set( IsGhost );
+
 	mDeleteWhenEmpty  = false;
 	mDeleteOnTick     = false;
 
@@ -704,9 +562,6 @@ ParticleEmitter::ParticleEmitter()
 
 	mDead = false;
 
-	// ParticleEmitter should be allocated on the client only.
-	mNetFlags.set( IsGhost );
-
 	sticky = false;
 	ParticleCollision = false;
 	attractionrange = 50;
@@ -717,10 +572,13 @@ ParticleEmitter::ParticleEmitter()
 		Attraction_offset[i] = "0 0 0";
 		attractedObjectID[i] = "";
 	}
+
+	oldTime = 0;
+	parentNodePos = Point3F(0);
 }
 
 //-----------------------------------------------------------------------------
-// destructor
+// Destructor
 //-----------------------------------------------------------------------------
 ParticleEmitter::~ParticleEmitter()
 {
@@ -760,7 +618,6 @@ bool ParticleEmitter::onAdd()
 	return true;
 }
 
-
 //-----------------------------------------------------------------------------
 // onRemove
 //-----------------------------------------------------------------------------
@@ -770,10 +627,6 @@ void ParticleEmitter::onRemove()
 	Parent::onRemove();
 }
 
-
-//-----------------------------------------------------------------------------
-// onNewDataBlock
-//-----------------------------------------------------------------------------
 bool ParticleEmitter::onNewDataBlock( GameBaseData *dptr, bool reload )
 {
 	mDataBlock = dynamic_cast<ParticleEmitterData*>( dptr );
@@ -1132,12 +985,7 @@ void ParticleEmitter::emitParticles(const Point3F& start,
 //-----------------------------------------------------------------------------
 // emitParticles
 //-----------------------------------------------------------------------------
-void ParticleEmitter::emitParticles(const Point3F& start,
-	const Point3F& end,
-	const Point3F& axis,
-	const Point3F& velocity,
-	const U32      numMilliseconds,
-	ParticleEmitterNode* node)
+void ParticleEmitter::emitParticles( const U32 numMilliseconds, ParticleEmitterNode* node )
 {
 	if( mDead ) return;
 
@@ -1149,6 +997,17 @@ void ParticleEmitter::emitParticles(const Point3F& start,
 	{
 		return;
 	}
+	
+	Point3F start, end, axis, velocity;
+	Point3F emitPoint, emitVelocity;
+	Point3F emitAxis(0, 0, 1);
+	node->getTransform().mulV(emitAxis);
+	node->getTransform().getColumn(3, &emitPoint);
+	emitVelocity = emitAxis * node->getVelocity();
+	start = emitPoint;
+	end = emitPoint;
+	axis = emitAxis;
+	velocity = emitVelocity;
 
 	U32 currTime = 0;
 	bool particlesAdded = false;
@@ -1212,7 +1071,8 @@ void ParticleEmitter::emitParticles(const Point3F& start,
 					S32(mDataBlock->periodVarianceMS);
 			}
 		}
-		AssertFatal(nextTime > 0, "Error, next particle ejection time must always be greater than 0");
+		if(nextTime <= 0)
+			AssertFatal(nextTime > 0, "Error, next particle ejection time must always be greater than 0");
 
 		if( currTime + nextTime > numMilliseconds )
 		{
@@ -1379,153 +1239,6 @@ void ParticleEmitter::updateBBox()
 	boxScale.z = getMax(boxScale.z, 1.0f);
 	mBBObjToWorld.scale(boxScale);
 }
-
-//-----------------------------------------------------------------------------
-// addParticle
-//-----------------------------------------------------------------------------
-void ParticleEmitter::addParticle(const Point3F& pos,
-	const Point3F& axis,
-	const Point3F& vel,
-	const Point3F& axisx)
-{
-	n_parts++;
-	if (n_parts > n_part_capacity || n_parts > mDataBlock->partListInitSize)
-	{
-		// In an emergency we allocate additional particles in blocks of 16.
-		// This should happen rarely.
-		Particle* store_block = new Particle[16];
-		part_store.push_back(store_block);
-		n_part_capacity += 16;
-		for (S32 i = 0; i < 16; i++)
-		{
-			store_block[i].next = part_freelist;
-			part_freelist = &store_block[i];
-		}
-		mDataBlock->allocPrimBuffer(n_part_capacity); // allocate larger primitive buffer or will crash 
-	}
-	Particle* pNew = part_freelist;
-	part_freelist = pNew->next;
-	pNew->next = part_list_head.next;
-	part_list_head.next = pNew;
-
-	Point3F ejectionAxis = axis;
-
-	F32 theta = (mDataBlock->thetaMax - mDataBlock->thetaMin) * gRandGen.randF() +
-		mDataBlock->thetaMin;
-
-	F32 ref  = (F32(mInternalClock) / 1000.0) * mDataBlock->phiReferenceVel;
-	F32 phi  = ref + gRandGen.randF() * mDataBlock->phiVariance;
-
-	// Both phi and theta are in degs.  Create axis angles out of them, and create the
-	//  appropriate rotation matrix...
-	AngAxisF thetaRot(axisx, theta * (M_PI / 180.0));
-	AngAxisF phiRot(axis,    phi   * (M_PI / 180.0));
-
-	MatrixF temp(true);
-	thetaRot.setMatrix(&temp);
-	temp.mulP(ejectionAxis);
-	phiRot.setMatrix(&temp);
-	temp.mulP(ejectionAxis);
-
-	F32 initialVel = mDataBlock->ejectionVelocity;
-	initialVel    += (mDataBlock->velocityVariance * 2.0f * gRandGen.randF()) - mDataBlock->velocityVariance;
-
-	pNew->pos = pos + (ejectionAxis * mDataBlock->ejectionOffset);
-	pNew->vel = ejectionAxis * initialVel;
-	pNew->orientDir = ejectionAxis;
-	pNew->acc.set(0, 0, 0);
-	pNew->currentAge = 0;
-
-	// Choose a new particle datablack randomly from the list
-	U32 dBlockIndex = gRandGen.randI() % mDataBlock->particleDataBlocks.size();
-	mDataBlock->particleDataBlocks[dBlockIndex]->initializeParticle(pNew, vel);
-	updateKeyData( pNew );
-
-}
-
-void ParticleEmitter::addParticle(const Point3F& pos,
-	const Point3F& axis,
-	const Point3F& vel,
-	const Point3F& axisx,
-	ParticleEmitterNode* nodeDat)
-{
-	n_parts++;
-	if (n_parts > n_part_capacity || n_parts > mDataBlock->partListInitSize)
-	{
-		// In an emergency we allocate additional particles in blocks of 16.
-		// This should happen rarely.
-		Particle* store_block = new Particle[16];
-		part_store.push_back(store_block);
-		n_part_capacity += 16;
-		for (S32 i = 0; i < 16; i++)
-		{
-			store_block[i].next = part_freelist;
-			part_freelist = &store_block[i];
-		}
-		mDataBlock->allocPrimBuffer(n_part_capacity); // allocate larger primitive buffer or will crash 
-	}
-	Particle* pNew = part_freelist;
-	part_freelist = pNew->next;
-	pNew->next = part_list_head.next;
-	part_list_head.next = pNew;
-
-	Point3F ejectionAxis = axis;
-	F32 ref;
-	F32 phi;
-	F32 theta;
-
-	if(nodeDat->standAloneEmitter)
-	{
-		theta = (nodeDat->sa_thetaMax - nodeDat->sa_thetaMin) * gRandGen.randF() +
-			nodeDat->sa_thetaMin;
-		ref  = (F32(mInternalClock) / 1000.0) * nodeDat->sa_phiReferenceVel;
-		phi  = ref + gRandGen.randF() * nodeDat->sa_phiVariance;
-	}
-	else{
-		theta = (mDataBlock->thetaMax - mDataBlock->thetaMin) * gRandGen.randF() +
-			mDataBlock->thetaMin;
-
-		ref  = (F32(mInternalClock) / 1000.0) * mDataBlock->phiReferenceVel;
-		phi  = ref + gRandGen.randF() * mDataBlock->phiVariance;
-	}
-
-	// Both phi and theta are in degs.  Create axis angles out of them, and create the
-	//  appropriate rotation matrix...
-	AngAxisF thetaRot(axisx, theta * (M_PI / 180.0));
-	AngAxisF phiRot(axis,    phi   * (M_PI / 180.0));
-
-	MatrixF temp(true);
-	thetaRot.setMatrix(&temp);
-	temp.mulP(ejectionAxis);
-	phiRot.setMatrix(&temp);
-	temp.mulP(ejectionAxis);
-	F32 initialVel;
-	if(nodeDat->standAloneEmitter)
-	{
-		initialVel = nodeDat->sa_ejectionVelocity;
-		initialVel    += (nodeDat->sa_velocityVariance * 2.0f * gRandGen.randF()) - nodeDat->sa_velocityVariance;
-	}
-	else
-	{
-		initialVel = mDataBlock->ejectionVelocity;
-		initialVel    += (mDataBlock->velocityVariance * 2.0f * gRandGen.randF()) - mDataBlock->velocityVariance;
-	}
-	if(nodeDat->standAloneEmitter)
-		pNew->pos = pos + (ejectionAxis * nodeDat->sa_ejectionOffset);
-	else
-		pNew->pos = pos + (ejectionAxis * mDataBlock->ejectionOffset);
-	pNew->vel = ejectionAxis * initialVel;
-	pNew->orientDir = ejectionAxis;
-	pNew->acc.set(0, 0, 0);
-	pNew->currentAge = 0;
-
-	// Choose a new particle datablack randomly from the list
-	U32 dBlockIndex = gRandGen.randI() % mDataBlock->particleDataBlocks.size();
-	mDataBlock->particleDataBlocks[dBlockIndex]->initializeParticle(pNew, vel);
-	updateKeyData( pNew );
-
-}
-
 
 //-----------------------------------------------------------------------------
 // processTick

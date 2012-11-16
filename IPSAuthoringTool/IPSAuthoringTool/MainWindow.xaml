@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<Controls:MetroWindow x:Class="IPSAuthoringTool.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -136,3 +137,146 @@
         <Dialogs:AlertDialog x:Name="AlertControl" Visibility="Hidden" />
     </Grid>
 </Controls:MetroWindow>
+=======
+﻿<Controls:MetroWindow x:Class="IPSAuthoringTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:Dialogs="clr-namespace:IPSAuthoringTool.Dialogs"
+        Title="MainWindow" Height="566" Width="700" ResizeMode="NoResize" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Closing="MetroWindow_Closing_1">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+                <ResourceDictionary Source="Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="mainGrid">
+        <Grid x:Name="ModalDialogParent">
+            <TabControl x:Name="MainTabControl" Height="{Binding ElementName=mainGrid, Path=ActualHeight}" Width="{Binding ElementName=mainGrid, Path=ActualWidth}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                <TabItem Header="Effects" Name="EffectsTab" IsSelected="True" PreviewMouseDown="EffectsTab_MouseDown" MouseDown="EffectsTab_MouseDown">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="44*" />
+                            <ColumnDefinition x:Name="r_colTab1" Width="13*" />
+                        </Grid.ColumnDefinitions>
+                        <Controls:Panorama Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                       Name="EffectPan" HeaderFontColor="Black" Margin="0,0,7,0" Grid.RowSpan="2" />
+                        <GridSplitter Height="{Binding ElementName=MainTabControl, Path=ActualHeight}" HorizontalAlignment="Stretch" Margin="0,-1,1,-56" Name="gridSplitter1" VerticalAlignment="Top" Grid.Column="1" Grid.RowSpan="2" />
+                        <Rectangle Fill="Black" Width="32" Height="32" Style="{Binding Source={StaticResource AccentColor4}}" Grid.Column="1" Margin="20,15,0,434" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_new}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+
+                        <Rectangle Fill="Black" Width="32" Height="32" Style="{Binding Source={StaticResource AccentColor4}}" Grid.Column="1" Margin="19,53,0,396" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_add}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+
+                        <Rectangle Fill="Black" Width="32" Height="32" Style="{Binding Source={StaticResource AccentColor4}}" Grid.Column="1" Margin="19,89,0,360" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_delete}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                        <Button Content="Create Effect" Grid.Column="1" Height="31" HorizontalAlignment="Left" Margin="57,15,0,0" Name="CreateEffectButton" VerticalAlignment="Top" Width="83" Click="CreateEffectButton_Click" />
+                        <Button Content="Load Effect" Grid.Column="1" Height="31" HorizontalAlignment="Left" Margin="57,51,0,0" Name="LoadEffectButton" VerticalAlignment="Top" Width="83" Click="LoadEffectButton_Click" />
+                        <Button Content="Delete Effect" Height="31" HorizontalAlignment="Left" Margin="57,87,0,0" Name="DeleteEffectButton" VerticalAlignment="Top" Width="83" Grid.Column="1" Click="DeleteEffectButton_Click" />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Emitters" Name="EmittersTab" IsEnabled="False" PreviewMouseDown="EmittersTab_MouseDown" MouseDown="EmittersTab_MouseDown" Margin="0,2,0,-2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="44*" />
+                            <ColumnDefinition x:Name="r_colTab2" Width="13*" />
+                        </Grid.ColumnDefinitions>
+                        <Controls:Panorama Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                           ItemBox="160" Name="EmitterPan" HeaderFontColor="Black" Margin="0,0,7,0" Grid.RowSpan="2" />
+                        <GridSplitter Height="{Binding ElementName=MainTabControl, Path=ActualHeight}" HorizontalAlignment="Stretch" Margin="0,-1,1,-56" Name="EmitterSplitter" VerticalAlignment="Top" Grid.Column="1" Grid.RowSpan="2" />
+                        <Rectangle Fill="Black" Width="32" Height="32" Style="{Binding Source={StaticResource AccentColor4}}" Grid.Column="1" Margin="21,14,0,435" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_new}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+
+                        <Rectangle Fill="Black" Width="32" Height="32" Style="{Binding Source={StaticResource AccentColor4}}" Grid.Column="1" Margin="20,54,0,395" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_delete}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                        <Button Content="Create Emitter" Grid.Column="1" Height="31" HorizontalAlignment="Left" Margin="57,15,0,0" Name="CreateEmitterButton" VerticalAlignment="Top" Width="91" Click="CreateEmitterButton_Click" />
+                        <Button Content="Delete Emitter" Height="31" HorizontalAlignment="Left" Margin="57,53,0,0" Name="DeleteEmitterButton" VerticalAlignment="Top" Width="91" Grid.Column="1" Click="DeleteEmitterButton_Click" />
+                        <Rectangle Fill="Black" Margin="20,92,0,357" Style="{Binding Source={StaticResource AccentColor4}}" Width="32" Height="32" Grid.Column="1" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                        <Button Content="Save Effect" Height="31" HorizontalAlignment="Left" Margin="57,92,0,0" Name="SaveEffectButton" VerticalAlignment="Top" Width="91" Grid.Column="1" Click="SaveEffectButton_Click" />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="EmitterType" Name="selEmitterTab" IsEnabled="False" PreviewMouseDown="selEmitterTab_MouseDown" MouseDown="selEmitterTab_MouseDown" Margin="0,3,0,-3">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="44*" />
+                            <ColumnDefinition x:Name="r_colTab3" Width="13*" />
+                        </Grid.ColumnDefinitions>
+                        <Controls:Panorama HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                       ItemBox="190" Name="ValuesPan" HeaderFontColor="Black" Margin="0,0,7,0" />
+                        <GridSplitter Height="{Binding ElementName=MainTabControl, Path=ActualHeight}" HorizontalAlignment="Stretch" Margin="0,-1,1,-56" Name="ValueSplitter" VerticalAlignment="Top" Grid.Column="1" Grid.RowSpan="2" />
+                        <Rectangle Fill="Black" Width="32" Height="32" Style="{Binding Source={StaticResource AccentColor4}}" Grid.Column="1" Margin="20,15,0,434" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_new}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+
+                        <Rectangle Fill="Black" Width="32" Height="32" Style="{Binding Source={StaticResource AccentColor4}}" Grid.Column="1" Margin="20,57,0,392" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_delete}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                        <Button Content="Add Value" Grid.Column="1" Height="31" HorizontalAlignment="Left" Margin="57,15,0,0" Name="CreateValueButton" VerticalAlignment="Top" Width="83" Click="AddValueButton_Click" />
+                        <Button Content="Delete Value" Height="31" HorizontalAlignment="Left" Margin="58,55,0,0" Name="DeleteValueButton" VerticalAlignment="Top" Width="83" Grid.Column="1" Click="RemoveValueButton_Click" />
+                        <Rectangle Fill="Black" Margin="20,95,0,354" Style="{Binding Source={StaticResource AccentColor4}}" Width="32" Height="32" Grid.Column="1" HorizontalAlignment="Left">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                        <Button Content="Save Emitter" Height="31" HorizontalAlignment="Left" Margin="58,94,0,0" Name="SaveEmitterButton" VerticalAlignment="Top" Width="83" Grid.Column="1" Click="SaveEmitterButton_Click" />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Value" Name="selValueTab" IsEnabled="False" >
+                    <Grid Margin="0,2,0,-2">
+                        <ComboBox x:Name="ValueTypeBox" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Width="120"/>
+                        <Label Content="Value type:" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top"/>
+                        <Controls:ToggleSwitch x:Name="EaseCheckBox" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" Content="Ease: " Height="39" Checked="EaseCheckBox_CheckChange" Unchecked="EaseCheckBox_CheckChange" />
+                        <TextBox x:Name="DeltaTextBox" Controls:TextboxHelper.Watermark="Delta value" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="10,149,0,0" RenderTransformOrigin="0.025,-2.385"/>
+                        <ListView x:Name="PointList" HorizontalAlignment="Left" Height="428" Margin="221,41,0,0" VerticalAlignment="Top" Width="453">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Label Content="Points:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="221,5,0,0" FontSize="16"/>
+                        <Button Content="Add point" HorizontalAlignment="Left" VerticalAlignment="Top" Width="83" Margin="591,10,0,0"/>
+                        <Label Content="Raise value with:" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
+                        <Grid x:Name="GraphContainer" HorizontalAlignment="Left" Height="164" Margin="10,236,0,0" VerticalAlignment="Top" Width="164"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Dialogs:ItemInputDialog x:Name="ItemInputControl" Visibility="Hidden" />
+        <Dialogs:StringInputDialog x:Name="StringInputControl" Visibility="Hidden" />
+        <Dialogs:VectorInputDialog x:Name="VectorInputControl" Visibility="Hidden" />
+        <Dialogs:TimeInputDialog x:Name="TimeInputControl" Visibility="Hidden" />
+        <Dialogs:AlertDialog x:Name="AlertControl" Visibility="Hidden" />
+    </Grid>
+</Controls:MetroWindow>
+>>>>>>> 627d2adcc4f311b89e4202439bfe9eb3588f32e1

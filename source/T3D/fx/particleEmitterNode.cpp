@@ -1,8 +1,3 @@
-//-----------------------------------------------------------------------------
-// Torque
-// Copyright GarageGames, LLC 2011
-//-----------------------------------------------------------------------------
-
 #include "particleEmitterNode.h"
 #include "console/consoleTypes.h"
 #include "core/stream/bitStream.h"
@@ -11,47 +6,8 @@
 #include "sim/netConnection.h"
 #include "console/engineAPI.h"
 
-IMPLEMENT_CO_DATABLOCK_V1(ParticleEmitterNodeData);
-IMPLEMENT_CO_NETOBJECT_V1(ParticleEmitterNode);
-
-ConsoleDocClass( ParticleEmitterNodeData,
-	"@brief Contains additional data to be associated with a ParticleEmitterNode."
-	"@ingroup FX\n"
-	);
-
-ConsoleDocClass( ParticleEmitterNode,
-	"@brief A particle emitter object that can be positioned in the world and "
-	"dynamically enabled or disabled.\n\n"
-
-	"@tsexample\n"
-	"datablock ParticleEmitterNodeData( SimpleEmitterNodeData )\n"
-	"{\n"
-	"   timeMultiple = 1.0;\n"
-	"};\n\n"
-
-	"%emitter = new ParticleEmitterNode()\n"
-	"{\n"
-	"   datablock = SimpleEmitterNodeData;\n"
-	"   active = true;\n"
-	"   emitter = FireEmitterData;\n"
-	"   velocity = 3.5;\n"
-	"};\n\n"
-
-	"// Dynamically change emitter datablock\n"
-	"%emitter.setEmitterDataBlock( DustEmitterData );\n"
-	"@endtsexample\n"
-
-	"@note To change the emitter field dynamically (after the ParticleEmitterNode "
-	"object has been created) you must use the setEmitterDataBlock() method or the "
-	"change will not be replicated to other clients in the game.\n"
-	"Similarly, use the setActive() method instead of changing the active field "
-	"directly. When changing velocity, you need to toggle setActive() on and off "
-	"to force the state change to be transmitted to other clients.\n\n"
-
-	"@ingroup FX\n"
-	"@see ParticleEmitterNodeData\n"
-	"@see ParticleEmitterData\n"
-	);
+//IMPLEMENT_CO_DATABLOCK_V1(ParticleEmitterNodeData);
+//IMPLEMENT_CONOBJECT(ParticleEmitterNode);
 
 typedef ParticleEmitterNode::EnumAttractionMode pAttractionMode;
 DefineEnumType( pAttractionMode );
@@ -90,22 +46,12 @@ ParticleEmitterNodeData::ParticleEmitterNodeData()
 	sa_ejectionVelocity = 2.0f;   // From 1.0 - 3.0 meters per sec
 	sa_velocityVariance = 1.0f;
 	sa_ejectionOffset   = 0.0f;   // ejection from the emitter point
-
-	sa_thetaMin         = 0.0f;   // All heights
-	sa_thetaMax         = 90.0f;
-
-	sa_phiReferenceVel  = 0.0f;   // All directions
-	sa_phiVariance      = 180.0f;
 }
 
 ParticleEmitterNodeData::~ParticleEmitterNodeData()
 {
-
 }
 
-//-----------------------------------------------------------------------------
-// initPersistFields
-//-----------------------------------------------------------------------------
 void ParticleEmitterNodeData::initPersistFields()
 {
 	addField( "timeMultiple", TYPEID< F32 >(), Offset(timeMultiple, ParticleEmitterNodeData),
@@ -126,7 +72,7 @@ void ParticleEmitterNodeData::initPersistFields()
 
 	addField("sa_periodVarianceMS", TYPEID< S32 >(), Offset(sa_periodVarianceMS,   ParticleEmitterNodeData),
 		"Variance in ejection period, from 1 - ejectionPeriodMS." );
-
+	
 	addField( "sa_ejectionVelocity", TYPEID< F32 >(), Offset(sa_ejectionVelocity, ParticleEmitterNodeData),
 		"Particle ejection velocity." );
 
@@ -135,18 +81,6 @@ void ParticleEmitterNodeData::initPersistFields()
 
 	addField( "sa_ejectionOffset", TYPEID< F32 >(), Offset(sa_ejectionOffset, ParticleEmitterNodeData),
 		"Distance along ejection Z axis from which to eject particles." );
-
-	addField( "sa_thetaMin", TYPEID< F32 >(), Offset(sa_thetaMin, ParticleEmitterNodeData),
-		"Minimum angle, from the horizontal plane, to eject from." );
-
-	addField( "sa_thetaMax", TYPEID< F32 >(), Offset(sa_thetaMax, ParticleEmitterNodeData),
-		"Maximum angle, from the horizontal plane, to eject particles from." );
-
-	addField( "sa_phiReferenceVel", TYPEID< F32 >(), Offset(sa_phiReferenceVel, ParticleEmitterNodeData),
-		"Reference angle, from the vertical plane, to eject particles from." );
-
-	addField( "sa_phiVariance", TYPEID< F32 >(), Offset(sa_phiVariance, ParticleEmitterNodeData),
-		"Variance from the reference angle, from 0 - 360." );
 
 	endGroup( "Independent emitters" );
 
@@ -175,40 +109,27 @@ void ParticleEmitterNodeData::initPersistFields()
 	Parent::initPersistFields();
 }
 
-//-----------------------------------------------------------------------------
-// onAdd
-//-----------------------------------------------------------------------------
 bool ParticleEmitterNodeData::onAdd()
 {
 	if( !Parent::onAdd() )
 		return false;
+	return true;
+}
 
+bool ParticleEmitterNodeData::preload(bool server, String &errorStr)
+{
+	if( Parent::preload(server, errorStr) == false )
+		return false;
+	// Verify variables
 	if( timeMultiple < 0.01 || timeMultiple > 100 )
 	{
 		Con::warnf("ParticleEmitterNodeData::onAdd(%s): timeMultiple must be between 0.01 and 100", getName());
 		timeMultiple = timeMultiple < 0.01 ? 0.01 : 100;
 	}
 
-
 	return true;
 }
 
-
-//-----------------------------------------------------------------------------
-// preload
-//-----------------------------------------------------------------------------
-bool ParticleEmitterNodeData::preload(bool server, String &errorStr)
-{
-	if( Parent::preload(server, errorStr) == false )
-		return false;
-
-	return true;
-}
-
-
-//-----------------------------------------------------------------------------
-// packData
-//-----------------------------------------------------------------------------
 void ParticleEmitterNodeData::packData(BitStream* stream)
 {
 	Parent::packData(stream);
@@ -216,20 +137,15 @@ void ParticleEmitterNodeData::packData(BitStream* stream)
 	stream->write(timeMultiple);
 
 	stream->writeFlag(standAloneEmitter);
+
 	stream->writeInt(sa_ejectionPeriodMS, 10);
 	stream->writeInt(sa_periodVarianceMS, 10);
+
 	stream->writeInt((S32)(sa_ejectionVelocity * 100), 16);
 	stream->writeInt((S32)(sa_velocityVariance * 100), 14);
 	stream->writeInt((S32)(sa_ejectionOffset * 100), 16);
-	stream->writeRangedU32((U32)sa_thetaMin, 0, 180);
-	stream->writeRangedU32((U32)sa_thetaMax, 0, 180);
-	stream->writeRangedU32((U32)sa_phiReferenceVel, 0, 360);
-	stream->writeRangedU32((U32)sa_phiVariance, 0, 360);
 }
 
-//-----------------------------------------------------------------------------
-// unpackData
-//-----------------------------------------------------------------------------
 void ParticleEmitterNodeData::unpackData(BitStream* stream)
 {
 	Parent::unpackData(stream);
@@ -240,23 +156,17 @@ void ParticleEmitterNodeData::unpackData(BitStream* stream)
 
 	sa_ejectionPeriodMS = stream->readInt(10);
 	sa_periodVarianceMS = stream->readInt(10);
+	
 	sa_ejectionVelocity = stream->readInt(16) / 100.0f;
 	sa_velocityVariance = stream->readInt(14) / 100.0f;
 	sa_ejectionOffset = stream->readInt(16) / 100.0f;
-
-	sa_thetaMin = (F32)stream->readRangedU32(0, 180);
-	sa_thetaMax = (F32)stream->readRangedU32(0, 180);
-	sa_phiReferenceVel = (F32)stream->readRangedU32(0, 360);
-	sa_phiVariance = (F32)stream->readRangedU32(0, 360);
 }
-
 
 //-----------------------------------------------------------------------------
 // ParticleEmitterNode
 //-----------------------------------------------------------------------------
 ParticleEmitterNode::ParticleEmitterNode()
 {
-	// Todo: ScopeAlways?
 	mNetFlags.set(ScopeAlways | Ghostable);
 	mTypeMask |= EnvironmentObjectType;
 
@@ -277,12 +187,6 @@ ParticleEmitterNode::ParticleEmitterNode()
 	sa_velocityVariance = 1.0f;
 	sa_ejectionOffset   = 0.0f;   // ejection from the emitter point
 
-	sa_thetaMin         = 0.0f;   // All heights
-	sa_thetaMax         = 90.0f;
-
-	sa_phiReferenceVel  = 0.0f;   // All directions
-	sa_phiVariance      = 180.0f;
-
 	sticky = false;
 	ParticleCollision = false;
 	attractionrange = 50;
@@ -295,17 +199,10 @@ ParticleEmitterNode::ParticleEmitterNode()
 	}
 }
 
-//-----------------------------------------------------------------------------
-// Destructor
-//-----------------------------------------------------------------------------
 ParticleEmitterNode::~ParticleEmitterNode()
 {
-	//
 }
 
-//-----------------------------------------------------------------------------
-// initPersistFields
-//-----------------------------------------------------------------------------
 void ParticleEmitterNode::initPersistFields()
 {
 	addField( "active", TYPEID< bool >(), Offset(mActive,ParticleEmitterNode),
@@ -337,18 +234,6 @@ void ParticleEmitterNode::initPersistFields()
 	addField( "sa_ejectionOffset", TYPEID< F32 >(), Offset(sa_ejectionOffset, ParticleEmitterNode),
 		"Distance along ejection Z axis from which to eject particles." );
 
-	addField( "sa_thetaMin", TYPEID< F32 >(), Offset(sa_thetaMin, ParticleEmitterNode),
-		"Minimum angle, from the horizontal plane, to eject from." );
-
-	addField( "sa_thetaMax", TYPEID< F32 >(), Offset(sa_thetaMax, ParticleEmitterNode),
-		"Maximum angle, from the horizontal plane, to eject particles from." );
-
-	addField( "sa_phiReferenceVel", TYPEID< F32 >(), Offset(sa_phiReferenceVel, ParticleEmitterNode),
-		"Reference angle, from the vertical plane, to eject particles from." );
-
-	addField( "sa_phiVariance", TYPEID< F32 >(), Offset(sa_phiVariance, ParticleEmitterNode),
-		"Variance from the reference angle, from 0 - 360." );
-
 	endGroup( "Independent emitters" );
 
 	addGroup( "Physics" );
@@ -379,9 +264,6 @@ void ParticleEmitterNode::initPersistFields()
 	Parent::initPersistFields();
 }
 
-//-----------------------------------------------------------------------------
-// onAdd
-//-----------------------------------------------------------------------------
 bool ParticleEmitterNode::onAdd()
 {
 	if( !Parent::onAdd() )
@@ -410,9 +292,6 @@ bool ParticleEmitterNode::onAdd()
 	return true;
 }
 
-//-----------------------------------------------------------------------------
-// onRemove
-//-----------------------------------------------------------------------------
 void ParticleEmitterNode::onRemove()
 {
 	removeFromScene();
@@ -448,18 +327,13 @@ bool ParticleEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 	ParticleCollision = mDataBlock->ParticleCollision;
 
 	standAloneEmitter = mDataBlock->standAloneEmitter;
+
 	sa_ejectionPeriodMS = mDataBlock->sa_ejectionPeriodMS;
 	sa_periodVarianceMS = mDataBlock->sa_periodVarianceMS;
 
 	sa_ejectionVelocity = mDataBlock->sa_ejectionVelocity;
 	sa_velocityVariance = mDataBlock->sa_velocityVariance;
 	sa_ejectionOffset = mDataBlock->sa_ejectionOffset;
-
-	sa_thetaMin = mDataBlock->sa_thetaMin;
-	sa_thetaMax = mDataBlock->sa_thetaMax;
-
-	sa_phiReferenceVel = mDataBlock->sa_phiReferenceVel;
-	sa_phiVariance = mDataBlock->sa_phiVariance;
 
 	if(mEmitter)
 	{
@@ -493,14 +367,6 @@ bool ParticleEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 			sa_velocityVariance = atoi(const_cast<char*>(initialValues[i+1].c_str()));
 		if(strcmp("sa_ejectionOffset",initialValues[i].c_str()) == 0)
 			sa_ejectionOffset = atof(const_cast<char*>(initialValues[i+1].c_str()));
-		if(strcmp("sa_phiReferenceVel",initialValues[i].c_str()) == 0)
-			sa_phiReferenceVel = atoi(const_cast<char*>(initialValues[i+1].c_str()));
-		if(strcmp("sa_phiVariance",initialValues[i].c_str()) == 0)
-			sa_phiVariance = atoi(const_cast<char*>(initialValues[i+1].c_str()));
-		if(strcmp("sa_thetaMax",initialValues[i].c_str()) == 0)
-			sa_thetaMax = atoi(const_cast<char*>(initialValues[i+1].c_str()));
-		if(strcmp("sa_thetaMin",initialValues[i].c_str()) == 0)
-			sa_thetaMin = atof(const_cast<char*>(initialValues[i+1].c_str()));
 		if(strcmp("Attraction_offset",initialValues[i].c_str()) == 0)
 		{
 			Attraction_offset[0] = const_cast<char*>(initialValues[i+1].c_str());
@@ -532,16 +398,12 @@ bool ParticleEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 	return true;
 }
 
-//-----------------------------------------------------------------------------
 void ParticleEmitterNode::inspectPostApply()
 {
 	Parent::inspectPostApply();
 	setMaskBits(StateMask | EmitterDBMask);
 }
 
-//-----------------------------------------------------------------------------
-// advanceTime
-//-----------------------------------------------------------------------------
 void ParticleEmitterNode::processTick(const Move* move)
 {
 	Parent::processTick(move);
@@ -558,22 +420,12 @@ void ParticleEmitterNode::advanceTime(F32 dt)
 {
 	Parent::advanceTime(dt);
 
-	if(!mActive || mEmitter.isNull() || !mDataBlock)
+	if(!mActive || !mEmitter->isProperlyAdded() || !mDataBlock)
 		return;
 
-	Point3F emitPoint, emitVelocity;
-	Point3F emitAxis(0, 0, 1);
-	getTransform().mulV(emitAxis);
-	getTransform().getColumn(3, &emitPoint);
-	emitVelocity = emitAxis * mVelocity;
-	mEmitter->emitParticles(emitPoint, emitPoint,
-		emitAxis,
-		emitVelocity, (U32)(dt * mDataBlock->timeMultiple * 1000.0f), this);
+	//mEmitter->emitParticles( (U32)(dt * mDataBlock->timeMultiple * 1000.0f), this );
 }
 
-//-----------------------------------------------------------------------------
-// packUpdate
-//-----------------------------------------------------------------------------
 U32 ParticleEmitterNode::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
 {
 	U32 retMask = Parent::packUpdate(con, mask, stream);
@@ -604,13 +456,10 @@ U32 ParticleEmitterNode::packUpdate(NetConnection* con, U32 mask, BitStream* str
 	{
 		stream->writeInt(sa_ejectionPeriodMS, 10);
 		stream->writeInt(sa_periodVarianceMS, 10);
+		
 		stream->writeInt((S32)(sa_ejectionVelocity * 100), 16);
 		stream->writeInt((S32)(sa_velocityVariance * 100), 14);
 		stream->writeInt((S32)(sa_ejectionOffset * 100), 16);
-		stream->writeRangedU32((U32)sa_thetaMin, 0, 180);
-		stream->writeRangedU32((U32)sa_thetaMax, 0, 180);
-		stream->writeRangedU32((U32)sa_phiReferenceVel, 0, 360);
-		stream->writeRangedU32((U32)sa_phiVariance, 0, 360);
 
 		stream->writeFlag(sticky);
 		stream->writeFlag(ParticleCollision);
@@ -627,9 +476,6 @@ U32 ParticleEmitterNode::packUpdate(NetConnection* con, U32 mask, BitStream* str
 	return retMask;
 }
 
-//-----------------------------------------------------------------------------
-// unpackUpdate
-//-----------------------------------------------------------------------------
 void ParticleEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 {
 	Parent::unpackUpdate(con, stream);
@@ -667,14 +513,10 @@ void ParticleEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 	{
 		sa_ejectionPeriodMS = stream->readInt(10);
 		sa_periodVarianceMS = stream->readInt(10);
+
 		sa_ejectionVelocity = stream->readInt(16) / 100.0f;
 		sa_velocityVariance = stream->readInt(14) / 100.0f;
 		sa_ejectionOffset = stream->readInt(16) / 100.0f;
-
-		sa_thetaMin = (F32)stream->readRangedU32(0, 180);
-		sa_thetaMax = (F32)stream->readRangedU32(0, 180);
-		sa_phiReferenceVel = (F32)stream->readRangedU32(0, 360);
-		sa_phiVariance = (F32)stream->readRangedU32(0, 360);
 
 		sticky = stream->readFlag();
 		ParticleCollision = stream->readFlag();
@@ -719,7 +561,7 @@ void ParticleEmitterNode::setEmitterDataBlock(ParticleEmitterData* data)
 		if ( data )
 		{
 			// Create emitter with new datablock
-			pEmitter = new ParticleEmitter;
+			pEmitter = data->createEmitter();
 			pEmitter->onNewDataBlock( data, false );
 			if( pEmitter->registerObject() == false )
 			{
@@ -757,13 +599,10 @@ void ParticleEmitterNode::onStaticModified(const char* slotName, const char*newV
 	if(strcmp(slotName, "sa_ejectionOffset") == 0 ||
 		strcmp(slotName, "sa_ejectionPeriodMS") == 0 ||
 		strcmp(slotName, "sa_periodVarianceMS") == 0 ||
-		strcmp(slotName, "standAloneEmitter") == 0 ||
+		strcmp(slotName, "sa_ejectionOffset") == 0 ||
 		strcmp(slotName, "sa_ejectionVelocity") == 0 ||
 		strcmp(slotName, "sa_velocityVariance") == 0 ||
-		strcmp(slotName, "sa_thetaMin") == 0 ||
-		strcmp(slotName, "sa_thetaMax") == 0 ||
-		strcmp(slotName, "sa_phiReferenceVel") == 0 ||
-		strcmp(slotName, "sa_phiVariance") == 0||
+		strcmp(slotName, "standAloneEmitter") == 0 ||
 		strcmp(slotName, "attracted") == 0 ||
 		strcmp(slotName, "attractionrange") == 0 ||
 		strcmp(slotName, "Attraction_offset") == 0 ||
@@ -814,36 +653,11 @@ void ParticleEmitterNode::onStaticModified(const char* slotName, const char*newV
 			initialValues.push_back(std::string(newValue));
 		}
 	}
-
-	if(strcmp(slotName, "attractedObjectID") == 0)
-	{
-		for(int i = 0; i < attrobjectCount; i++)
-		{
-			attractedObjectID[i] = StringTableEntry(attractedObjectID[i]);
-		}
-	}
 }
 
 void ParticleEmitterNode::onDynamicModified(const char* slotName, const char*newValue)
 {
 
-}
-
-DefineEngineMethod(ParticleEmitterNode, setEmitterDataBlock, void, (ParticleEmitterData* emitterDatablock), (0),
-	"Assigns the datablock for this emitter node.\n"
-	"@param emitterDatablock ParticleEmitterData datablock to assign\n"
-	"@tsexample\n"
-	"// Assign a new emitter datablock\n"
-	"%emitter.setEmitterDatablock( %emitterDatablock );\n"
-	"@endtsexample\n" )
-{
-	if ( !emitterDatablock )
-	{
-		Con::errorf("ParticleEmitterData datablock could not be found when calling setEmitterDataBlock in particleEmitterNode.");
-		return;
-	}
-
-	object->setEmitterDataBlock(emitterDatablock);
 }
 
 DefineEngineMethod(ParticleEmitterNode, setActive, void, (bool active),,

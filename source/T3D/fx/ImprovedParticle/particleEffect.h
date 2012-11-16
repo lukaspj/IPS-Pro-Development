@@ -113,7 +113,7 @@ public:
 	void unpackUpdate(NetConnection *conn,           BitStream* stream);
 
 private:
-	void setValue(emitterNode node, std::string value, F32 newValue);
-	F32 getValue(emitterNode node, std::string value);
+	void setValue(emitterNode *node, pEffectReader::valueType value, F32 newValue);
+	F32 getValue(emitterNode node, pEffectReader::valueType value);
 };
 #endif // _PARTICLEEFFECT_H_

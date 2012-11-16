@@ -28,18 +28,42 @@
 #endif
 #include "math\mPoint2.h"
 
+#ifndef _SIMOBJECT_H_
+#include "console/simObject.h"
+#endif
+
+#ifndef _GAMEBASE_H_
+#include "T3D/gameBase/gameBase.h"
+#endif
+
 //--------------------------------------------------------------------------
-class PixelMask
+class PixelMask : public GameBaseData
 {
+	typedef GameBaseData Parent;
+
 private:
+	U8 Treshold;
 	U32 Height;
 	U32 Width;
 	Vector<Point2I> pixels;
+	FileName thePath;
 public:
 	void compile(const Torque::Path &path);
 	void loadFromImage(const Torque::Path &path, U8 Treshold);
 	void loadFromCompiledFile(const Torque::Path &path);
 	Point2F getRandomUnitPixel();
+	
+	// SimObject
+   virtual bool onAdd();
+   virtual void onRemove();
+
+   // ConsoleObject
+   static void initPersistFields();
+
+   PixelMask();
+   ~PixelMask();
+
+	DECLARE_CONOBJECT(PixelMask);
 };
 
 #endif // _PIXELMASK_H_
