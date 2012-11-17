@@ -254,7 +254,7 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 	const Point3F& axisx,
 	ParticleEmitterNode* pnodeDat)
 {
-	PROFILE_SCOPE(GraphEmitAddPart);
+	PROFILE_SCOPE(MaskEmitAddPart);
 	IPSBenchmarkBegin;
 	MaskEmitterNode* nodeDat = static_cast<MaskEmitterNode*>(pnodeDat);
 	MaskEmitterData* DataBlock = getDataBlock();
@@ -357,6 +357,8 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 
 void MaskEmitter::onStaticModified(const char* slotName, const char*newValue)
 {
+	/*if(strcmp(slotName, "radius"))
+		setMaskBits();*/
 	Parent::onStaticModified(slotName, newValue);
 }
 

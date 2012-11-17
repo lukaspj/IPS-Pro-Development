@@ -178,8 +178,7 @@ public:
 	/// @}
 
 	bool mDead;
-
-protected:
+	
 	/// @name Internal interface
 	/// @{
 
@@ -211,7 +210,6 @@ protected:
 	void updateBBox();
 
 	/// @}
-protected:
 	bool onAdd();
 	void onRemove();
 
@@ -219,8 +217,7 @@ protected:
 	void advanceTime(F32 dt);
 
 	// PEngine interface
-protected:
-
+	protected:
 	void update( U32 ms );
 	inline void updateKeyData( Particle *part );
 

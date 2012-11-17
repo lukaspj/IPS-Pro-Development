@@ -721,13 +721,13 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 
 		// Increment the t value based on the progressmode
 		if(nodeDat->ProgressMode == gProgressMode::byParticleCount){
-			if(Reverse)
+			if(nodeDat->Reverse)
 				nodeDat->particleProg = (nodeDat->particleProg - (1 * nodeDat->timeScale));
 			else
 				nodeDat->particleProg = (nodeDat->particleProg + (1 * nodeDat->timeScale));
 		}
 		if(nodeDat->ProgressMode == gProgressMode::byTime){
-			if(Reverse)
+			if(nodeDat->Reverse)
 				nodeDat->particleProg = (nodeDat->particleProg - (dt * nodeDat->timeScale));
 			else
 				nodeDat->particleProg = (nodeDat->particleProg + (dt * nodeDat->timeScale));

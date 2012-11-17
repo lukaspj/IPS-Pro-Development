@@ -208,7 +208,7 @@ void MaskEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 void MaskEmitterNode::onStaticModified(const char* slotName, const char*newValue)
 {
 	if(strcmp(slotName, "Grounded") == 0 ||
-		strcmp(slotName, "sa_radius"))
+		strcmp(slotName, "sa_radius") == 0)
 		setMaskBits(emitterEdited);
 	Parent::onStaticModified(slotName, newValue);
 }
