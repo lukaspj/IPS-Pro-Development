@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ParticleEffect>
+  <Emitters>
+    <Emitter Type="StockEmitter" x="0" y="0" z="0" datablock="pEffecTest" emitter="DefaultEmitter" Start="0" End="1">
+	  <Value Ease="True" Name="EjectionOffset" DeltaValue="2">
+        <Point X="0" Y="0" Easing="" EaseIn="False" EaseOut="False" />
+        <Point X="1" Y="1" Easing="Cubic" EaseIn="True" EaseOut="True" />
+      </Value>
+    </Emitter>
+  </Emitters>
+</ParticleEffect>
