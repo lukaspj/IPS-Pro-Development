@@ -96,10 +96,16 @@ datablock MaskEmitterData(msk_DefaultEmitter)
    radius = 3;
 };
 
-//-----------ParticleEffectsEmitters-----------
+//-----------SphereEmitters-----------
+datablock SphereEmitterNodeData( DefaultNode )
+{   
+	timeMultiple = 1;
+};
+
+//-----------ParticleEffects-----------
 //Childs--------------------
-//-----ParticleEmitters-----
-datablock ParticleEmitterData(SampleEmitter)
+//-----SphereEmitters-----
+datablock SphereEmitterData(SampleEmitter)
 {
    ejectionPeriodMS = "50";
    ejectionVelocity = "0";
@@ -121,7 +127,7 @@ datablock GraphEmitterData(g_sampleEmitter : g_DefaultEmitter)
 };
 
 
-datablock ParticleEmitterNodeData( pEffecTest )
+datablock SphereEmitterNodeData( pEffecTest )
 {   
    sa_ejectionVelocity = 0;
    sa_ejectionPeriodMS = "50";

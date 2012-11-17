@@ -38,9 +38,9 @@ singleton Material(SimpleConeMat)
 {
    mapTo = "blue";
 
-   diffuseMap[0] = "blue";
+   diffuseMap[0] = "core/art/shapes/blue";
    translucent = "0";
-   emissive = "1";
+   emissive = "0";
    castShadows = "0";
 };
 

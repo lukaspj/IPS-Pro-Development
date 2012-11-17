@@ -78,6 +78,7 @@ $pref::shadows::filterMode = "SoftShadow";
 $pref::Shadows::textureScalar = "1";
 $pref::Terrain::detailScale = "1";
 $pref::Terrain::lodScale = "1";
+$Pref::TerrainEditor::LastPath = "C:/Torque3D Main/MIT/My Projects/IPS Pro/game/art/terrains/textures";
 $pref::TS::detailAdjust = "1";
 $pref::TS::maxInstancingVerts = "200";
 $pref::TS::skipLoadDLs = "0";

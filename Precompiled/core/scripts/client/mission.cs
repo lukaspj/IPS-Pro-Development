@@ -41,7 +41,8 @@ function clientStartMission()
    
    // Create client mission cleanup group.
       
-   new SimGroup( ClientMissionCleanup );
+   if(!(isObject(ClientMissionCleanup)))
+        new SimGroup( ClientMissionCleanup );
 
    // Done.
       

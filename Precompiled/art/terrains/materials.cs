@@ -20,3 +20,27 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+
+new TerrainMaterial()
+{
+   diffuseMap = "art/terrains/textures/OrganicA1";
+   diffuseSize = "20";
+   internalName = "Organic";
+   detailMap = "art/terrains/textures/OrganicA1";
+};
+
+new TerrainMaterial()
+{
+   diffuseMap = "core/art/warnMat.png";
+   detailMap = "core/art/warnMat.png";
+   internalName = "warning_material";
+};
+
+new TerrainMaterial()
+{
+   diffuseMap = "art/terrains/textures/StoneA1";
+   diffuseSize = "20";
+   detailMap = "art/terrains/textures/StoneA1";
+   detailSize = "20";
+   internalName = "Stone";
+};

@@ -123,6 +123,8 @@ function GameConnection::onConnect( %client, %name )
    // If the mission is running, go ahead download it to the client
    if ($missionRunning)
    {
+	  if(!(isObject(ClientMissionCleanup)))
+        new SimGroup( ClientMissionCleanup );
       %client.loadMission();
    }
    else if ($Server::LoadFailMsg !$= "")

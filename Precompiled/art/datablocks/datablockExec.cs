@@ -24,3 +24,4 @@
 // a server is constructed.
 
 exec("./../ParticleSystem/defaultdatablocks.cs");
+exec("./../ParticleSystem/graphExamples.cs");

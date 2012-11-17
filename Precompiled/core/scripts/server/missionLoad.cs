@@ -97,6 +97,7 @@ function loadMissionStage2()
       $missionCRC = getFileCRC( %file );
 
       // Exec the mission.  The MissionGroup (loaded components) is added to the ServerGroup
+	  new SimGroup(ClientMissionCleanup);
       exec(%file);
 
       if( !isObject(MissionGroup) )
