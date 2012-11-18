@@ -100,6 +100,33 @@ new SimGroup(MissionGroup) {
       canSave = "1";
       canSaveDynamicFields = "1";
    };
+   new GroundEmitterNode(gaa) {
+      layers[0] = "Stone";
+      active = "1";
+      emitter = "gr_DefaultEmitter";
+      velocity = "1";
+      standAloneEmitter = "0";
+      sa_ejectionPeriodMS = "100";
+      sa_periodVarianceMS = "0";
+      sa_ejectionVelocity = "2";
+      sa_velocityVariance = "1";
+      sa_ejectionOffset = "0";
+      RayCollision = "0";
+      Attraction_offset[0] = "0 0 0";
+      Attraction_offset[1] = "0 0 0";
+      AttractionMode[0] = "Not attracted";
+      AttractionMode[1] = "Not attracted";
+      Amount[0] = "1";
+      Amount[1] = "1";
+      attractionrange = "50";
+      sticky = "0";
+      dataBlock = "gr_DefaultNode";
+      position = "-9.53732 -4.79362 2.27795";
+      rotation = "1 0 0 0";
+      scale = "1 1 1";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
 };
 //--- OBJECT WRITE END ---
 
