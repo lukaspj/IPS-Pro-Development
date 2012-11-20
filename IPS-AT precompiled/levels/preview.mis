@@ -1,5 +1,4 @@
 //--- OBJECT WRITE BEGIN ---
-new SimGroup(ClientMissionCleanup);
 new SimGroup(MissionGroup) {
    canSave = "1";
    canSaveDynamicFields = "1";
@@ -28,6 +27,16 @@ new SimGroup(MissionGroup) {
          desc0 = "A blank room ready to be populated with Torque objects.\n\nGuns, anyone?";
          enabled = "1";
          LevelName = "Blank Room";
+   };
+   new SkyBox() {
+      Material = "DefaultSkyMat";
+      drawBottom = "1";
+      fogBandHeight = "0";
+      position = "0 85 4.37114e-006";
+      rotation = "1 0 0 0";
+      scale = "1 1 1";
+      canSave = "1";
+      canSaveDynamicFields = "1";
    };
 };
 //--- OBJECT WRITE END ---

@@ -15,5 +15,6 @@
       </Value>
       <Value Ease="False" Name="EjectionPeriod" DeltaValue="1" setTime="0" />
     </Emitter>
+    <Emitter Type="MaskEmitter" x="0" y="0" z="0" datablock="msk_DefaultNode" emitter="msk_DefaultEmitter" Start="0" End="1000" />
   </Emitters>
 </ParticleEffect>
