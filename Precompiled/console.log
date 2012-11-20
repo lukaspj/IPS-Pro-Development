@@ -1,4 +1,4 @@
-//-------------------------- 11/18/2012 -- 01:36:34 -----
+//-------------------------- 11/20/2012 -- 01:55:16 -----
 Processor Init:
    Intel Pentium III Xeon, ~3.31 Ghz
    FPU detected
@@ -91,9 +91,9 @@ Accepted Mode:
 --Refresh Rate : 60
 --FSAA Level : 4
 --------------
-GFXPCD3D9Device::reset - depthstencil 3306280 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 33481a0 has 2 ref's
 --- Resetting D3D Device ---
-GFXPCD3D9Device::reset - depthstencil 59bc940 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 33ee1c0 has 2 ref's
 --- Resetting D3D Device ---
 Binding server port to default IP
 UDP initialized on port 0
@@ -117,8 +117,8 @@ No physics plugin exists.
  - Initializing Road and Path Editor
  % - Initializing Shape Editor
 Engine initialized...
-Window focus status changed: focus: 1
 AntiAliasing has been disabled; it is not compatible with AdvancedLighting.
+Window focus status changed: focus: 1
 Exporting server prefs...
 ParticleEmitterData(g_burnerEmitter) unable to find particle datablock: backburnerParticles
 ParticleEmitterData(g_burnerEmitter) unable to find any particle datablocks
@@ -133,8 +133,8 @@ art/datablocks/../ParticleSystem/graphExamples.cs (71): Register object failed f
 [MaterialList::mapMaterials] Unable to find material for texture: StoneA1
 *** Mission loaded
 Connect request from: 
-Connection established 4010
-CADD: 4011 local
+Connection established 4011
+CADD: 4012 local
 *** Sending mission load to client: levels/Empty Room.mis
 Mapping string: ServerMessage to index: 0
 Mapping string: MsgConnectionError to index: 1
@@ -177,20 +177,14 @@ Activating DirectInput...
 *** Control Object Changed
 Missing file: art/forest/brushes.cs!
 Win32Window::WindowProc - resetting device due to window size change.
-GFXPCD3D9Device::reset - depthstencil 59bc940 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 33ed680 has 2 ref's
 --- Resetting D3D Device ---
-Time spent in toggleEditor() : 0.432 s
-Mapping string: EditorOrbitCameraSelectChange to index: 3
-Window focus status changed: focus: 0
-  Using background sleep time: 200
-DirectInput deactivated.
-Activating DirectInput...
-Window focus status changed: focus: 1
+Time spent in toggleEditor() : 2.482 s
 Win32Window::WindowProc - resetting device due to window size change.
-GFXPCD3D9Device::reset - depthstencil 7f489a0 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 79d1fe0 has 2 ref's
 --- Resetting D3D Device ---
 *** ENDING MISSION
-CDROP: 4011 
+CDROP: 4012 
 Exporting server prefs...
 Exporting client prefs
 Exporting server prefs
