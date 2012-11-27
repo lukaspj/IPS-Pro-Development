@@ -1,4 +1,4 @@
-//-------------------------- 11/27/2012 -- 00:26:07 -----
+//-------------------------- 11/27/2012 -- 02:38:01 -----
 Warning: forcing the Torque profiler thread to run only on cpu 1.
 Processor Init:
    Intel Pentium III Xeon, ~3.31 Ghz
@@ -42,7 +42,10 @@ Error: Unable to find specified directory: tools
 --------- Parsing Arguments ---------
 
 Executing scripts/client/prefs.cs.
+Executing scripts/client/prefs.cs.
 Executing ./scripts/server/prefs.cs.
+Executing ./scripts/server/prefs.cs.
+<input> (0): Cannot re-declare object [DefaultCursor].
 Binding server port to default IP
 UDP initialized on port 0
 Attempting to create GFX device: NVIDIA GeForce GTX 550 Ti (D3D9)
@@ -75,6 +78,8 @@ Executing core/art/gui/console.gui.
 Executing core/art/gui/consoleVarDlg.gui.
 Executing core/art/gui/netGraphGui.gui.
 Executing core/art/gui/FrameOverlayGui.gui.
+Executing core/art/gui/FrameOverlayGui.gui.
+core/art/gui/FrameOverlayGui.gui (0): Cannot re-declare object [FrameOverlayGui].
 Executing core/art/materials.cs.
 Executing core/art/grids/materials.cs.
 Executing core/art/shapes/materials.cs.
@@ -86,6 +91,15 @@ Executing core/art/skies/NewLevel_sky/materials.cs.
 Executing core/art/skies/night/materials.cs.
 Executing core/art/skies/Physics_sky/materials.cs.
 Executing core/art/special/materials.cs.
+<input> (0): Cannot re-declare object [SamplerClampLinear].
+<input> (0): Cannot re-declare object [SamplerClampPoint].
+<input> (0): Cannot re-declare object [SamplerWrapLinear].
+<input> (0): Cannot re-declare object [SamplerWrapPoint].
+<input> (0): Cannot re-declare object [ReflectBump].
+<input> (0): Cannot re-declare object [reflect].
+<input> (0): Cannot re-declare object [fxFoliageReplicatorShader].
+<input> (0): Cannot re-declare object [WaterSampler].
+<input> (0): Cannot re-declare object [ScatterSkySBData].
 Executing art/postfx/postFXManager.gui.
 Executing core/scripts/gui/guiTreeViewCtrl.cs.
 Executing core/scripts/gui/messageBoxes/messageBox.ed.cs.
@@ -118,6 +132,28 @@ SFXDSDevice::setDistanceModel - 'linear' distance attenuation not supported by D
 
 --------- Initializing FPS Example: Client Scripts ---------
 Missing file: core/art/gui/customProfiles.cs!
+<input> (0): Cannot re-declare object [AL_VectorLightState].
+<input> (0): Cannot re-declare object [AL_VectorLightShader].
+<input> (0): Cannot re-declare object [AL_VectorLightMaterial].
+<input> (0): Cannot re-declare object [AL_ConvexLightState].
+<input> (0): Cannot re-declare object [AL_PointLightShader].
+<input> (0): Cannot re-declare object [AL_PointLightMaterial].
+<input> (0): Cannot re-declare object [AL_SpotLightShader].
+<input> (0): Cannot re-declare object [AL_SpotLightMaterial].
+<input> (0): Cannot re-declare object [AL_DefaultPrePassMaterial].
+<input> (0): Cannot re-declare object [AL_DefaultShadowMaterial].
+<input> (0): Cannot re-declare object [AL_ParticlePointLightShader].
+<input> (0): Cannot re-declare object [AL_ParticlePointLightMaterial].
+<input> (0): Cannot re-declare object [AL_DepthVisualizeState].
+<input> (0): Cannot re-declare object [AL_DefaultVisualizeState].
+<input> (0): Cannot re-declare object [AL_DepthVisualizeShader].
+<input> (0): Cannot re-declare object [AL_NormalsVisualizeShader].
+<input> (0): Cannot re-declare object [AL_LightColorVisualizeShader].
+<input> (0): Cannot re-declare object [AL_LightSpecularVisualizeShader].
+<input> (0): Cannot re-declare object [AL_ShadowVisualizeShader].
+<input> (0): Cannot re-declare object [AL_ShadowVisualizeMaterial].
+<input> (0): Cannot re-declare object [AL_ShadowVizOverlayCtrl].
+<input> (0): Cannot re-declare object [BlurDepthShader].
 Using Advanced Lighting
 
 
@@ -130,9 +166,9 @@ Accept Mode:
 --Refresh Rate  : 60
 --FSAA Level    : 4
 ---------------------------
-GFXPCD3D9Device::reset - depthstencil 92e9660 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 8ee2c00 has 2 ref's
 --- Resetting D3D Device ---
-GFXPCD3D9Device::reset - depthstencil 92e9a20 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 8ee28e0 has 2 ref's
 --- Resetting D3D Device ---
 Executing art/gui/defaultGameProfiles.cs.
 Executing art/gui/PlayGui.gui.
@@ -144,6 +180,7 @@ Executing art/gui/mainMenuGui.gui.
 Executing art/gui/joinServerDlg.gui.
 Executing art/gui/endGameGui.gui.
 Executing art/gui/StartupGui.gui.
+<input> (0): Cannot re-declare object [HudMessageVector].
 Missing file: scripts/gui/startupGui.cs!
 Executing art/skies/materials.cs.
 Executing core/art/materials.cs.
@@ -183,11 +220,11 @@ Executing creations/ParticleEffects.cs.
 Executing levels/preview.mis.
 *** Mission loaded
 Connect request from:
-Connection established 1883
-CADD: 1884 local
+Connection established 1968
+CADD: 1969 local
 *** Sending mission load to client: levels/preview.mis
 Engine initialized...
-Started up in 1.06 seconds...
+Started up in 1.27 seconds...
 Window focus status changed: focus: 1
 Mapping string: ServerMessage to index: 0
 Mapping string: MsgConnectionError to index: 1
@@ -219,7 +256,7 @@ Failed to create resource: [levels/preview.mis.decals]
 Mission lighting done
 Mapping string: MissionStartPhase3Ack to index: 2
 GameBase::setDatablockProperty - Could not find data block "DefaultPlayerData"
-ShapeBase::onAdd - no datablock on shape 1892:Player ((null))
+ShapeBase::onAdd - no datablock on shape 1977:Player ((null))
 <input> (0): Register object failed for object (null) of class Player.
 No spawnsphere
 Mapping string: MissionStart to index: 8
@@ -233,7 +270,7 @@ Mapping string: Visitor to index: 14
 *** Initial Control Object
 Activating DirectInput...
 *** Control Object Changed
-CDROP: 1884 
+CDROP: 1969 
 Exporting server prefs...
 Exporting client prefs
 Exporting server prefs
@@ -243,7 +280,7 @@ usage: Dump the banlist to a file.
 @param filename Path of the file to write the list to.
 
 @tsexample
-BanList::Export("./server/banlist.cs");
+exportBanList::Export("./server/banlist.cs");
 @endtsexample
 
 
