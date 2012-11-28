@@ -25,3 +25,5 @@
 
 exec("./../ParticleSystem/defaultdatablocks.cs");
 exec("./../ParticleSystem/graphExamples.cs");
+exec("./../decals/indicatorDecal.cs");
+exec("./../effects/effects.cs");

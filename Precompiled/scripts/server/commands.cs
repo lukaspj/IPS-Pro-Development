@@ -1,25 +1,36 @@
 //-----------------------------------------------------------------------------
-// Copyright (c) 2012 GarageGames, LLC
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// Torque
+// Copyright GarageGames, LLC 2011
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // Misc. server commands avialable to clients
 //-----------------------------------------------------------------------------
+
+// Cast a spell in center of the client's screen
+function serverCmdCastSpell(%client, %spell)
+{
+   // Retrieve the ScriptObject which matches the spell name.
+   %scrObj = getSpellFromName(%spell);
+   // Cast the spell at the center of the client's screen.
+   %scrObj.CastAtScreenCenter(%client);
+}
+
+// Same as above, simply spawns a mob instead of casting a spell.
+function serverCmdCastMobSpell(%client, %spell)
+{
+   %scrObj = getSpellFromName(%spell);
+   %scrObj.SpawnMobAtScreenCenter(%client);
+}
+
+// Begin playing an animation
+function serverCmdSpellAnimation(%client, %anim)
+{
+	if(isobject(%client.player)
+		%client.player.playSpellAnimation(%anim);
+}
+
+function serverCmdPlayerID(%client)
+{
+   commandToClient(%client, 'PlayerID_Ret', %client.player);
+}

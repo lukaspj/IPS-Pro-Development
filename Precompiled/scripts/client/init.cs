@@ -81,6 +81,8 @@ function initClient()
    // Client scripts
    exec("./missionDownload.cs");
    exec("./serverConnection.cs");
+   
+   exec("./scriptExec.cs");
 
    // Default player key bindings
    exec("./default.bind.cs");

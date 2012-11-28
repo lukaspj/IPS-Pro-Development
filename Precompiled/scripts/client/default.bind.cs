@@ -44,31 +44,50 @@ moveMap.bindCmd(keyboard, "escape", "", "handleEscape();");
 //------------------------------------------------------------------------------
 
 $movementSpeed = 1; // m/s
+$moving = 1;
 
+// Added this function
 function setSpeed(%speed)
 {
-   if(%speed)
+   if(%speed !$= "")
       $movementSpeed = %speed;
 }
 
+// Edited all these move functions
 function moveleft(%val)
 {
-   $mvLeftAction = %val * $movementSpeed;
+   $oldLeftAction = %val * $movementSpeed;
+   if($moving)
+   {
+      $mvLeftAction = $oldLeftAction;
+   }
 }
-
+// Edited all these move functions
 function moveright(%val)
 {
-   $mvRightAction = %val * $movementSpeed;
+   $oldRightAction = %val * $movementSpeed;
+   if($moving)
+   {
+      $mvRightAction = $oldRightAction;
+   }
 }
-
+// Edited all these move functions
 function moveforward(%val)
 {
-   $mvForwardAction = %val * $movementSpeed;
+   $oldForwardAction = %val * $movementSpeed;
+   if($moving)
+   {
+      $mvForwardAction = $oldForwardAction;
+   }
 }
-
+// Edited all these move functions
 function movebackward(%val)
 {
-   $mvBackwardAction = %val * $movementSpeed;
+   $oldBackwardAction = %val * $movementSpeed;
+   if($moving)
+   {
+      $mvBackwardAction = $oldBackwardAction;
+   }
 }
 
 function moveup(%val)
@@ -241,7 +260,14 @@ moveMap.bindCmd(gamepad, dpadr, "toggleLightSpecularViz();", "");
 
 function mouseFire(%val)
 {
-   $mvTriggerCount0++;
+   //$mvTriggerCount0++;
+   if(%val && $nextSpell !$= "")
+   {
+      commandToServer('CastSpell', $nextSpell);
+      $nextSpell = "";
+      decalManagerRemoveDecal( $SpellDecal );
+      $SpellDecal = "";
+   }
 }
 
 function altTrigger(%val)
@@ -540,3 +566,39 @@ GlobalActionMap.bind(keyboard, "ctrl F3", doProfile);
 GlobalActionMap.bind(keyboard, "tilde", toggleConsole);
 GlobalActionMap.bindCmd(keyboard, "alt k", "cls();","");
 GlobalActionMap.bindCmd(keyboard, "alt enter", "", "Canvas.attemptFullscreenToggle();");
+
+moveMap.bind(keyboard, "g", castSpell1);
+moveMap.bind(keyboard, "f", castSpell2);
+moveMap.bind(keyboard, "e", castSpell3);
+moveMap.bindCmd(keyboard, "r", "spellIndicator(\"Flamepillar\");");
+
+function castSpell1(%val)
+{
+   if(%val)
+      commandToServer('CastSpell', "Rogue");
+}
+
+function castSpell2(%val)
+{
+   if(%val)
+      commandToServer('CastMobSpell', "Rogue");
+}
+
+function castSpell3(%val)
+{
+   if(%val)
+      commandToServer('CastSpell', "Fireball");
+}
+
+function castSpell4(%val)
+{
+   if(%val)
+      commandToServer('CastSpell', "Flamepillar");
+}
+
+function spellIndicator(%spell)
+{
+   if(%spell !$= "")
+      $nextSpell = %spell;
+   spawnIndicatorDecal();
+}
