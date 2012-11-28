@@ -1,12 +1,23 @@
+<<<<<<< HEAD
 //-------------------------- 11/22/2012 -- 12:19:19 -----
 Processor Init:
    Intel Pentium II, ~2.66 Ghz
+=======
+//-------------------------- 11/27/2012 -- 02:38:01 -----
+Warning: forcing the Torque profiler thread to run only on cpu 1.
+Processor Init:
+   Intel Pentium III Xeon, ~3.31 Ghz
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
    FPU detected
    MMX detected
    SSE detected
    SSE2 detected
+<<<<<<< HEAD
    HT detected
    MP detected [2 cores, 4 logical, 1 physical]
+=======
+   MP detected [4 cores, 4 logical, 1 physical]
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
  
 Math Init:
    Installing Standard C extensions
@@ -25,21 +36,44 @@ Done
 SFXALProvider - OpenAL not available.
 GFX Init:
    Direct 3D (version 9.x) device found
+<<<<<<< HEAD
+=======
+   Direct 3D (version 9.x) device found
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
    Null device found
 
 DebugDrawer Enabled!
 -------------------------------->Loading Directory 'tools;scripts;art;levels'---------------------------
 ----------->Executing file 'levels/main.cs'
+<<<<<<< HEAD
 ----------->Executing file 'art/main.cs'
 ----------->Executing file 'scripts/main.cs'
+=======
+Executing levels/main.cs.
+----------->Executing file 'art/main.cs'
+Executing art/main.cs.
+----------->Executing file 'scripts/main.cs'
+Executing scripts/main.cs.
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 ----------->Executing file 'tools/main.cs'
 Missing file: tools/main.cs!
 Error: Unable to find specified directory: tools
 --------- Parsing Arguments ---------
 
+<<<<<<< HEAD
 Binding server port to default IP
 UDP initialized on port 0
 Attempting to create GFX device: NVIDIA Quadro FX 880M (D3D9)
+=======
+Executing scripts/client/prefs.cs.
+Executing scripts/client/prefs.cs.
+Executing ./scripts/server/prefs.cs.
+Executing ./scripts/server/prefs.cs.
+<input> (0): Cannot re-declare object [DefaultCursor].
+Binding server port to default IP
+UDP initialized on port 0
+Attempting to create GFX device: NVIDIA GeForce GTX 550 Ti (D3D9)
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 Device created, setting adapter and enumerating modes
    Cur. D3DDevice ref count=1
    Pix version detected: 3.000000
@@ -64,14 +98,68 @@ GFXCardProfiler (D3D9) - Setting capability 'fourStageDetailBlend' to 1.
       - No card profile core/profile/D3D9..cs exists
       - No card profile core/profile/D3D9...cs exists
       - No card profile core/profile/D3D9....cs exists
+<<<<<<< HEAD
+=======
+Executing core/art/gui/remapDlg.gui.
+Executing core/art/gui/console.gui.
+Executing core/art/gui/consoleVarDlg.gui.
+Executing core/art/gui/netGraphGui.gui.
+Executing core/art/gui/FrameOverlayGui.gui.
+Executing core/art/gui/FrameOverlayGui.gui.
+core/art/gui/FrameOverlayGui.gui (0): Cannot re-declare object [FrameOverlayGui].
+Executing core/art/materials.cs.
+Executing core/art/grids/materials.cs.
+Executing core/art/shapes/materials.cs.
+Executing core/art/skies/Black_sky/materials.cs.
+Executing core/art/skies/Blank_sky/materials.cs.
+Executing core/art/skies/Desert_Sky/materials.cs.
+Executing core/art/skies/Grey_sky/materials.cs.
+Executing core/art/skies/NewLevel_sky/materials.cs.
+Executing core/art/skies/night/materials.cs.
+Executing core/art/skies/Physics_sky/materials.cs.
+Executing core/art/special/materials.cs.
+<input> (0): Cannot re-declare object [SamplerClampLinear].
+<input> (0): Cannot re-declare object [SamplerClampPoint].
+<input> (0): Cannot re-declare object [SamplerWrapLinear].
+<input> (0): Cannot re-declare object [SamplerWrapPoint].
+<input> (0): Cannot re-declare object [ReflectBump].
+<input> (0): Cannot re-declare object [reflect].
+<input> (0): Cannot re-declare object [fxFoliageReplicatorShader].
+<input> (0): Cannot re-declare object [WaterSampler].
+<input> (0): Cannot re-declare object [ScatterSkySBData].
+Executing art/postfx/postFXManager.gui.
+Executing core/scripts/gui/guiTreeViewCtrl.cs.
+Executing core/scripts/gui/messageBoxes/messageBox.ed.cs.
+Executing core/scripts/gui/messageBoxes/messageBoxOk.ed.gui.
+Executing core/scripts/gui/messageBoxes/messageBoxYesNo.ed.gui.
+Executing core/scripts/gui/messageBoxes/messageBoxYesNoCancel.ed.gui.
+Executing core/scripts/gui/messageBoxes/messageBoxOKCancel.ed.gui.
+Executing core/scripts/gui/messageBoxes/messageBoxOKCancelDetailsDlg.ed.gui.
+Executing core/scripts/gui/messageBoxes/messagePopup.ed.gui.
+Executing core/scripts/gui/messageBoxes/IODropdownDlg.ed.gui.
+Executing art/gui/customProfiles.cs.
+Executing core/art/gui/chooseLevelDlg.gui.
+Executing core/scripts/gui/chooseLevelDlg.cs.
+Executing core/scripts/gui/optionsDlg.cs.
+Executing core/art/gui/optionsDlg.gui.
+Executing core/scripts/gui/loadingGui.cs.
+Executing core/art/gui/loadingGui.gui.
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
  % - Initialized Core
 
 --------- Initializing Directory: scripts ---------
 sfxStartup...
+<<<<<<< HEAD
 SFXSystem::createDevice - created DirectSound device 'Speakers (High Definition Audio Device)'
 SFXDSDevice::setDistanceModel - 'linear' distance attenuation not supported by DirectSound
    Provider: DirectSound
    Device: Speakers (High Definition Audio Device)
+=======
+SFXSystem::createDevice - created DirectSound device 'Speakers (USB Sound Device        )'
+SFXDSDevice::setDistanceModel - 'linear' distance attenuation not supported by DirectSound
+   Provider: DirectSound
+   Device: Speakers (USB Sound Device        )
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
    Hardware: No
    Buffers: 16
 
@@ -79,6 +167,31 @@ SFXDSDevice::setDistanceModel - 'linear' distance attenuation not supported by D
 
 --------- Initializing FPS Example: Client Scripts ---------
 Missing file: core/art/gui/customProfiles.cs!
+<<<<<<< HEAD
+=======
+<input> (0): Cannot re-declare object [AL_VectorLightState].
+<input> (0): Cannot re-declare object [AL_VectorLightShader].
+<input> (0): Cannot re-declare object [AL_VectorLightMaterial].
+<input> (0): Cannot re-declare object [AL_ConvexLightState].
+<input> (0): Cannot re-declare object [AL_PointLightShader].
+<input> (0): Cannot re-declare object [AL_PointLightMaterial].
+<input> (0): Cannot re-declare object [AL_SpotLightShader].
+<input> (0): Cannot re-declare object [AL_SpotLightMaterial].
+<input> (0): Cannot re-declare object [AL_DefaultPrePassMaterial].
+<input> (0): Cannot re-declare object [AL_DefaultShadowMaterial].
+<input> (0): Cannot re-declare object [AL_ParticlePointLightShader].
+<input> (0): Cannot re-declare object [AL_ParticlePointLightMaterial].
+<input> (0): Cannot re-declare object [AL_DepthVisualizeState].
+<input> (0): Cannot re-declare object [AL_DefaultVisualizeState].
+<input> (0): Cannot re-declare object [AL_DepthVisualizeShader].
+<input> (0): Cannot re-declare object [AL_NormalsVisualizeShader].
+<input> (0): Cannot re-declare object [AL_LightColorVisualizeShader].
+<input> (0): Cannot re-declare object [AL_LightSpecularVisualizeShader].
+<input> (0): Cannot re-declare object [AL_ShadowVisualizeShader].
+<input> (0): Cannot re-declare object [AL_ShadowVisualizeMaterial].
+<input> (0): Cannot re-declare object [AL_ShadowVizOverlayCtrl].
+<input> (0): Cannot re-declare object [BlurDepthShader].
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 Using Advanced Lighting
 
 
@@ -91,26 +204,86 @@ Accept Mode:
 --Refresh Rate  : 60
 --FSAA Level    : 4
 ---------------------------
+<<<<<<< HEAD
 GFXPCD3D9Device::reset - depthstencil 6bacaa0 has 2 ref's
 --- Resetting D3D Device ---
 GFXPCD3D9Device::reset - depthstencil c864240 has 2 ref's
 --- Resetting D3D Device ---
 Missing file: scripts/gui/startupGui.cs!
+=======
+GFXPCD3D9Device::reset - depthstencil 8ee2c00 has 2 ref's
+--- Resetting D3D Device ---
+GFXPCD3D9Device::reset - depthstencil 8ee28e0 has 2 ref's
+--- Resetting D3D Device ---
+Executing art/gui/defaultGameProfiles.cs.
+Executing art/gui/PlayGui.gui.
+Executing art/gui/ChatHud.gui.
+Executing art/gui/playerList.gui.
+Executing art/gui/hudlessGui.gui.
+Executing art/gui/controlsHelpDlg.gui.
+Executing art/gui/mainMenuGui.gui.
+Executing art/gui/joinServerDlg.gui.
+Executing art/gui/endGameGui.gui.
+Executing art/gui/StartupGui.gui.
+<input> (0): Cannot re-declare object [HudMessageVector].
+Missing file: scripts/gui/startupGui.cs!
+Executing art/skies/materials.cs.
+Executing core/art/materials.cs.
+Executing core/art/grids/materials.cs.
+Executing core/art/shapes/materials.cs.
+Executing core/art/skies/Black_sky/materials.cs.
+Executing core/art/skies/Blank_sky/materials.cs.
+Executing core/art/skies/Desert_Sky/materials.cs.
+Executing core/art/skies/Grey_sky/materials.cs.
+Executing core/art/skies/NewLevel_sky/materials.cs.
+Executing core/art/skies/night/materials.cs.
+Executing core/art/skies/Physics_sky/materials.cs.
+Executing core/art/special/materials.cs.
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 Binding server port to default IP
 UDP initialized on port 0
 *** ENDING MISSION
 Exporting server prefs...
+<<<<<<< HEAD
 art/datablocks/managedDatablocks.cs (0): Unable to find parent object ScatterskyFlareExample for LightFlareData.
+=======
+Executing core/art/datablocks/datablockExec.cs.
+Executing core/art/datablocks/camera.cs.
+Executing core/art/datablocks/markers.cs.
+Executing core/art/datablocks/defaultparticle.cs.
+Executing core/art/datablocks/lights.cs.
+Executing art/shapes/particles/managedParticleData.cs.
+Executing art/datablocks/managedDatablocks.cs.
+art/datablocks/managedDatablocks.cs (0): Unable to find parent object ScatterskyFlareExample for LightFlareData.
+Executing art/datablocks/datablockExec.cs.
+Executing art/datablocks/particles.cs.
+Executing art/datablocks/genericparticles.cs.
+Executing art/datablocks/../templates/defaultDatablocks.cs.
+Executing art/datablocks/../templates/graphExamples.cs.
+Executing creations/exec.cs.
+Executing creations/ParticleEffects.cs.
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 *** ENDING MISSION
 *** LOADING MISSION: levels/preview.mis
 *** Stage 1 load
 *** Stage 2 load CSHARP
+<<<<<<< HEAD
 *** Mission loaded
 Connect request from:
 Connection established 1883
 CADD: 1884 local
 *** Sending mission load to client: levels/preview.mis
 Engine initialized...
+=======
+Executing levels/preview.mis.
+*** Mission loaded
+Connect request from:
+Connection established 1968
+CADD: 1969 local
+*** Sending mission load to client: levels/preview.mis
+Engine initialized...
+Started up in 1.27 seconds...
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 Window focus status changed: focus: 1
 Mapping string: ServerMessage to index: 0
 Mapping string: MsgConnectionError to index: 1
@@ -142,12 +315,19 @@ Failed to create resource: [levels/preview.mis.decals]
 Mission lighting done
 Mapping string: MissionStartPhase3Ack to index: 2
 GameBase::setDatablockProperty - Could not find data block "DefaultPlayerData"
+<<<<<<< HEAD
 ShapeBase::onAdd - no datablock on shape 1892:Player ((null))
 <input> (0): Register object failed for object (null) of class Player.
+=======
+ShapeBase::onAdd - no datablock on shape 1977:Player ((null))
+<input> (0): Register object failed for object (null) of class Player.
+No spawnsphere
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 Mapping string: MissionStart to index: 8
 Mapping string: SyncClock to index: 9
 Mapping string: RefreshWeaponHud to index: 10
 ------------------------------------>WARNING Cannot Find object 'WeaponHUD'.setVisible.
+<<<<<<< HEAD
 Window focus status changed: focus: 0
   Using background sleep time: 200
 *** Initial Control Object
@@ -6311,6 +6491,16 @@ Callback error node
 Callback error node
 Callback error node
 CDROP: 1884 
+=======
+Mapping string: MsgClientJoin to index: 11
+Mapping string: Current Players: 1 to index: 12
+Mapping string: Welcome to the Torque demo app %1. to index: 13
+Mapping string: Visitor to index: 14
+*** Initial Control Object
+Activating DirectInput...
+*** Control Object Changed
+CDROP: 1969 
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 Exporting server prefs...
 Exporting client prefs
 Exporting server prefs
@@ -6320,8 +6510,17 @@ usage: Dump the banlist to a file.
 @param filename Path of the file to write the list to.
 
 @tsexample
+<<<<<<< HEAD
 BanList::Export("./server/banlist.cs");
+=======
+exportBanList::Export("./server/banlist.cs");
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
 @endtsexample
 
 
 Cur. D3DDevice ref count=1
+<<<<<<< HEAD
+=======
+GFXTextureObject::dumpActiveTOs - no active TOs to dump.
+GFXPrimitiveBuffer::dumpActivePBs - no currently active PBs to dump. You are A-OK!
+>>>>>>> 6eabb23118fa4b35e82690c884e6d4d90be90a7d
