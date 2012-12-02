@@ -98,12 +98,8 @@ datablock GraphEmitterData(ProjectileEmitter)
   // periodVarianceMS = 1;
    ejectionVelocity = 0.25;
    velocityVariance = 0.10;
-   thetaMin = 0.0;
-   thetaMax = 180;
    particles = ProjectileParticles;
    ejectionOffset   = 1;
-   phiReferenceVel  = 0;
-   phiVariance      = 360;
    overrideAdvances = false;
    //yFunc = "cos(t/50)";
    xFunc = "cos(t/50)";
