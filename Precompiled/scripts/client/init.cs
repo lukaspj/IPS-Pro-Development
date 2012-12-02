@@ -84,6 +84,8 @@ function initClient()
 
    // Default player key bindings
    exec("./default.bind.cs");
+   
+   exec("./scriptExec.cs");
 
    if (isFile("./config.cs"))
       exec("./config.cs");
