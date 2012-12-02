@@ -569,10 +569,7 @@ GlobalActionMap.bind(keyboard, "tilde", toggleConsole);
 GlobalActionMap.bindCmd(keyboard, "alt k", "cls();","");
 GlobalActionMap.bindCmd(keyboard, "alt enter", "", "Canvas.attemptFullscreenToggle();");
 
-<<<<<<< HEAD
 // Added this to the end of default.bind.cs
-=======
->>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
 moveMap.bind(keyboard, "g", castSpell1);
 moveMap.bind(keyboard, "f", castSpell2);
 moveMap.bind(keyboard, "e", castSpell3);
@@ -607,8 +604,4 @@ function spellIndicator(%spell)
    if(%spell !$= "")
       $nextSpell = %spell;
    spawnIndicatorDecal();
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
