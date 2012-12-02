@@ -8,14 +8,9 @@
 // One takes a client the other takes an object.
 function castrayfromplayer(%client, %return)
 {  
-   %player = %client.getControlObject();    
-<<<<<<< HEAD
+   %player = %client.getControlObject();
    %start = %client.getControlObject().getEyePoint();
-   %eyeVector = %client.getControlObject().getEyeVector();  
-=======
-   %start = %player.getEyePoint();
-   %eyeVector = %player.getEyeVector();  
->>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
+   %eyeVector = %client.getControlObject().getEyeVector();
    
    %start = getWords(%start, 0, 2);
    

@@ -37,11 +37,7 @@ function Flamepillar::Cast(%this, %pos, %trans, %path, %team, %client)
       return false;
    }
    
-<<<<<<< HEAD
-   // Instantiate the ParticleEmitterNode which shows the almighty Pillar of Flame
-=======
    // Instantiate the SphereEmitterNode which shows the almighty Pillar of Flame
->>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
    %flame = new SphereEmitterNode(){
       position = %pos;
       rotation = "1 0 0 0";
