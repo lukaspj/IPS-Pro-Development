@@ -38,7 +38,11 @@ function Fireball::Cast(%this, %pos, %trans, %path, %team, %client)
    }
    
    // Start the code which summons the fireball!
+<<<<<<< HEAD
    %clientplayer = %client.getControlObject();
+=======
+   %clientplayer = %client.getcontrolobject();
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
    
    // Get a vector defining where the camera is pointing
    %eye = %clientplayer.getEyeVector();
@@ -53,7 +57,11 @@ function Fireball::Cast(%this, %pos, %trans, %path, %team, %client)
          initialVelocity = %muzzleVector;
          initialPosition  = %clientplayer.getWorldBoxCenter();
          sourceObject     = %clientplayer;
+<<<<<<< HEAD
          sourceSlot       = 0;
+=======
+         sourceSlot       = -1;
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
          client           = %client;
    };
    MissionCleanup.add(%bullet);
@@ -71,7 +79,11 @@ datablock ParticleData(ProjectileParticles)
    dragCoeffiecient     = 0.0;
    gravityCoefficient   = 0.0;
    inheritedVelFactor   = 0.00;
+<<<<<<< HEAD
    lifetimeMS           = 300;
+=======
+   lifetimeMS           = 100;
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
    lifetimeVarianceMS   = 25;
    useInvAlpha = false;
    spinRandomMin = -30.0;
@@ -92,15 +104,24 @@ datablock ParticleData(ProjectileParticles)
    times[2]      = 1.0;
 };
 
+<<<<<<< HEAD
 datablock GraphEmitterData(ProjectileEmitter)
 {
    ejectionPeriodMS = 1;
   // periodVarianceMS = 1;
+=======
+datablock SphereEmitterData(ProjectileEmitter)
+{
+   ejectionPeriodMS = 1;
+  // periodVarianceMS = 1;
+   period = 0;
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
    ejectionVelocity = 0.25;
    velocityVariance = 0.10;
    thetaMin = 0.0;
    thetaMax = 180;
    particles = ProjectileParticles;
+<<<<<<< HEAD
    ejectionOffset   = 1;
    phiReferenceVel  = 0;
    phiVariance      = 360;
@@ -109,16 +130,31 @@ datablock GraphEmitterData(ProjectileEmitter)
    xFunc = "cos(t/50)";
    zFunc = "sin(t/50)";
    Loop = false;
+=======
+   ejectionOffset   = 0.5;
+   phiReferenceVel  = 0;
+   phiVariance      = 360;
+   overrideAdvances = false;
+   orientParticles  = true;
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
 };
 datablock ProjectileData(SampleSpellProjectile)
 {
    projectileShapeName = "art/shapes/Projectiles/Projectile.dts";
    
+<<<<<<< HEAD
    muzzleVelocity = 10;
    velInheritFactor = 0;
    armingDelay = 0;
    //Explosion = SpellExplosion;
    particleEmitter = ProjectileEmitter;
+=======
+   muzzleVelocity = 20;
+   velInheritFactor = 0;
+   armingDelay = 0;
+   //Explosion = SpellExplosion;
+   ParticleEmitter = gr_DefaultEmitter;
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
    lifetime = 10000;
    fadeDelay = 9000;
    isBallistic = false;

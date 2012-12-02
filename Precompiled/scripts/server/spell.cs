@@ -50,14 +50,24 @@ function Spell::CastAtScreenCenter(%this, %client)
    if(%this.raytype !$= false)
    {
       %rayresult = castrayfromplayer(%client, %this.raytype);
+<<<<<<< HEAD
+=======
+	  %player = %client.getControlObject();
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
       if(%rayresult == false)
       {
          //The rayresult returned nothing, decide how you handle this error
          //Here the Spell sends the rayresult error further through the system and lets
          //The individual spells handle the error.
+<<<<<<< HEAD
          %trans = %client.getControlObject().getTransform();
          echo("Out of range");
          %this.Cast(%rayresult, %trans, "", %client.getControlObject().team, %client);
+=======
+         %trans = %player.getTransform();
+         echo("Out of range");
+         %this.Cast(%rayresult, %trans, "", %player.team, %client);
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
       }
       if(%rayresult != false)
       {
@@ -66,14 +76,23 @@ function Spell::CastAtScreenCenter(%this, %client)
          // resumes the 'cast' call.
          if(%this.raytype $= "point")
          {
+<<<<<<< HEAD
             %trans = %rayresult SPC getWords(%client.getControlObject().getTransform(),2);
             %this.Cast(%rayresult, %trans, "", %client.getControlObject().team, %client);
+=======
+            %trans = %rayresult SPC getWords(%player.getTransform(),2);
+            %this.Cast(%rayresult, %trans, "", %player.team, %client);
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
          }
       }
       
    }
    else{
+<<<<<<< HEAD
       %this.Cast(null, null , null, %client.getControlObject().team, %client);
+=======
+      %this.Cast(null, null , null, %player.team, %client);
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
    }
 }
 

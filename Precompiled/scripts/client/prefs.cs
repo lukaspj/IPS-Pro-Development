@@ -5,8 +5,8 @@ $pref::Decals::lifeTimeScale = "1";
 $pref::enableBadWordFilter = "1";
 $pref::enablePostEffects = "1";
 $pref::GroundCover::densityScale = "1";
-$pref::hasClientTicked = "1";
-$pref::hasServerTicked = "1";
+$pref::hasClientTicked = "0";
+$pref::hasServerTicked = "0";
 $pref::HudMessageLogSize = 40;
 $pref::imposter::canShadow = "1";
 $pref::Input::JoystickEnabled = "0";
@@ -61,7 +61,11 @@ $pref::SFX::channelVolume5 = 1;
 $pref::SFX::channelVolume6 = 1;
 $pref::SFX::channelVolume7 = 1;
 $pref::SFX::channelVolume8 = 1;
+<<<<<<< HEAD
 $pref::SFX::device = "Digital Audio (S/PDIF) (High Definition Audio Device)";
+=======
+$pref::SFX::device = "Speakers (High Definition Audio Device)";
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
 $pref::SFX::FMOD::disableSoftware = "0";
 $pref::SFX::FMOD::DSoundHRTF = "full";
 $pref::SFX::FMOD::enableProfile = "0";

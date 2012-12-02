@@ -26,7 +26,12 @@ function serverCmdCastMobSpell(%client, %spell)
 // Begin playing an animation
 function serverCmdSpellAnimation(%client, %anim)
 {
+<<<<<<< HEAD
    %client.getControlObject().playSpellAnimation(%anim);
+=======
+	if(isobject(%client.player)
+		%client.player.playSpellAnimation(%anim);
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
 }
 
 function serverCmdPlayerID(%client)

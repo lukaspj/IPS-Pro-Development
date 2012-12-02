@@ -9,8 +9,13 @@
 function castrayfromplayer(%client, %return)
 {  
    %player = %client.getControlObject();    
+<<<<<<< HEAD
    %start = %client.getControlObject().getEyePoint();
    %eyeVector = %client.getControlObject().getEyeVector();  
+=======
+   %start = %player.getEyePoint();
+   %eyeVector = %player.getEyeVector();  
+>>>>>>> 27f31352860d97b5280eed398be6f4cf7f051ebb
    
    %start = getWords(%start, 0, 2);
    
