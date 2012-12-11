@@ -1,12 +1,11 @@
-//-------------------------- 11/28/2012 -- 10:40:54 -----
+//-------------------------- 12/11/2012 -- 22:24:42 -----
 Processor Init:
-   Intel Pentium II, ~2.66 Ghz
+   Intel Pentium III Xeon, ~3.31 Ghz
    FPU detected
    MMX detected
    SSE detected
    SSE2 detected
-   HT detected
-   MP detected [2 cores, 4 logical, 1 physical]
+   MP detected [4 cores, 4 logical, 1 physical]
  
 Math Init:
    Installing Standard C extensions
@@ -25,6 +24,7 @@ Done
 SFXALProvider - OpenAL not available.
 GFX Init:
    Direct 3D (version 9.x) device found
+   Direct 3D (version 9.x) device found
    Null device found
 
 DebugDrawer Enabled!
@@ -33,7 +33,7 @@ DebugDrawer Enabled!
 --------- Parsing Arguments ---------
 Binding server port to default IP
 UDP initialized on port 0
-Attempting to create GFX device: NVIDIA Quadro FX 880M (D3D9)
+Attempting to create GFX device: NVIDIA GeForce GTX 550 Ti (D3D9)
 Device created, setting adapter and enumerating modes
    Cur. D3DDevice ref count=1
    Pix version detected: 3.000000
@@ -44,9 +44,9 @@ Device created, setting adapter and enumerating modes
    Using Direct3D9Ex: No
 WMIVideoInfo: DxDiag initialized
 Initializing GFXCardProfiler (D3D9)
-   o Chipset : 'Quadro FX 880M'
-   o Card    : 'Quadro FX 880M'
-   o Version : '8.17.0012.9688'
+   o Chipset : 'GeForce GTX 550 Ti'
+   o Card    : 'GeForce GTX 550 Ti'
+   o Version : '9.18.0013.0697'
    - Scanning card capabilities...
 GFXCardProfiler (D3D9) - Setting capability 'autoMipMapLevel' to 1.
 GFXCardProfiler (D3D9) - Setting capability 'maxTextureWidth' to 8192.
@@ -56,9 +56,9 @@ GFXCardProfiler (D3D9) - Setting capability 'lerpDetailBlend' to 1.
 GFXCardProfiler (D3D9) - Setting capability 'fourStageDetailBlend' to 1.
    - Loading card profiles...
       - Loaded card profile core/profile/D3D9.cs
-      - No card profile core/profile/D3D9.QuadroFX880M.cs exists
-      - No card profile core/profile/D3D9.QuadroFX880M.QuadroFX880M.cs exists
-      - No card profile core/profile/D3D9.QuadroFX880M.QuadroFX880M.81700129688.cs exists
+      - No card profile core/profile/D3D9.GeForceGTX550Ti.cs exists
+      - No card profile core/profile/D3D9.GeForceGTX550Ti.GeForceGTX550Ti.cs exists
+      - No card profile core/profile/D3D9.GeForceGTX550Ti.GeForceGTX550Ti.91800130697.cs exists
 % - PostFX Manager - Executing core/scripts/client/postFx/default.postfxpreset.cs
 % - PostFX Manager - Applying from preset
 % - PostFX Manager - PostFX enabled
@@ -67,36 +67,14 @@ Missing file: core/art/gui/customProfiles.cs!
 
 --------- Initializing Directory: scripts ---------
 sfxStartup...
-SFXSystem::createDevice - created DirectSound device 'Speakers (High Definition Audio Device)'
+SFXSystem::createDevice - created DirectSound device 'Digital Audio (S/PDIF) (High Definition Audio Device)'
 SFXDSDevice::setDistanceModel - 'linear' distance attenuation not supported by DirectSound
    Provider: DirectSound
-   Device: Speakers (High Definition Audio Device)
+   Device: Digital Audio (S/PDIF) (High Definition Audio Device)
    Hardware: No
    Buffers: 16
 
 --------- Initializing IPS Pro: Server Scripts ---------
-scripts/server/commands.cs Line: 30 - syntax error
->>> Advanced script error report.  Line 30.
->>> Some error context, with ## on sides of error halt:
-function serverCmdCastMobSpell(%client, %spell)
-{
-   %scrObj = getSpellFromName(%spell);
-   %scrObj.SpawnMobAtScreenCenter(%client);
-}
-
-// Begin playing an animation
-function serverCmdSpellAnimation(%client, %anim)
-{
-^if(isobject(%client.player)
-^^%client.player.playSpellAnimation(%anim);
-##}##
-
-function serverCmdPlayerID(%client)
-{
-   commandToClient(%client, 'PlayerID_Ret', %client.player);
-}
->>> Error report complete.
-
 
 --------- Initializing IPS Pro: Client Scripts ---------
 
@@ -113,9 +91,9 @@ Accepted Mode:
 --Refresh Rate : 60
 --FSAA Level : 4
 --------------
-GFXPCD3D9Device::reset - depthstencil 4520b60 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 32f0940 has 2 ref's
 --- Resetting D3D Device ---
-GFXPCD3D9Device::reset - depthstencil 450f160 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 414e5e0 has 2 ref's
 --- Resetting D3D Device ---
 Binding server port to default IP
 UDP initialized on port 0
@@ -139,8 +117,11 @@ No physics plugin exists.
  - Initializing Road and Path Editor
  % - Initializing Shape Editor
 Engine initialized...
-Window focus status changed: focus: 1
 AntiAliasing has been disabled; it is not compatible with AdvancedLighting.
+Window focus status changed: focus: 1
+Window focus status changed: focus: 0
+  Using background sleep time: 200
+Window focus status changed: focus: 1
 Exporting server prefs...
 ParticleEmitterData(g_burnerEmitter) unable to find particle datablock: backburnerParticles
 ParticleEmitterData(g_burnerEmitter) unable to find any particle datablocks
@@ -156,8 +137,8 @@ scripts/server/spells/roguePack.cs (0): Unable to find parent object DemoPlayer 
 [MaterialList::mapMaterials] Unable to find material for texture: StoneA1
 *** Mission loaded
 Connect request from: 
-Connection established 4017
-CADD: 4018 local
+Connection established 4042
+CADD: 4043 local
 *** Sending mission load to client: levels/Empty Room.mis
 Mapping string: ServerMessage to index: 0
 Mapping string: MsgConnectionError to index: 1
@@ -181,6 +162,8 @@ Mapping string: MissionStartPhase1 to index: 8
 % - PostFX Manager - PostFX enabled
 Mapping string: MissionStartPhase1Ack to index: 0
 [MaterialList::mapMaterials] Unable to find material for texture: crossbow
+Window focus status changed: focus: 0
+  Using background sleep time: 200
 Mapping string: MissionStartPhase2 to index: 9
 *** Phase 2: Download Ghost Objects
 Mapping string: MissionStartPhase2Ack to index: 1
@@ -198,233 +181,22 @@ Mapping string: MissionStart to index: 11
 *** Initial Control Object
 Activating DirectInput...
 *** Control Object Changed
-Mapping string: CastSpell to index: 3
-Mapping string: BeginCast to index: 12
-Mapping string: SpellAnimation to index: 4
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-scripts/server/utility/radiusDamage.cs (42): Unknown command damage.
-  Object Observer(3) Observer -> CameraData -> ShapeBaseData -> GameBaseData -> SimDataBlock -> SimObject
-serverCmdSpellAnimation: Unknown command.
-scripts/server/utility/radiusDamage.cs (42): Unknown command damage.
-  Object Observer(3) Observer -> CameraData -> ShapeBaseData -> GameBaseData -> SimDataBlock -> SimObject
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-Out of range
-serverCmdSpellAnimation: Unknown command.
-scripts/server/utility/radiusDamage.cs (42): Unknown command damage.
-  Object Observer(3) Observer -> CameraData -> ShapeBaseData -> GameBaseData -> SimDataBlock -> SimObject
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
-Mapping string: CastMobSpell to index: 5
-No path on Rogue::Cast
-scripts/server/spells/roguePack.cs (54): Unable to find function AIPlayer::spawnAtPos
-No path on Rogue::Cast
-No team on Rogue::Cast
-serverCmdSpellAnimation: Unknown command.
-serverCmdSpellAnimation: Unknown command.
+Window focus status changed: focus: 1
+Missing file: art/forest/brushes.cs!
+Win32Window::WindowProc - resetting device due to window size change.
+GFXPCD3D9Device::reset - depthstencil 414e720 has 2 ref's
+--- Resetting D3D Device ---
+Time spent in toggleEditor() : 2.082 s
+Mapping string: EditorOrbitCameraSelectChange to index: 3
+Window focus status changed: focus: 0
+  Using background sleep time: 200
+DirectInput deactivated.
+Activating DirectInput...
+Win32Window::WindowProc - resetting device due to window size change.
+GFXPCD3D9Device::reset - depthstencil 7a3b7c0 has 2 ref's
+--- Resetting D3D Device ---
 *** ENDING MISSION
-CDROP: 4018 
-Exporting server prefs...
+CDROP: 4043 
 Exporting server prefs...
 Exporting client prefs
 Exporting server prefs

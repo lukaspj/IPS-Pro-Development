@@ -1,3 +1,14 @@
+//-----------Behaviours-----------
+//-----------Uniform behaviours-----------
+datablock CollisionBehaviour(col_BHV){};
+datablock StickyBehaviour(sticky_BHV){};
+//-----------Variable behaviours-----------
+datablock AttractionBehaviour(spawn_attr_BHV){
+   attractedObjectID[0] = "spawn";
+   Amount[0] = 0.2;
+   AttractionMode[0] = "Attract";
+};
+
 //-----------GraphEmitters-----------
 datablock GraphEmitterNodeData(g_DefaultNode)
 {
@@ -72,7 +83,11 @@ datablock GroundEmitterData(gr_DefaultEmitter)
 datablock PixelMask(DefaultMask)
 {
 	MaskPath = "./IPS.png";
-	Treshold = 125;
+};
+
+datablock PixelMask(TresholdMask)
+{
+	MaskPath = "./tresholdtest.png";
 };
 
 //-----------MaskEmitters-----------
@@ -94,12 +109,39 @@ datablock MaskEmitterData(msk_DefaultEmitter)
    softnessDistance = "0.1";
    PixelMask = "DefaultMask";
    radius = 3;
+   Treshold_min = 0;
+   Treshold_max = 255;
+};
+
+datablock MaskEmitterData(msk_TresholdEmitter)
+{
+   ejectionPeriodMS = "2";
+   periodVarianceMS = "0";
+   ejectionVelocity = "0";
+   velocityVariance = "0";
+   ejectionOffset = "1";
+   particles = "DefaultParticle";
+   blendStyle = "ADDITIVE";
+   softParticles = "0";
+   softnessDistance = "0.1";
+   PixelMask = "TresholdMask";
+   radius = 3;
+   Treshold_min = 0;
+   Treshold_max = 0;
 };
 
 //-----------SphereEmitters-----------
 datablock SphereEmitterNodeData( DefaultNode )
 {   
 	timeMultiple = 1;
+   ejectionPeriodMS = "2";
+   periodVarianceMS = "0";
+   ejectionVelocity = "0";
+   velocityVariance = "0";
+   sa_ejectionPeriodMS = "2";
+   sa_periodVarianceMS = "0";
+   sa_ejectionVelocity = "0";
+   sa_velocityVariance = "0";
 };
 
 //-----------ParticleEffects-----------
@@ -116,6 +158,7 @@ datablock SphereEmitterData(SampleEmitter)
    blendStyle = "ADDITIVE";
    softParticles = "0";
    softnessDistance = "1";
+   ParticleBehaviour[0] = stick_BHV;
 };
 
 //---------------GRAPH EMITTER SAMPLES---------------------
@@ -151,5 +194,11 @@ datablock ParticleEffectData(DefaultEffect)
 datablock ParticleEffectData(DefaultEffect2)
 {
    pEffect = "./testEffect_2.pEffect";
+   lifeTimeMS = 20000;
+};
+
+datablock ParticleEffectData(TresholdEffect)
+{
+   pEffect = "./tresholdtest.pEffect";
    lifeTimeMS = 20000;
 };

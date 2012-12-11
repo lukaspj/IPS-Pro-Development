@@ -70,7 +70,7 @@ new SimGroup(MissionGroup) {
       canSaveDynamicFields = "1";
          enabled = "1";
 
-      new SpawnSphere() {
+      new SpawnSphere(spawn) {
          autoSpawn = "0";
          radius = "5";
          sphereWeight = "1";
@@ -101,9 +101,9 @@ new SimGroup(MissionGroup) {
       canSaveDynamicFields = "1";
    };
    new GroundEmitterNode(gaa) {
+      emitter = "gr_DefaultEmitter";
       layers[0] = "Stone";
       active = "1";
-      emitter = "gr_DefaultEmitter";
       velocity = "1";
       standAloneEmitter = "0";
       sa_ejectionPeriodMS = "100";
@@ -111,17 +111,39 @@ new SimGroup(MissionGroup) {
       sa_ejectionVelocity = "2";
       sa_velocityVariance = "1";
       sa_ejectionOffset = "0";
-      RayCollision = "0";
-      Attraction_offset[0] = "0 0 0";
-      Attraction_offset[1] = "0 0 0";
-      AttractionMode[0] = "Not attracted";
-      AttractionMode[1] = "Not attracted";
-      Amount[0] = "1";
-      Amount[1] = "1";
-      attractionrange = "50";
-      sticky = "0";
       dataBlock = "gr_DefaultNode";
       position = "-9.53732 -4.79362 2.27795";
+      rotation = "1 0 0 0";
+      scale = "1 1 1";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         Amount0 = "1";
+         Amount1 = "1";
+         Attraction_offset0 = "0 0 0";
+         Attraction_offset1 = "0 0 0";
+         AttractionMode0 = "Not attracted";
+         AttractionMode1 = "Not attracted";
+         attractionrange = "50";
+         RayCollision = "0";
+         sticky = "0";
+   };
+   new MaskEmitterNode(azz) {
+      emitter = "msk_TresholdEmitter";
+      sa_radius = "1";
+      sa_Treshold_min = "0";
+      sa_Treshold_max = "50";
+      Grounded = "0";
+      active = "1";
+      velocity = "1";
+      standAloneEmitter = "1";
+      sa_ejectionPeriodMS = "2";
+      sa_periodVarianceMS = "0";
+      sa_ejectionVelocity = "0";
+      sa_velocityVariance = "0";
+      sa_ejectionOffset = "0";
+      ParticleBehaviour[0] = "sticky_BHV";
+      dataBlock = "msk_DefaultNode";
+      position = "-2.41396 1.44845 2.44337";
       rotation = "1 0 0 0";
       scale = "1 1 1";
       canSave = "1";
