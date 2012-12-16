@@ -1,7 +1,7 @@
 IPS-Pro-Development
 ===================
 
-# The most recent is in the precompiled folder, this makes it easier to test!
+# The most recent versions is in the precompiled folder, this makes it easier to test!
 
 # Important information
 * The particle effect is still a prototype please focus on the emitters atm.
