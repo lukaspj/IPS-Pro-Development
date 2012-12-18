@@ -1,0 +1,153 @@
+﻿<Controls:MetroWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:Dialogs="clr-namespace:IPSAuthoringTool.Dialogs"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="IPSAuthoringTool.MainWindow"
+        Title="MainWindow" Height="607" Width="700" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Closing="MetroWindow_Closing_1" PreviewMouseRightButtonDown="MetroWindow_PreviewMouseRightButtonDown">
+    <Controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+                <ResourceDictionary Source="Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MetroWindow.Resources>
+    <Controls:MetroWindow.Flyouts>
+        <Controls:Flyout x:Name="EffectFlyOut" Header="Effects" Position="Right">
+            <StackPanel>
+                <Label Content="Preview Window" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Preview" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Reload datablocks" Click="Reload_Datablocks_Click" Style="{DynamicResource SquareButtonStyle}"/>
+                <Label Content="Manage effects" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Create Effect" x:Name="CreateEffectButton" Click="CreateEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Load Effect" x:Name="LoadEffectButton" Click="LoadEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Delete Effect" x:Name="DeleteEffectButton" Click="DeleteEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+            </StackPanel>
+        </Controls:Flyout>
+        <Controls:Flyout x:Name="EmitterFlyOut" Header="Emitters" Position="Right">
+            <StackPanel>
+                <Label Content="Preview Window" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Preview" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Reload datablocks" Click="Reload_Datablocks_Click" Style="{DynamicResource SquareButtonStyle}"/>
+                <Label Content="Manage emitters" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Create Emitter" x:Name="CreateEmitterButton" Click="CreateEmitterButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Delete Emitter" x:Name="DeleteEmitterButton" Click="DeleteEmitterButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Save Effect" x:Name="SaveEffectButton" Click="SaveEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Label Content="Emitter settings" Foreground="White" />
+                <Separator Background="White" />
+                <ComboBox x:Name="EmitterDatablockComboBox" ToolTip="The emitter datablock" SelectionChanged="EmitterDatablocksChanged">
+                    <ComboBox.ItemContainerStyle>
+                        <Style
+                            TargetType="ComboBoxItem">
+                            <Setter
+                                Property="HorizontalContentAlignment"
+                                Value="Left" />
+                            <Setter
+                            Property="VerticalContentAlignment"
+                            Value="Center" />
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
+                <ComboBox x:Name="NodeDatablockComboBox" ToolTip="The node datablock" SelectionChanged="EmitterDatablocksChanged">
+                <ComboBox.ItemContainerStyle>
+                    <Style
+                            TargetType="ComboBoxItem">
+                        <Setter
+                                Property="HorizontalContentAlignment"
+                                Value="Left" />
+                        <Setter
+                            Property="VerticalContentAlignment"
+                            Value="Center" />
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+                </ComboBox>
+                <UniformGrid Grid.Row="1" Margin="5" 
+                          Columns="6" HorizontalAlignment="Center"
+                          VerticalAlignment="Bottom">
+                    <Label Content="x:" Foreground="White" />
+                    <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="xControl" Text="0" TextChanged="EmitterPointChanged" />
+                    <Label Content="y:" Foreground="White" />
+                    <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="yControl" Text="0" TextChanged="EmitterPointChanged" />
+                    <Label Content="z:" Foreground="White" />
+                    <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="zControl" Text="0" TextChanged="EmitterPointChanged" />
+                </UniformGrid>
+                <Button Content="Time range" Click="TimeRange_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Test" Click="TestEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+            </StackPanel>
+        </Controls:Flyout>
+        <Controls:Flyout Header="Values" Position="Right">
+            <StackPanel>
+                <Label Content="Preview Window" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Preview" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Reload datablocks" Click="Reload_Datablocks_Click" Style="{DynamicResource SquareButtonStyle}"/>
+                <Label Content="Manage values" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Add Value" x:Name="CreateValueButton" Click="AddValueButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Delete Value" x:Name="DeleteValueButton" Click="RemoveValueButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Save Emitter" x:Name="SaveEmitterButton" Click="SaveEmitterButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Test" Click="TestEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+            </StackPanel>
+        </Controls:Flyout>
+        <Controls:Flyout Header="Value" Position="Right">
+            <StackPanel>
+                <Label Content="Preview Window" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Preview" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Reload datablocks" Click="Reload_Datablocks_Click" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Test" Click="TestEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+            </StackPanel>
+        </Controls:Flyout>
+    </Controls:MetroWindow.Flyouts>
+    <Grid x:Name="mainGrid">
+        <Grid x:Name="ModalDialogParent">
+            <TabControl x:Name="MainTabControl" Height="{Binding ActualHeight, ElementName=mainGrid}" Width="{Binding ActualWidth, ElementName=mainGrid}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="MainTabControl_SelectionChanged" >
+                <TabItem Header="Effects" x:Name="EffectsTab" IsSelected="True" PreviewMouseDown="EffectsTab_MouseDown" MouseDown="EffectsTab_MouseDown">
+                    <Controls:Panorama x:Name="EffectPan" HeaderFontColor="Black"/>
+                </TabItem>
+                <TabItem Header="Emitters" x:Name="EmittersTab" IsEnabled="False" PreviewMouseDown="EmittersTab_MouseDown" MouseDown="EmittersTab_MouseDown">
+                    <Controls:Panorama  ItemBox="140" x:Name="EmitterPan" HeaderFontColor="Black" />
+                </TabItem>
+                <TabItem Header="EmitterType" x:Name="selEmitterTab" IsEnabled="False" PreviewMouseDown="selEmitterTab_MouseDown" MouseDown="selEmitterTab_MouseDown">
+                    <Controls:Panorama  ItemBox="140" x:Name="ValuesPan" HeaderFontColor="Black" />
+                </TabItem>
+                <TabItem Header="Value" x:Name="selValueTab" IsEnabled="False">
+                    <Grid>
+                        <ComboBox x:Name="ValueTypeBox" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ValueTypeBox_SelectionChanged"/>
+                        <Label Content="Value type:" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top"/>
+                        <Controls:ToggleSwitch x:Name="EaseCheckBox" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" Content="Ease: " Height="39" Checked="EaseCheckBox_CheckChange" Unchecked="EaseCheckBox_CheckChange" />
+                        <TextBox x:Name="DeltaTextBox" Controls:TextboxHelper.Watermark="Delta value" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="10,320,0,0" RenderTransformOrigin="0.025,-2.385" TextChanged="DeltaTextBox_TextChanged"/>
+                        <ListView x:Name="PointList" HorizontalAlignment="Left" Height="428" Margin="221,41,0,0" VerticalAlignment="Top" Width="453">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Label Content="Points:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="221,5,0,0" FontSize="16"/>
+                        <Button Content="Add point" HorizontalAlignment="Left" VerticalAlignment="Top" Width="83" Margin="591,10,0,0" Click="AddPointButton_Click"/>
+                        <Label Content="Raise value with:" HorizontalAlignment="Left" Margin="10,289,0,0" VerticalAlignment="Top"/>
+                        <Grid x:Name="GraphContainer" HorizontalAlignment="Left" Height="164" Margin="10,351,0,0" VerticalAlignment="Top" Width="164"/>
+                        <Slider x:Name="SetTimeSlider" HorizontalAlignment="Left" Margin="10,149,0,0" VerticalAlignment="Top" Width="120" Maximum="1" TickFrequency="0.001" ValueChanged="SetTimeSlider_ValueChanged"/>
+                        <Label x:Name="SetTimeLabel" Content="Set value at 0.0:" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Dialogs:ItemInputDialog x:Name="ItemInputControl" Visibility="Hidden" />
+        <Dialogs:StringInputDialog x:Name="StringInputControl" Visibility="Hidden" />
+        <Dialogs:VectorInputDialog x:Name="VectorInputControl" Visibility="Hidden" />
+        <Dialogs:TimeInputDialog x:Name="TimeInputControl" Visibility="Hidden" />
+        <Dialogs:AlertDialog x:Name="AlertControl" Visibility="Hidden" />
+    </Grid>
+</Controls:MetroWindow>

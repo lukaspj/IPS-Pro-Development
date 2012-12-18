@@ -1,0 +1,9 @@
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\game\DNT FPS Demo Game Dll.dll
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\game\DNT FPS Demo Game Dll.pdb
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Debug\DNT FPS Demo Game Dll.dll
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Debug\DNT FPS Demo Game Dll.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo Game Dll.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo Game Dll.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Debug\DNT FPS Demo Game Dll No Core.csprojResolveAssemblyReference.cache
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Debug\DNT FPS Demo Game Dll.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Debug\DNT FPS Demo Game Dll.pdb

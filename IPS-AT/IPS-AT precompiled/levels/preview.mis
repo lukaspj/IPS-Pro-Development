@@ -1,0 +1,43 @@
+//--- OBJECT WRITE BEGIN ---
+new SimGroup(MissionGroup) {
+   canSave = "1";
+   canSaveDynamicFields = "1";
+      cdTrack = "2";
+      CTF_scoreLimit = "5";
+      enabled = "1";
+      musicTrack = "lush";
+
+   new LevelInfo(theLevelInfo) {
+      nearClip = "0.1";
+      visibleDistance = "1000";
+      visibleDistance_Ghost = "200";
+      decalBias = "0.0015";
+      fogColor = "0.6 0.6 0.7 1";
+      fogDensity = "0";
+      fogDensityOffset = "700";
+      fogAtmosphereHeight = "0";
+      canvasClearColor = "16 16 16 255";
+      ambientLightBlendPhase = "1";
+      ambientLightBlendCurve = "0 0 -1 -1";
+      advancedLightmapSupport = "0";
+      soundAmbience = "AudioAmbienceDefault";
+      soundDistanceModel = "Linear";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         desc0 = "A blank room ready to be populated with Torque objects.\n\nGuns, anyone?";
+         enabled = "1";
+         LevelName = "Blank Room";
+   };
+   new SkyBox() {
+      Material = "DefaultSkyMat";
+      drawBottom = "1";
+      fogBandHeight = "0";
+      position = "0 85 4.37114e-006";
+      rotation = "1 0 0 0";
+      scale = "1 1 1";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+};
+//--- OBJECT WRITE END ---
+

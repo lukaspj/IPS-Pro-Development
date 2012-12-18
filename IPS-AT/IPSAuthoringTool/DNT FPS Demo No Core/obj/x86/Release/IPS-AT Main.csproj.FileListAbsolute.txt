@@ -1,0 +1,8 @@
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\IPS-AT Main.exe.config
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\IPS-AT Main.exe
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\IPS-AT Main.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Release\IPS-AT Main.csprojResolveAssemblyReference.cache
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Release\DNT_FPS_Demo.Properties.Resources.resources
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Release\IPS-AT Main.csproj.GenerateResource.Cache
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Release\IPS-AT Main.exe
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Release\IPS-AT Main.pdb

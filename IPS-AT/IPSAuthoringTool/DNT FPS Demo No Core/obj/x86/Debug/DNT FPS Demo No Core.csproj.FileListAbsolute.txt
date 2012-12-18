@@ -1,0 +1,16 @@
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\game\DNT FPS Demo.exe.config
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\game\DNT FPS Demo.exe
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\game\DNT FPS Demo.pdb
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT FPS Demo No Core.csprojResolveAssemblyReference.cache
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT_FPS_Demo.Properties.Resources.resources
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT FPS Demo No Core.csproj.GenerateResource.Cache
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT FPS Demo.exe
+C:\Torque3D Main\DotNetTorque\Templates\Starter.FPS No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT FPS Demo.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo.exe.config
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo.exe
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT FPS Demo No Core.csprojResolveAssemblyReference.cache
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT_FPS_Demo.Properties.Resources.resources
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT FPS Demo No Core.csproj.GenerateResource.Cache
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT FPS Demo.exe
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo No Core\obj\x86\Debug\DNT FPS Demo.pdb

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ParticleEffect>
+  <Emitters>
+    <Emitter Type="GraphEmitter" x="0" y="0" z="0" datablock="g_spiralNode" emitter="g_sampleEmitter" Start="0" End="1">
+      <Value Ease="True" Name="LowerBoundary" DeltaValue="1000">
+        <Point X="0" Y="0" Easing="" EaseIn="False" EaseOut="False" />
+        <Point X="1" Y="1" Easing="Quartic" EaseIn="True" EaseOut="True" />
+      </Value>
+    </Emitter>
+    <Emitter Type="StockEmitter" x="0" y="0" z="0" datablock="pEffecTest" emitter="SampleEmitter" Start="0" End="1">
+      <Value Ease="True" Name="EjectionOffset" DeltaValue="2">
+        <Point X="0" Y="0" Easing="" EaseIn="False" EaseOut="False" />
+        <Point X="0.5" Y="1" Easing="Cubic" EaseIn="True" EaseOut="True" />
+		<Point X="1" Y="0" Easing="Circular" EaseIn="True" EaseOut="True" />
+      </Value>
+	  <Value Ease="False" Name="EjectionPeriod" DeltaValue="1" setTime="0.5" />
+    </Emitter>
+  </Emitters>
+</ParticleEffect>
