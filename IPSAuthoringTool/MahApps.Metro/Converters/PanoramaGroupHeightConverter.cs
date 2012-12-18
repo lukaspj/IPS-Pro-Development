@@ -8,9 +8,9 @@ namespace MahApps.Metro.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var itemBox = double.Parse(values[0].ToString());
-            var groupHeight = double.Parse(values[1].ToString());
-            var headerHeight = double.Parse(values[2].ToString());
+            var itemBox = double.Parse(values[0].ToString(), culture);
+            var groupHeight = double.Parse(values[1].ToString(), culture);
+            var headerHeight = double.Parse(values[2].ToString(), culture);
 
             return (Math.Floor((groupHeight - headerHeight) / itemBox) * itemBox);
         }

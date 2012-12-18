@@ -83,6 +83,35 @@ namespace IPSAuthoringTool.Dialogs
             return _result;
         }
 
+        public float[] ShowHandlerDialog(string message, int start, int stop)
+        {
+            theMessage = message;
+            Visibility = Visibility.Visible;
+            RangeSlider.RangeStartSelected = start;
+            RangeSlider.RangeStopSelected = stop;
+
+            _parent.IsEnabled = false;
+
+            _hideRequest = false;
+            while (!_hideRequest)
+            {
+                // HACK: Stop the thread if the application is about to close
+                if (this.Dispatcher.HasShutdownStarted ||
+                    this.Dispatcher.HasShutdownFinished)
+                {
+                    break;
+                }
+
+                // HACK: Simulate "DoEvents"
+                this.Dispatcher.Invoke(
+                    DispatcherPriority.Background,
+                    new ThreadStart(delegate { }));
+                Thread.Sleep(20);
+            }
+
+            return _result;
+        }
+
         private void HideHandlerDialog()
         {
             _hideRequest = true;

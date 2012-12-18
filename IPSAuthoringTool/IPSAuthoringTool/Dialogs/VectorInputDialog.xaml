@@ -28,11 +28,11 @@
                           Columns="6" HorizontalAlignment="Center"
                           VerticalAlignment="Bottom">
                         <Label Content="x:"/>
-                        <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="xControl" />
+                        <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="xControl" Text="0" />
                         <Label Content="y:"/>
-                        <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="yControl" />
+                        <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="yControl" Text="0" />
                         <Label Content="z:"/>
-                        <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="zControl" />
+                        <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="zControl" Text="0" />
                     </UniformGrid>
                     <UniformGrid Grid.Row="2" Margin="5" 
                           Columns="2" HorizontalAlignment="Center"

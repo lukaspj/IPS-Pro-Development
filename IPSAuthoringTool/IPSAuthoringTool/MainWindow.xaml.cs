@@ -14,6 +14,11 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using System.Collections.ObjectModel;
 using IPSAuthoringTool.Utility;
+using WinterLeaf;
+using System.Diagnostics;
+using System.Threading;
+using System.ComponentModel;
+using System.IO;
 
 namespace IPSAuthoringTool
 {
@@ -34,15 +39,43 @@ namespace IPSAuthoringTool
         ObservableCollection<Grid> EmitterPanels;
         ObservableCollection<Grid> ValuePanels;
 
+        Dictionary<string, List<string>> datablocks;
+
         Emitter emitter;
         List<ParticleEffect> Effects;
         ParticleEffect Effect;
         Emitter.value Value;
-        
+        TorqueController TC;
+        dnTorque dnt;
 
         public MainWindow()
         {
+            datablocks = new Dictionary<string, List<string>>();
+            List<string> EmitterDatablocks = null;
+            if (File.Exists("datablocks.cache"))
+                EmitterDatablocks = IOHandler.readStringDataFile("datablocks.cache");
+            if (EmitterDatablocks != null)
+            {
+                foreach (string s in EmitterDatablocks)
+                {
+                    string key = s.Split('|')[0];
+                    if (!datablocks.Keys.Contains(key))
+                        datablocks.Add(key, new List<string>());
+                    datablocks[key].Add(s.Split('|')[1]);
+                }
+            }
+            dnt = new dnTorque(Process.GetCurrentProcess().Handle);
+
+            dnt.onShutDown += new dnTorque.ShutDownEventHandler(dnt_onShutDown);
+
+            using (var bwr = new System.ComponentModel.BackgroundWorker())
+            {
+                bwr.DoWork += bwr_DoWork;
+                bwr.RunWorkerAsync();
+            }
+            
             InitializeComponent();
+
             // EffectsPanorama binding
             panEffects = new PanoramaGroup("Effects");
             EffectGroups = new ObservableCollection<PanoramaGroup> { panEffects };
@@ -72,6 +105,12 @@ namespace IPSAuthoringTool
             TimeInputControl.SetParent(ModalDialogParent);
             AlertControl.SetParent(ModalDialogParent);
         }
+
+        void bwr_DoWork(object sender, DoWorkEventArgs e)
+        {
+            TC = new TorqueController(ref dnt);
+        }
+
         
         #region EffectTab
         private void reloadEffects()
@@ -88,7 +127,6 @@ namespace IPSAuthoringTool
                 title.FontSize = 24;
                 title.Width = 128;
                 title.PreviewMouseDown += Effect_Click;
-                //title.Name = "" + i;
                 title.Tag = i;
                 p.Children.Add(title);
                 EffectPanels.Add(p);
@@ -110,15 +148,15 @@ namespace IPSAuthoringTool
         #region buttonClicks
         private void CreateEffectButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.SaveFileDialog SFD = new System.Windows.Forms.SaveFileDialog();
-            if (SFD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                ParticleEffect newEff = new ParticleEffect();
-                newEff.path = SFD.FileName;
-                newEff.name = System.IO.Path.GetFileNameWithoutExtension(SFD.FileName);
-                Effects.Add(newEff);
-                reloadEffects();
+            string s = StringInputControl.ShowHandlerDialog("Effect name:");
+            if (s == null) {
+                AlertControl.ShowHandlerDialog("No name given...\nEffect not created.");
+                return;
             }
+            ParticleEffect newEff = new ParticleEffect();
+            newEff.name = s;
+            Effects.Add(newEff);
+            reloadEffects();
         }
         private void LoadEffectButton_Click(object sender, RoutedEventArgs e)
         {
@@ -145,7 +183,8 @@ namespace IPSAuthoringTool
         {
             if (Effect != null)
             {
-                Effect.WriteToFile(Effect.path, AlertControl);
+                IOHandler.writeDatablockScript(Effects);
+                IOHandler.WriteAndExec(TC.getUtil(), Effect, AlertControl);
                 reloadEffects();
             }
         }
@@ -163,12 +202,12 @@ namespace IPSAuthoringTool
                 for (int i = 0; i < Effect.Emitters.Count; i++)
                 {
                     Grid p = new Grid();
-                    p.Width = 160;
-                    p.Height = 160;
+                    p.Width = 140;
+                    p.Height = 140;
                     Image img = new Image();
-                    img.Source = new BitmapImage(new Uri("/Icons/" + Effect.Emitters[i].ToString() + ".png", UriKind.Relative));
-                    img.Width = 160;
-                    img.Height = 160;
+                    img.Source = new BitmapImage(new Uri("Icons/" + Effect.Emitters[i].ToString() + ".png", UriKind.Relative));
+                    img.Width = 140;
+                    img.Height = 140;
                     img.Stretch = Stretch.Fill;
                     img.Tag = i;
                     img.PreviewMouseDown += Emitter_Click;
@@ -181,7 +220,24 @@ namespace IPSAuthoringTool
 
         void Emitter_Click(object sender, EventArgs e)
         {
+            Emitter oldEmitter = emitter;
             emitter = Effect.Emitters[(int)((Image)sender).Tag];
+            if (emitter != null)
+            {
+                EmitterDatablockComboBox.Items.Clear();
+                NodeDatablockComboBox.Items.Clear();
+                string datablockType = emitter.getDatablockType();
+                datablocks[datablockType].ForEach(x => EmitterDatablockComboBox.Items.Add(x));
+                string nodeDatablockType = emitter.getNodeDatablockType();
+                datablocks[nodeDatablockType].ForEach(x => NodeDatablockComboBox.Items.Add(x));
+                EmitterDatablockComboBox.SelectedIndex = datablocks[datablockType].IndexOf(emitter.emitter);
+                NodeDatablockComboBox.SelectedIndex = datablocks[nodeDatablockType].IndexOf(emitter.datablock);
+
+                xControl.Text = emitter.x.ToString();
+                yControl.Text = emitter.y.ToString();
+                zControl.Text = emitter.z.ToString();
+            }
+
             selEmitterTab.IsEnabled = true;
             selEmitterTab.Header = emitter.ToString();
             selValueTab.Header = "Value";
@@ -194,47 +250,29 @@ namespace IPSAuthoringTool
         {
             object o = ItemInputControl.ShowHandlerDialog("Please choose emitter type:", getEmitterLabels());
             Emitter emi = new Emitter();
-            if ( o != null )
-            {
-                switch((int)o)
-                {
-                    case 1:
-                        emi.Type = Emitter.EmitterType.StockEmitter;
-                        break;
-                    case 2:
-                        emi.Type = Emitter.EmitterType.GraphEmitter;
-                        break;
-                    case 3:
-                        emi.Type = Emitter.EmitterType.GroundEmitter;
-                        break;
-                    case 4:
-                        emi.Type = Emitter.EmitterType.MaskEmitter;
-                        break;
-                    default:
-                        emi.Type = Emitter.EmitterType.Error;
-                        break;
-                }
-            }
+            emi.Type = Emitter.stringToEnum((string)o);
+            if (emi.Type == Emitter.EmitterType.Error)
+                return;
+
+            List<string> EmitterDatablocks = datablocks[emi.getDatablockType()];
+            o = ItemInputControl.ShowHandlerDialog("Please choose emitter datablock:", EmitterDatablocks.Cast<object>().ToList());
+            if (o != null)
+                emi.emitter = o.ToString();
             else
                 return;
 
-            string s = StringInputControl.ShowHandlerDialog("Emitter datablock:");
-            if (s != null)
-                emi.emitter = s;
-            else
-                return;
-
-            s = StringInputControl.ShowHandlerDialog("Node datablock:");
-            if (s != null)
-                emi.datablock = s;
+            List<string> NodeDatablocks = datablocks[emi.getNodeDatablockType()];
+            o = ItemInputControl.ShowHandlerDialog("Please choose node datablock:", NodeDatablocks.Cast<object>().ToList());
+            if (o != null)
+                emi.datablock = o.ToString();
             else
                 return;
 
             float[] timeRange = TimeInputControl.ShowHandlerDialog("Time range:");
             if (timeRange != null)
             {
-                emi.Start = timeRange[0];
-                emi.End = timeRange[1];
+                emi.Start = timeRange[0] / 1000;
+                emi.End = timeRange[1] / 1000;
             }
             else
                 return;
@@ -269,30 +307,13 @@ namespace IPSAuthoringTool
 
         private List<object> getEmitterLabels()
         {
-            List<object> IC = new List<object>();
-            Label l1 = new Label();
-            l1.Content = "SphereEmitter";
-            l1.Tag = 1;
-            Label l2 = new Label();
-            l2.Content = "GraphEmitter";
-            l2.Tag = 2;
-            Label l3 = new Label();
-            l3.Content = "GroundEmitter";
-            l3.Tag = 3;
-            Label l4 = new Label();
-            l4.Content = "MaskEmitter";
-            l4.Tag = 4;
-            IC.Add(l1);
-            IC.Add(l2);
-            IC.Add(l3);
-            IC.Add(l4);
-            return IC;
+            return new List<object>() { "StockEmitter", "GraphEmitter", "GroundEmitter", "MaskEmitter" };
         }
 
         #endregion
 
         #region ValuesTab
-
+        #region ValuesPanorama
         private void reloadValues()
         {
             ValuePanels.Clear();
@@ -304,7 +325,6 @@ namespace IPSAuthoringTool
                     Grid p = new Grid();
                     p.Height = 180;
                     p.Width = 180;
-                    p.Margin = new Thickness(5);
                     p.Tag = i;
                     p.PreviewMouseDown += new MouseButtonEventHandler(valueGrid_PreviewMouseDown);
                     if (val.Ease == true)
@@ -312,8 +332,6 @@ namespace IPSAuthoringTool
                         ObservableCollection<double> Points = new ObservableCollection<double>();
                         ComputeGraph(Points, i);
                         Chart.UCChartCurveGraph ucGraph = new Chart.UCChartCurveGraph();
-                        ucGraph.Tag = i;
-                        ucGraph.PreviewMouseDown += new MouseButtonEventHandler(ucGraph_PreviewMouseDown);
                         ObservableCollection<Chart.ChartRequestInfo> ri = new ObservableCollection<Chart.ChartRequestInfo>();
                         ri.Add(new Chart.ChartRequestInfo(Brushes.Red, Points, Chart.ChartLineType.PolylineType, val.valueName));
                         ucGraph.RequestData = ri;
@@ -331,12 +349,10 @@ namespace IPSAuthoringTool
                         Label l = new Label();
                         l.Content = val.valueName;
                         l.Tag = i;
-                        l.PreviewMouseDown += new MouseButtonEventHandler(LabelValue_PreviewMouseDown);
+                        l.PreviewMouseDown += LabelValue_PreviewMouseDown;
                         l.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
                         l.FontSize = 24;
                         l.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-                        l.Height = 180;
-                        l.Width = 180;
                         p.Children.Add(l);
                     }
                     ValuePanels.Add(p);
@@ -352,14 +368,6 @@ namespace IPSAuthoringTool
             ReloadValueTabContent();
         }
 
-        void ucGraph_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Value = emitter.Values[(int)((Chart.UCChartCurveGraph)sender).Tag];
-            selValueTab.Header = Value.valueName;
-            selValueTab.IsEnabled = true;
-            ReloadValueTabContent();
-        }
-
         void LabelValue_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Value = emitter.Values[(int)((Label)sender).Tag];
@@ -367,6 +375,8 @@ namespace IPSAuthoringTool
             selValueTab.IsEnabled = true;
             ReloadValueTabContent();
         }
+        #endregion
+
 
         #region ButtonClicks
 
@@ -377,7 +387,7 @@ namespace IPSAuthoringTool
             if (o != null)
             {
                 Emitter.value val = new Emitter.value();
-                val.valueName = fields.ElementAt((int)o);
+                val.valueName = fields.ElementAt((int)((Control)o).Tag);
                 emitter.Values.Add(val);
                 reloadValues();
             }
@@ -429,7 +439,7 @@ namespace IPSAuthoringTool
         #endregion
 
         #region EditValueTab
-
+        #region Pointlist and resets
         public void ReloadValueTabContent()
         {
             ResetValueComboBox();
@@ -443,6 +453,7 @@ namespace IPSAuthoringTool
 
         public void ResetValueComboBox()
         {
+            ValueTypeBox.Items.Clear();
             List<object> objs = getFieldList();
             foreach(object o in objs)
                 ValueTypeBox.Items.Add(o);
@@ -636,16 +647,63 @@ namespace IPSAuthoringTool
             ucGraph.Width = 164;
             GraphContainer.Children.Add(ucGraph);
         }
+        #endregion
 
+        #region ValueChanges
         private void EaseCheckBox_CheckChange(object sender, RoutedEventArgs e)
         {
             if (EaseCheckBox.IsChecked.HasValue)
                 Value.Ease = (bool)EaseCheckBox.IsChecked;
             else
                 Value.Ease = false;
+
+            if (Value.points.Count < 2)
+            {
+                Value.points.Add(new Emitter.PointOnValue());
+                Value.points.Add(new Emitter.PointOnValue());
+                Value.points[0].point.X = 0;
+                Value.points[0].point.Y = 0;
+                Value.points[1].point.X = 1;
+                Value.points[1].point.Y = 1;
+            }
             reloadPoints();
         }
 
+
+        private void AddPointButton_Click(object sender, RoutedEventArgs e)
+        {
+            Emitter.PointOnValue POV = new Emitter.PointOnValue();
+            POV.point.X = 0.5f;
+            POV.point.Y = 0.5f;
+            Value.points.Add(POV);
+            Value.points.Sort(new Emitter.PointXSorter());
+            reloadPoints();
+        }
+
+        private void DeltaTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string Text = ((TextBox)sender).Text;
+            float result;
+            if (Value != null && Text != "" && Text != null && float.TryParse(Text, out result))
+                Value.deltaValue = result;
+        }
+
+        private void SetTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {   
+            SetTimeLabel.Content = String.Format("Set value at {0:0.000}", SetTimeSlider.Value);
+            if(Value != null)
+                Value.setTime = (float)SetTimeSlider.Value;
+        }
+
+        private void ValueTypeBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count <= 0)
+                return;
+            string Text = ((Label)e.AddedItems[0]).Content.ToString();
+            if (Value != null && Text != "" && Text != null)
+                Value.valueName = Text;
+        }
+        #endregion
         #endregion
 
         #region GraphComputing
@@ -676,6 +734,15 @@ namespace IPSAuthoringTool
 
         private int[] GetRelevantPointIndexes(float x, int id)
         {
+            if (emitter.Values[id].points.Count < 2)
+            {
+                emitter.Values[id].points.Add(new Emitter.PointOnValue());
+                emitter.Values[id].points.Add(new Emitter.PointOnValue());
+                emitter.Values[id].points[0].point.X = 0;
+                emitter.Values[id].points[0].point.Y = 0;
+                emitter.Values[id].points[1].point.X = 1;
+                emitter.Values[id].points[1].point.Y = 1;
+            }
             int[] retArr = new int[2];
             int p1 = 0;
             int p2 = emitter.Values[id].points.Count - 1;
@@ -711,7 +778,7 @@ namespace IPSAuthoringTool
             else
                 selEmitterTab.IsEnabled = false;
 
-            if (Value.valueName != null)
+            if (Value != null)
                 selValueTab.IsEnabled = true;
             else
                 selValueTab.IsEnabled = false;
@@ -725,7 +792,7 @@ namespace IPSAuthoringTool
             else
                 selEmitterTab.IsEnabled = false;
 
-            if (Value.valueName != null)
+            if (Value != null)
                 selValueTab.IsEnabled = true;
             else
                 selValueTab.IsEnabled = false;
@@ -733,7 +800,7 @@ namespace IPSAuthoringTool
 
         private void selEmitterTab_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Value.valueName != null)
+            if (Value != null)
                 selValueTab.IsEnabled = true;
             else
                 selValueTab.IsEnabled = false;
@@ -744,6 +811,165 @@ namespace IPSAuthoringTool
         private void MetroWindow_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ParticleEffect.writeLatestFile(Effects);
+
+            TC.ProperShutdown();
+        }
+
+        private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.RemovedItems.Count != 0)
+            {
+                if (MainTabControl.Items.IndexOf(e.RemovedItems[0]) == -1)
+                    return;
+                if (MainTabControl.SelectedIndex == 2)
+                    reloadValues();
+                if (Flyouts[MainTabControl.Items.IndexOf(e.RemovedItems[0])].IsOpen)
+                {
+                    ToggleFlyouts();
+                }
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (TC.DNTWindowOpen)
+                return;
+            if (TC.Dnt == null)
+            {
+                if (dnt.IsRunning)
+                    dnt.Stop();
+                dnt = null;
+                if (dnt == null)
+                    dnt = new dnTorque(Process.GetCurrentProcess().Handle);
+                using (var bwr = new System.ComponentModel.BackgroundWorker())
+                {
+                    bwr.DoWork += bwr_DoWork;
+                    bwr.RunWorkerAsync();
+                }
+            }
+            TC.Open();
+        }
+
+        private void TestEffectButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!TC.DNTWindowOpen)
+            {
+                AlertControl.ShowHandlerDialog("Please open the preview window first!");
+                return;
+            }
+            IOHandler.writeDatablockScript(Effects);
+            
+            IOHandler.WriteAndExec(TC.getUtil(), Effect, null);
+            TC.SpawnEffect(Effect.name);
+        }
+
+        void dnt_onShutDown(object sender, EventArgs e)
+        {
+            TC.ProperShutdown();
+        }
+
+        private void FlyoutsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Flyouts[0].IsOpen = true;
+
+            Flyouts[1].IsOpen = true;
+        }
+
+        private void ToggleFlyouts()
+        {
+            if (MainTabControl.SelectedIndex == 0)
+            {
+                Flyouts[0].IsOpen = !Flyouts[0].IsOpen;
+                Flyouts[1].IsOpen = false;
+                Flyouts[2].IsOpen = false;
+                Flyouts[3].IsOpen = false;
+            }
+            if (MainTabControl.SelectedIndex == 1)
+            {
+                Flyouts[1].IsOpen = !Flyouts[1].IsOpen;
+                Flyouts[0].IsOpen = false;
+                Flyouts[2].IsOpen = false;
+                Flyouts[3].IsOpen = false;
+            }
+            if (MainTabControl.SelectedIndex == 2)
+            {
+                Flyouts[2].IsOpen = !Flyouts[2].IsOpen;
+                Flyouts[0].IsOpen = false;
+                Flyouts[1].IsOpen = false;
+                Flyouts[3].IsOpen = false;
+            }
+            if (MainTabControl.SelectedIndex == 3)
+            {
+                Flyouts[3].IsOpen = !Flyouts[3].IsOpen;
+                Flyouts[0].IsOpen = false;
+                Flyouts[1].IsOpen = false;
+                Flyouts[2].IsOpen = false;
+            }
+        }
+
+        private void MetroWindow_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ToggleFlyouts();
+        }
+
+        private void Reload_Datablocks_Click(object sender, RoutedEventArgs e)
+        {
+            if (!TC.DNTWindowOpen)
+            {
+                AlertControl.ShowHandlerDialog("Please open the preview window first!\nThe preview window is needed to trace all the available datablocks");
+                return;
+            }
+            if (datablocks == null)
+                datablocks = new Dictionary<string, List<string>>();
+            if(datablocks.Count > 0)
+                datablocks.Clear();
+            List<string> emitters = getEmitterLabels().Cast<string>().ToList();
+            foreach (string s in emitters)
+            {
+                string datablockType = Emitter.getDatablockType(Emitter.stringToEnum(s));
+                if (!datablocks.Keys.Contains(datablockType))
+                    datablocks.Add(datablockType, new List<string>());
+                datablocks[datablockType].AddRange(TC.getDatablocks(datablockType));
+            }
+            foreach (string s in emitters)
+            {
+                string datablockType = Emitter.getNodeDatablockType(Emitter.stringToEnum(s));
+                if (!datablocks.Keys.Contains(datablockType))
+                    datablocks.Add(datablockType, new List<string>());
+                datablocks[datablockType].AddRange(TC.getDatablocks(datablockType));
+            }
+            IOHandler.writeStringDataFile(datablocks, "datablocks.cache");
+        }
+
+        private void TimeRange_Click(object sender, RoutedEventArgs e)
+        {
+            float[] timeRange = TimeInputControl.ShowHandlerDialog("Time range:", (int)(emitter.Start * 1000), (int)(emitter.End * 1000));
+            if (timeRange != null)
+            {
+                emitter.Start = timeRange[0] / 1000;
+                emitter.End = timeRange[1] / 1000;
+            }
+            else
+                return;
+        }
+
+        private void EmitterPointChanged(object sender, TextChangedEventArgs e)
+        {
+            if (emitter != null)
+            {
+                float.TryParse(xControl.Text, out emitter.x);
+                float.TryParse(yControl.Text, out emitter.y);
+                float.TryParse(zControl.Text, out emitter.z);
+            }
+        }
+
+        private void EmitterDatablocksChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (emitter != null && NodeDatablockComboBox.SelectedItem != null && EmitterDatablockComboBox.SelectedItem != null)
+            {
+                emitter.datablock = NodeDatablockComboBox.SelectedItem.ToString();
+                emitter.emitter = EmitterDatablockComboBox.SelectedItem.ToString();
+            }
         }
     }
 }

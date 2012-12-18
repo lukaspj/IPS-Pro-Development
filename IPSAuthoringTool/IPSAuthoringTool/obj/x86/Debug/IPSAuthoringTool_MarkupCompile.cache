@@ -1,19 +1,19 @@
 ﻿IPSAuthoringTool
 
 
-winexe
+library
 C#
 .cs
-C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\
 IPSAuthoringTool
 none
 false
 DEBUG;TRACE
-C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\App.xaml
+
 8-1368426524
 
-16223299149
-16-297495363
+17-2064646516
+182007910557
 Chart\UCChartCurveGraph.xaml;Dialogs\AlertDialog.xaml;Dialogs\TimeInputDialog.xaml;Dialogs\VectorInputDialog.xaml;Dialogs\StringInputDialog.xaml;Dialogs\ItemInputDialog.xaml;MainWindow.xaml;Resources\Icons.xaml;
 
 False

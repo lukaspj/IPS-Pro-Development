@@ -1,12 +1,12 @@
-datablock ParticleEffectData(TestEffect)
+datablock ParticleEffectData(NewEffect)
 {
-	pEffect = "./ParticleEffects/TestEffect.pEffect";
+	pEffect = "./ParticleEffects/NewEffect.pEffect";
 	lifeTimeMS = 5000;
 };
 
-datablock ParticleEffectData(NoName)
+datablock ParticleEffectData(NewEffect2)
 {
-	pEffect = "./ParticleEffects/NoName.pEffect";
+	pEffect = "./ParticleEffects/NewEffect2.pEffect";
 	lifeTimeMS = 5000;
 };
 

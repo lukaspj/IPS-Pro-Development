@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B1DC559B-A8A1-47D5-912B-4BCA2AE0091C}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IPSAuthoringTool</RootNamespace>
     <AssemblyName>IPSAuthoringTool</AssemblyName>
@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\game\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,18 +30,23 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\game\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.0.9.9.47-ALPHA\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\buildFiles\VisualStudio 2012\packages\MahApps.Metro.0.10.0.0\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,10 +61,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
     <Compile Include="Chart\BezierSpline.cs" />
     <Compile Include="Chart\UCChartCurveGraph.xaml.cs">
       <DependentUpon>UCChartCurveGraph.xaml</DependentUpon>
@@ -81,7 +82,9 @@
       <DependentUpon>ItemInputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility\Emitter.cs" />
+    <Compile Include="Utility\IOHandler.cs" />
     <Compile Include="Utility\ParticleEffect.cs" />
+    <Compile Include="Utility\TorqueController.cs" />
     <Compile Include="Utility\Tweener.cs" />
     <Page Include="Chart\UCChartCurveGraph.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -111,10 +114,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -157,12 +156,6 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MahApps.Metro\MahApps.Metro.csproj">
-      <Project>{5B1710D2-5DC8-4754-91B2-19165DE49B3D}</Project>
-      <Name>MahApps.Metro</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\GraphEmitter.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -187,6 +180,16 @@
     <Resource Include="Icons\StockEmitter.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DotNet Torque Core\DotNetTorque.csproj">
+      <Project>{f08948d7-0e15-408a-b1f6-ec395895656f}</Project>
+      <Name>DotNetTorque</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MahApps.Metro\MahApps.Metro.csproj">
+      <Project>{5B1710D2-5DC8-4754-91B2-19165DE49B3D}</Project>
+      <Name>MahApps.Metro</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

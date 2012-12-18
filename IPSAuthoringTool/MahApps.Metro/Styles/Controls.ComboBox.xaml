@@ -260,7 +260,7 @@
                                     Effect="{DynamicResource DropShadowBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     HorizontalAlignment="Stretch"
-                                    Height="Auto"
+                                    Height="100"
                                     BorderBrush="{DynamicResource ComboBoxPopupBrush}"
                                     Background="{DynamicResource WhiteBrush}">
                                 <ScrollViewer x:Name="DropDownScrollViewer" BorderThickness="0" Margin="2" Padding="1">

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,11 +68,13 @@ namespace IPSAuthoringTool.Utility
                 writer.WriteEndElement();
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
-                alertDialog.ShowHandlerDialog("Successfully saved: " + name);
+                if (alertDialog != null)
+                    alertDialog.ShowHandlerDialog("Successfully saved: " + name);
             }
             catch
             {
-                alertDialog.ShowHandlerDialog("Error saving: " + name);
+                if (alertDialog != null)
+                    alertDialog.ShowHandlerDialog("Error saving: " + name);
             }
             writer.Close();
         }

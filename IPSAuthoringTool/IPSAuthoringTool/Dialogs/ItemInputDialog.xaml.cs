@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -58,9 +59,7 @@ namespace IPSAuthoringTool.Dialogs
             theMessage = message;
             Visibility = Visibility.Visible;
             ComboControl.Items.Clear();
-            foreach (object o in coll)
-                ComboControl.Items.Add(o);
-
+            coll.ForEach(x => ComboControl.Items.Add(x));
             _parent.IsEnabled = false;
 
             _hideRequest = false;
@@ -92,7 +91,7 @@ namespace IPSAuthoringTool.Dialogs
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            _result = ((Control)ComboControl.SelectedItem).Tag;
+            _result = ComboControl.SelectedItem;
             HideHandlerDialog();
         }
 

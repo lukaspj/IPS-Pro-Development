@@ -58,9 +58,9 @@ namespace IPSAuthoringTool.Dialogs
         {
             theMessage = message;
             Visibility = Visibility.Visible;
-            xControl.Text = "";
-            yControl.Text = "";
-            zControl.Text = "";
+            xControl.Text = "0";
+            yControl.Text = "0";
+            zControl.Text = "0";
 
             _parent.IsEnabled = false;
 

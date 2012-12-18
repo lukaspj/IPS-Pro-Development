@@ -45,3 +45,45 @@ C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthorin
 C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\TimeInputDialog.g.cs
 C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\AlertDialog.baml
 C:\Users\Lukas\Documents\GitHub\IPS-Pro-Development\IPSAuthoringTool\IPSAuthoringTool\obj\x86\Debug\Dialogs\AlertDialog.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\IPSAuthoringTool.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\IPSAuthoringTool.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\DotNetTorque.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\DotNetTorque.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\DotNetTorque.xml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\MahApps.Metro.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\System.Windows.Interactivity.xml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\de\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\en\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\es\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\fr\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\it\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\ja\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\ko\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.csprojResolveAssemblyReference.cache
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Chart\UCChartCurveGraph.baml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\AlertDialog.baml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\TimeInputDialog.baml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\VectorInputDialog.baml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\StringInputDialog.baml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\ItemInputDialog.baml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Resources\Icons.baml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Chart\UCChartCurveGraph.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\AlertDialog.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\TimeInputDialog.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\VectorInputDialog.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\StringInputDialog.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\Dialogs\ItemInputDialog.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\MainWindow.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool_MarkupCompile.cache
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool_MarkupCompile.lref
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\MainWindow.baml
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.g.resources
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.Properties.Resources.resources
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.csproj.GenerateResource.Cache
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\IPSAuthoringTool\obj\x86\Debug\IPSAuthoringTool.pdb
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\IPSAuthoringTool.dll
+C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\IPSAuthoringTool.pdb

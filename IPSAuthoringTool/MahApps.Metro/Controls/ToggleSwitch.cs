@@ -85,9 +85,8 @@ namespace MahApps.Metro.Controls
             var toggleSwitch = (ToggleSwitch)d;
             if (toggleSwitch._toggleButton != null)
             {
-                toggleSwitch.IsChecked = (bool?)e.NewValue;
                 toggleSwitch._toggleButton.IsChecked = (bool?)e.NewValue;
-                toggleSwitch.ChangeVisualState(true);
+
             }
         }
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +27,10 @@ namespace IPSAuthoringTool.Utility
             public List<PointOnValue> points;
             public bool Ease;
             public float setTime;
+            public value()
+            {
+                points = new List<PointOnValue>();
+            }
         }
 
         public struct PointF
@@ -55,37 +59,89 @@ namespace IPSAuthoringTool.Utility
 
         public enum EmitterType
         {
-            StockEmitter = 0,
+            SphereEmitter = 0,
             GraphEmitter,
-            MeshEmitter,
-            RadiusMeshEmitter,
             GroundEmitter,
             MaskEmitter,
-            GroundMaskEmitter,
-            PathEmitter,
             Error
+        }
+
+        public string getDatablockType()
+        {
+            switch (Type)
+            {
+                case EmitterType.SphereEmitter:
+                    return "SphereEmitterData";
+                case EmitterType.GraphEmitter:
+                    return "GraphEmitterData";
+                case EmitterType.GroundEmitter:
+                    return "GroundEmitterData";
+                case EmitterType.MaskEmitter:
+                    return "MaskEmitterData";
+            }
+            return "";
+        }
+
+        public static string getDatablockType(EmitterType Type)
+        {
+            switch (Type)
+            {
+                case EmitterType.SphereEmitter:
+                    return "SphereEmitterData";
+                case EmitterType.GraphEmitter:
+                    return "GraphEmitterData";
+                case EmitterType.GroundEmitter:
+                    return "GroundEmitterData";
+                case EmitterType.MaskEmitter:
+                    return "MaskEmitterData";
+            }
+            return "";
+        }
+
+        public string getNodeDatablockType()
+        {
+            switch (Type)
+            {
+                case EmitterType.SphereEmitter:
+                    return "SphereEmitterNodeData";
+                case EmitterType.GraphEmitter:
+                    return "GraphEmitterNodeData";
+                case EmitterType.GroundEmitter:
+                    return "GroundEmitterNodeData";
+                case EmitterType.MaskEmitter:
+                    return "MaskEmitterNodeData";
+            }
+            return "";
+        }
+
+        public static string getNodeDatablockType(EmitterType Type)
+        {
+            switch (Type)
+            {
+                case EmitterType.SphereEmitter:
+                    return "SphereEmitterNodeData";
+                case EmitterType.GraphEmitter:
+                    return "GraphEmitterNodeData";
+                case EmitterType.GroundEmitter:
+                    return "GroundEmitterNodeData";
+                case EmitterType.MaskEmitter:
+                    return "MaskEmitterNodeData";
+            }
+            return "";
         }
 
         public static EmitterType stringToEnum(string s)
         {
             switch (s)
             {
-                case "StockEmitter":
-                    return EmitterType.StockEmitter;
+                case "SphereEmitter":
+                    return EmitterType.SphereEmitter;
                 case "GraphEmitter":
                     return EmitterType.GraphEmitter;
-                case "MeshEmitter":
-                    return EmitterType.MeshEmitter;
-                case "RadiusMeshEmitter":
-                    return EmitterType.RadiusMeshEmitter;
                 case "GroundEmitter":
                     return EmitterType.GroundEmitter;
                 case "MaskEmitter":
                     return EmitterType.MaskEmitter;
-                case "GroundMaskEmitter":
-                    return EmitterType.GroundMaskEmitter;
-                case "PathEmitter":
-                    return EmitterType.PathEmitter;
                 default:
                     return EmitterType.Error;
             }
@@ -94,22 +150,14 @@ namespace IPSAuthoringTool.Utility
         {
             switch (s)
             {
-                case EmitterType.StockEmitter:
+                case EmitterType.SphereEmitter:
                     return 0;
                 case EmitterType.GraphEmitter:
                     return 1;
-                case EmitterType.MeshEmitter:
-                    return 2;
-                case EmitterType.RadiusMeshEmitter:
-                    return 3;
                 case EmitterType.GroundEmitter:
-                    return 4;
+                    return 2;
                 case EmitterType.MaskEmitter:
-                    return 5;
-                case EmitterType.GroundMaskEmitter:
-                    return 6;
-                case EmitterType.PathEmitter:
-                    return 7;
+                    return 3;
                 default:
                     return -1;
             }
@@ -129,27 +177,16 @@ namespace IPSAuthoringTool.Utility
             retList.AddRange(new string[] {"xPosition","yPosition", "zPosition", "EjectionPeriod", "EjectionOffset"});
             switch (_type)
             {
-                case EmitterType.StockEmitter:
+                case EmitterType.SphereEmitter:
                     break;
                 case EmitterType.GraphEmitter:
                     retList.AddRange(new string[] { "UpperBoundary", "LowerBoundary", "TimeScale"});
-                    break;
-                case EmitterType.MeshEmitter:
-                    break;
-                case EmitterType.RadiusMeshEmitter:
-                    retList.AddRange(new string[] { "Radius" });
                     break;
                 case EmitterType.GroundEmitter:
                     retList.AddRange(new string[] { "Radius" });
                     break;
                 case EmitterType.MaskEmitter:
                     retList.AddRange(new string[] { "Scale" });
-                    break;
-                case EmitterType.GroundMaskEmitter:
-                    retList.AddRange(new string[] { "Radius" });
-                    break;
-                case EmitterType.PathEmitter:
-                    retList.AddRange(new string[] { "Travelspeed" });
                     break;
             }
             return retList;
@@ -159,22 +196,14 @@ namespace IPSAuthoringTool.Utility
         {
             switch (Type)
             {
-                case EmitterType.StockEmitter:
+                case EmitterType.SphereEmitter:
                     return "StockEmitter";
                 case EmitterType.GraphEmitter:
                     return "GraphEmitter";
-                case EmitterType.MeshEmitter:
-                    return "MeshEmitter";
-                case EmitterType.RadiusMeshEmitter:
-                    return "RadiusMeshEmitter";
                 case EmitterType.GroundEmitter:
                     return "GroundEmitter";
                 case EmitterType.MaskEmitter:
                     return "MaskEmitter";
-                case EmitterType.GroundMaskEmitter:
-                    return "GroundMaskEmitter";
-                case EmitterType.PathEmitter:
-                    return "PathEmitter";
                 default:
                     return "Unidentified Emitter";
             }
