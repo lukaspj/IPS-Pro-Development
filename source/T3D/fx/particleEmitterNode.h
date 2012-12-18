@@ -9,12 +9,17 @@
 #include <vector>
 #include <sstream>
 
-#ifndef attrobjectCount
-#define attrobjectCount (U8)2
+#ifndef PARTICLE_BEHAVIOUR_H
+#include "ImprovedParticle\ParticleBehaviours\particleBehaviour.h"
+#endif
+
+#ifndef ParticleBehaviourCount
+#define ParticleBehaviourCount (U8)8
 #endif
 
 class ParticleEmitterData;
 class ParticleEmitter;
+class IParticleBehaviour;
 
 //*****************************************************************************
 // ParticleEmitterNodeData
@@ -31,22 +36,15 @@ public:
 	F32 timeMultiple;
 
 	//------------------------- Stand alone variables
-	bool standAloneEmitter;
-	S32   sa_ejectionPeriodMS;                   ///< Time, in Milliseconds, between particle ejection
-	S32   sa_periodVarianceMS;                   ///< Varience in ejection peroid between 0 and n
+	bool	standAloneEmitter;
+	S32		sa_ejectionPeriodMS;                   ///< Time, in Milliseconds, between particle ejection
+	S32		sa_periodVarianceMS;                   ///< Varience in ejection peroid between 0 and n
 
-	F32   sa_ejectionVelocity;                   ///< Ejection velocity
-	F32   sa_velocityVariance;                   ///< Variance for velocity between 0 and n
-	F32   sa_ejectionOffset;                     ///< Z offset from emitter point to eject from
+	F32		sa_ejectionVelocity;                   ///< Ejection velocity
+	F32		sa_velocityVariance;                   ///< Variance for velocity between 0 and n
+	F32		sa_ejectionOffset;                     ///< Z offset from emitter point to eject from
 
-	S32	AttractionMode[attrobjectCount];		///< How the objects should interact with the associated objects.
-
-	bool	grounded;
-	bool	sticky;
-	bool	ParticleCollision;
-	F32		attractionrange;
-	F32		Amount[attrobjectCount];
-	StringTableEntry	Attraction_offset[attrobjectCount];
+	bool	sa_grounded;
 
 	ParticleEmitterNodeData();
 	~ParticleEmitterNodeData();
@@ -96,23 +94,15 @@ public:
 
 public:
 	//------------------------- Stand alone variables
-	bool standAloneEmitter;
-	S32   sa_ejectionPeriodMS;                   ///< Time, in Milliseconds, between particle ejection
-	S32   sa_periodVarianceMS;                   ///< Varience in ejection peroid between 0 and n
+	bool	standAloneEmitter;
+	S32		sa_ejectionPeriodMS;                   ///< Time, in Milliseconds, between particle ejection
+	S32		sa_periodVarianceMS;                   ///< Varience in ejection peroid between 0 and n
 	
-	F32   sa_ejectionVelocity;                   ///< Ejection velocity
-	F32   sa_velocityVariance;                   ///< Variance for velocity between 0 and n
-	F32   sa_ejectionOffset;                     ///< Z offset from emitter point to eject from
-
-	S32	AttractionMode[attrobjectCount];		///< How the objects should interact with the associated objects.
-
-	bool	grounded;
-	bool	sticky;
-	bool	ParticleCollision;
-	F32		attractionrange;
-	StringTableEntry attractedObjectID[attrobjectCount];
-	F32		Amount[attrobjectCount];
-	StringTableEntry	Attraction_offset[attrobjectCount];
+	F32		sa_ejectionVelocity;                   ///< Ejection velocity
+	F32		sa_velocityVariance;                   ///< Variance for velocity between 0 and n
+	F32		sa_ejectionOffset;                     ///< Z offset from emitter point to eject from
+	bool	sa_grounded;
+	SimDataBlock* ParticleBHVs[ParticleBehaviourCount];
 
 	std::vector<std::string> initialValues;
 
@@ -127,6 +117,7 @@ public:
 
 	// Time/Move Management
 	void processTick(const Move* move);
+	virtual void UpdateEmitterValues();
 	virtual void advanceTime(F32 dt);
 
 	//DECLARE_CONOBJECT(ParticleEmitterNode);
@@ -150,6 +141,20 @@ protected:
 		emitterEdited	 = Parent::NextFreeMask << 2,
 		NextFreeMask   = Parent::NextFreeMask << 3,
 	};
+
+	enum EmitterUpdateBits
+	{
+		saEmitter		= BIT(0),
+		saPeriod		= BIT(1),
+		saPeriodVar		= BIT(2),
+		saVel			= BIT(3),
+		saVelVar		= BIT(4),
+		saOffset		= BIT(5),
+		saGrounded		= BIT(6),
+		saBehaviour		= BIT(7),
+		saNextFreeMask	= BIT(8)
+	};
+	U32 saUpdateBits;
 };
 
 #endif // _H_PARTICLEEMISSIONDUMMY

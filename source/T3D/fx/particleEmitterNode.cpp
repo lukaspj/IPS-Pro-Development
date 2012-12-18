@@ -26,17 +26,6 @@ EndImplementEnumType;
 ParticleEmitterNodeData::ParticleEmitterNodeData()
 {
 	timeMultiple = 1.0;
-
-	attractionrange = 50;
-	for(int i = 0; i < attrobjectCount; i++)
-	{
-		AttractionMode[i] = 0;
-		Amount[i] = 1;
-		Attraction_offset[i] = "0 0 0";
-	}
-	sticky = false;
-	ParticleCollision = false;
-
 	
 	standAloneEmitter = false;
 
@@ -83,28 +72,6 @@ void ParticleEmitterNodeData::initPersistFields()
 		"Distance along ejection Z axis from which to eject particles." );
 
 	endGroup( "Independent emitters" );
-
-	addGroup( "Physics" );
-
-	addField( "RayCollision", TYPEID< bool >(), Offset(ParticleCollision, ParticleEmitterNodeData),
-		"Reverse the graphEmitter." );
-
-	addField( "AttractionMode", TYPEID< ParticleEmitterNode::EnumAttractionMode >(), Offset(AttractionMode, ParticleEmitterNodeData), attrobjectCount,
-		"String value that controls how the particles interact." );
-
-	addField( "Attraction range", TYPEID< F32 >(), Offset(attractionrange, ParticleEmitterNodeData),
-		"Reverse the graphEmitter." );
-
-	addField( "Amount", TYPEID< F32 >(), Offset(Amount, ParticleEmitterNodeData), attrobjectCount,
-		"Reverse the graphEmitter." );
-
-	addField( "Sticky", TYPEID< bool >(), Offset(sticky, ParticleEmitterNodeData),
-		"Reverse the graphEmitter." );
-
-	addField( "Attraction_offset;", TYPEID< StringTableEntry >(), Offset(Attraction_offset, ParticleEmitterNodeData), attrobjectCount,
-		"testReverse the graphEmitter." );
-
-	endGroup( "Physics" );
 
 	Parent::initPersistFields();
 }
@@ -187,16 +154,9 @@ ParticleEmitterNode::ParticleEmitterNode()
 	sa_velocityVariance = 1.0f;
 	sa_ejectionOffset   = 0.0f;   // ejection from the emitter point
 
-	sticky = false;
-	ParticleCollision = false;
-	attractionrange = 50;
-	for(int i = 0; i < attrobjectCount; i++)
-	{
-		AttractionMode[i] = 0;
-		Amount[i] = 1;
-		Attraction_offset[i] = "0 0 0";
-		attractedObjectID[i] = "";
-	}
+	saUpdateBits = 0;
+	for(int i = 0; i < ParticleBehaviourCount; i++)
+		ParticleBHVs[i] = NULL;
 }
 
 ParticleEmitterNode::~ParticleEmitterNode()
@@ -207,8 +167,6 @@ void ParticleEmitterNode::initPersistFields()
 {
 	addField( "active", TYPEID< bool >(), Offset(mActive,ParticleEmitterNode),
 		"Controls whether particles are emitted from this node." );
-	addField( "emitter",  TYPEID< ParticleEmitterData >(), Offset(mEmitterDatablock, ParticleEmitterNode),
-		"Datablock to use when emitting particles." );
 	addField( "velocity", TYPEID< F32 >(), Offset(mVelocity, ParticleEmitterNode),
 		"Velocity to use when emitting particles (in the direction of the "
 		"ParticleEmitterNode object's up (Z) axis)." );
@@ -236,30 +194,12 @@ void ParticleEmitterNode::initPersistFields()
 
 	endGroup( "Independent emitters" );
 
-	addGroup( "Physics" );
+	addGroup( "ParticleBehaviours" );
 
-	addField( "RayCollision", TYPEID< bool >(), Offset(ParticleCollision, ParticleEmitterNode),
-		"If true, the particles will stick to their original spawn place relative to the emitter." );
+	addField("ParticleBehaviour", TYPEID<IParticleBehaviour>(), Offset(ParticleBHVs, ParticleEmitterNode), ParticleBehaviourCount,
+		"Null");
 
-	addField( "attractedObjectID", TYPEID< StringTableEntry >(), Offset(attractedObjectID, ParticleEmitterNode), attrobjectCount,
-		"The ID or name of the object that the particles should interact with." );
-
-	addField( "Attraction_offset", TYPEID< StringTableEntry >(), Offset(Attraction_offset, ParticleEmitterNode), attrobjectCount,
-		"Offset from the objects position the particles should be attracted to or repulsed from." );
-
-	addField( "AttractionMode", TYPEID< pAttractionMode >(), Offset(AttractionMode, ParticleEmitterNode), attrobjectCount,
-		"String value that controls how the particles interact." );
-
-	addField( "Amount", TYPEID< F32 >(), Offset(Amount, ParticleEmitterNode), attrobjectCount,
-		"Amount of influence, combine with attraction range for the desired result." );
-
-	addField( "attractionrange", TYPEID< F32 >(), Offset(attractionrange, ParticleEmitterNode),
-		"Range of influence, any objects further away than this length will not attract or repulse the particles." );
-
-	addField( "sticky", TYPEID< bool >(), Offset(sticky, ParticleEmitterNode),
-		"If true, the particles will stick to their original spawn place relative to the emitter." );
-
-	endGroup( "Physics" );
+	endGroup( "ParticleBehaviours" );
 
 	Parent::initPersistFields();
 }
@@ -316,16 +256,6 @@ bool ParticleEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 	if ( !mDataBlock || !Parent::onNewDataBlock( dptr, reload ) )
 		return false;
 
-	for(int i = 0; i < attrobjectCount; i++)
-	{
-		AttractionMode[i] = mDataBlock->AttractionMode[i];
-		Amount[i] = mDataBlock->Amount[i];
-		Attraction_offset[i] = mDataBlock->Attraction_offset[i];
-	}
-	attractionrange = mDataBlock->attractionrange;
-	sticky = mDataBlock->sticky;
-	ParticleCollision = mDataBlock->ParticleCollision;
-
 	standAloneEmitter = mDataBlock->standAloneEmitter;
 
 	sa_ejectionPeriodMS = mDataBlock->sa_ejectionPeriodMS;
@@ -335,26 +265,8 @@ bool ParticleEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 	sa_velocityVariance = mDataBlock->sa_velocityVariance;
 	sa_ejectionOffset = mDataBlock->sa_ejectionOffset;
 
-	if(mEmitter)
-	{
-		for(int i = 0; i < attrobjectCount; i++)
-		{
-			mEmitter->AttractionMode[i] = AttractionMode[i];
-			mEmitter->Amount[i] = Amount[i];
-			mEmitter->Attraction_offset[i] = Attraction_offset[i];
-		}
-		mEmitter->sticky = sticky;
-		mEmitter->ParticleCollision = ParticleCollision;
-		mEmitter->attractionrange = attractionrange;
-	}
 	for(int i = 0; i < initialValues.size(); i=i+2)
 	{
-		if(strcmp("attractionrange",initialValues[i].c_str()) == 0)
-			attractionrange = atof(const_cast<char*>(initialValues[i+1].c_str()));
-		if(strcmp("sticky",initialValues[i].c_str()) == 0)
-			sticky = atoi(const_cast<char*>(initialValues[i+1].c_str()));
-		if(strcmp("RayCollision",initialValues[i].c_str()) == 0)
-			ParticleCollision = atoi(const_cast<char*>(initialValues[i+1].c_str()));
 		if(strcmp("standAloneEmitter",initialValues[i].c_str()) == 0)
 			standAloneEmitter = atoi(const_cast<char*>(initialValues[i+1].c_str()));
 		if(strcmp("sa_ejectionPeriodMS",initialValues[i].c_str()) == 0)
@@ -367,31 +279,9 @@ bool ParticleEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 			sa_velocityVariance = atoi(const_cast<char*>(initialValues[i+1].c_str()));
 		if(strcmp("sa_ejectionOffset",initialValues[i].c_str()) == 0)
 			sa_ejectionOffset = atof(const_cast<char*>(initialValues[i+1].c_str()));
-		if(strcmp("Attraction_offset",initialValues[i].c_str()) == 0)
-		{
-			Attraction_offset[0] = const_cast<char*>(initialValues[i+1].c_str());
-			Attraction_offset[1] = const_cast<char*>(initialValues[i+2].c_str());
-			i++;
-		}
-		if(strcmp("attractedObjectID",initialValues[i].c_str()) == 0)
-		{
-			attractedObjectID[0] = const_cast<char*>(initialValues[i+1].c_str());
-			attractedObjectID[1] = const_cast<char*>(initialValues[i+2].c_str());
-			i++;
-		}
-		if(strcmp("AttractionMode",initialValues[i].c_str()) == 0)
-		{
-			AttractionMode[0] = atoi(const_cast<char*>(initialValues[i+1].c_str()));
-			AttractionMode[1] = atoi(const_cast<char*>(initialValues[i+2].c_str()));
-			i++;
-		}
-		if(strcmp("Amount",initialValues[i].c_str()) == 0)
-		{
-			Amount[0] = atoi(const_cast<char*>(initialValues[i+1].c_str()));
-			Amount[1] = atoi(const_cast<char*>(initialValues[i+2].c_str()));
-			i++;
-		}
 	}
+	saUpdateBits = U32_MAX;
+	UpdateEmitterValues();
 
 	// Todo: Uncomment if this is a "leaf" class
 	scriptOnNewDataBlock();
@@ -401,7 +291,7 @@ bool ParticleEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 void ParticleEmitterNode::inspectPostApply()
 {
 	Parent::inspectPostApply();
-	setMaskBits(StateMask | EmitterDBMask);
+	//setMaskBits(StateMask | EmitterDBMask);
 }
 
 void ParticleEmitterNode::processTick(const Move* move)
@@ -414,13 +304,16 @@ void ParticleEmitterNode::processTick(const Move* move)
 		mMount.object->getMountTransform( mMount.node, mMount.xfm, &mat );
 		setTransform( mat );
 	}
+
+	if(mEmitter)
+		mEmitter->parentNodePos = getRenderPosition();
 }
 
 void ParticleEmitterNode::advanceTime(F32 dt)
 {
 	Parent::advanceTime(dt);
 
-	if(!mActive || !mEmitter->isProperlyAdded() || !mDataBlock)
+	if(!mActive || !mEmitter || !mEmitter->isProperlyAdded() || !mDataBlock)
 		return;
 
 	//mEmitter->emitParticles( (U32)(dt * mDataBlock->timeMultiple * 1000.0f), this );
@@ -449,29 +342,33 @@ U32 ParticleEmitterNode::packUpdate(NetConnection* con, U32 mask, BitStream* str
 	{
 		stream->writeFlag( mActive );
 		stream->write( mVelocity );
-		stream->write( standAloneEmitter );
 	}
 
 	if( stream->writeFlag( mask & emitterEdited) )
 	{
+		stream->writeFlag( standAloneEmitter );
+
 		stream->writeInt(sa_ejectionPeriodMS, 10);
 		stream->writeInt(sa_periodVarianceMS, 10);
 		
 		stream->writeInt((S32)(sa_ejectionVelocity * 100), 16);
 		stream->writeInt((S32)(sa_velocityVariance * 100), 14);
 		stream->writeInt((S32)(sa_ejectionOffset * 100), 16);
-
-		stream->writeFlag(sticky);
-		stream->writeFlag(ParticleCollision);
-		stream->writeInt(attractionrange*1000, 15);
-		for(int i = 0; i < attrobjectCount; i++)
+	}
+	if(stream->writeFlag(saUpdateBits & saBehaviour)){
+		for(int i = 0; i < ParticleBehaviourCount; i++)
 		{
-			stream->writeInt(AttractionMode[i], 4);
-			stream->writeInt(Amount[i]*1000, 15);
-			stream->writeString(attractedObjectID[i]);
-			stream->writeString(Attraction_offset[i]);
+			if(stream->writeFlag(ParticleBHVs[i]))
+			{
+				stream->writeRangedU32( ParticleBHVs[i]->getId(),
+					DataBlockObjectIdFirst,
+					DataBlockObjectIdLast );
+			}
 		}
 	}
+	if(stream->writeFlag(saUpdateBits))
+		stream->writeInt(saUpdateBits, 32);
+	saUpdateBits = 0;
 
 	return retMask;
 }
@@ -506,46 +403,36 @@ void ParticleEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 	{
 		mActive = stream->readFlag();
 		stream->read( &mVelocity );
-
-		stream->read( &standAloneEmitter );
 	}
 	if ( stream->readFlag() )
 	{
+		standAloneEmitter = stream->readFlag();
+
 		sa_ejectionPeriodMS = stream->readInt(10);
 		sa_periodVarianceMS = stream->readInt(10);
 
 		sa_ejectionVelocity = stream->readInt(16) / 100.0f;
 		sa_velocityVariance = stream->readInt(14) / 100.0f;
 		sa_ejectionOffset = stream->readInt(16) / 100.0f;
-
-		sticky = stream->readFlag();
-		ParticleCollision = stream->readFlag();
-		attractionrange = stream->readInt(15)  / 1000.0f;
-		for(int i = 0; i < attrobjectCount; i++)
+	}
+	if(stream->readFlag())
+	{
+		for(int i = 0; i < ParticleBehaviourCount; i++)
 		{
-			AttractionMode[i] = stream->readInt(4);
-			Amount[i] = stream->readInt(15) / 1000.0f;
-			char buf[256];
-			stream->readString(buf);
-			attractedObjectID[i] = dStrdup(buf);
-			char buf2[256];
-			stream->readString(buf2);
-			Attraction_offset[i] = dStrdup(buf2);
-		}
-
-		if(mEmitter)
-		{
-			mEmitter->sticky = sticky;
-			mEmitter->ParticleCollision = ParticleCollision;
-			mEmitter->attractionrange = attractionrange;
-			for(int i = 0; i < attrobjectCount; i++)
+			if ( stream->readFlag() )
 			{
-				mEmitter->AttractionMode[i] = AttractionMode[i];
-				mEmitter->Amount[i] = Amount[i];
-				mEmitter->attractedObjectID[i] = attractedObjectID[i];
-				mEmitter->Attraction_offset[i] = Attraction_offset[i];
+				SimDataBlock *dptr = 0;
+				SimObjectId id = stream->readRangedU32( DataBlockObjectIdFirst, DataBlockObjectIdLast );
+				Sim::findObject( id, dptr );
+				if(dptr)
+					ParticleBHVs[i] = (IParticleBehaviour*)dptr;
 			}
 		}
+	}
+	if(stream->readFlag()){
+		saUpdateBits |= stream->readInt(32);
+		if(mEmitter)
+			UpdateEmitterValues();
 	}
 }
 
@@ -577,18 +464,7 @@ void ParticleEmitterNode::setEmitterDataBlock(ParticleEmitterData* data)
 
 		mEmitter = pEmitter;
 		if(mEmitter)
-		{
-			mEmitter->sticky = sticky;
-			mEmitter->ParticleCollision = ParticleCollision;
-			mEmitter->attractionrange = attractionrange;
-			for(int i = 0; i < attrobjectCount; i++)
-			{
-				mEmitter->attractedObjectID[i] = attractedObjectID[i];
-				mEmitter->AttractionMode[i] = AttractionMode[i];
-				mEmitter->Amount[i] = Amount[i];
-				mEmitter->Attraction_offset[i] = Attraction_offset[i];
-			}
-		}
+			UpdateEmitterValues();
 	}
 
 	mEmitterDatablock = data;
@@ -596,63 +472,78 @@ void ParticleEmitterNode::setEmitterDataBlock(ParticleEmitterData* data)
 
 void ParticleEmitterNode::onStaticModified(const char* slotName, const char*newValue)
 {
-	if(strcmp(slotName, "sa_ejectionOffset") == 0 ||
-		strcmp(slotName, "sa_ejectionPeriodMS") == 0 ||
-		strcmp(slotName, "sa_periodVarianceMS") == 0 ||
-		strcmp(slotName, "sa_ejectionOffset") == 0 ||
-		strcmp(slotName, "sa_ejectionVelocity") == 0 ||
-		strcmp(slotName, "sa_velocityVariance") == 0 ||
-		strcmp(slotName, "standAloneEmitter") == 0 ||
-		strcmp(slotName, "attracted") == 0 ||
-		strcmp(slotName, "attractionrange") == 0 ||
-		strcmp(slotName, "Attraction_offset") == 0 ||
-		strcmp(slotName, "Amount") == 0 ||
-		strcmp(slotName, "sticky") == 0 ||
-		strcmp(slotName, "RayCollision") == 0 ||
-		strcmp(slotName, "attractedObjectID") == 0 ||
-		strcmp(slotName, "AttractionMode") == 0)
+	if( strcmp(slotName, "standAloneEmitter") == 0 ){
+		saUpdateBits |= saEmitter;
 		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_ejectionPeriodMS") == 0 ){
+		saUpdateBits |= saPeriod;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_periodVarianceMS") == 0 ){
+		saUpdateBits |= saPeriodVar;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_ejectionVelocity") == 0 ){
+		saUpdateBits |= saVel;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_velocityVariance") == 0 ){
+		saUpdateBits |= saVelVar;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_ejectionOffset") == 0 ){
+		saUpdateBits |= saOffset;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_ejectionOffset") == 0 ){
+		saUpdateBits |= saOffset;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "Grounded") == 0 ){
+		saUpdateBits |= saGrounded;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "ParticleBehaviour") == 0 ){
+		saUpdateBits |= saBehaviour;
+		setMaskBits( emitterEdited );
+	}
 
 	if(!isProperlyAdded())
 	{
-		if(strcmp(slotName, "Attraction_offset") == 0)
-		{
-			initialValues.push_back(std::string("Attraction_offset"));
-			initialValues.push_back(std::string(Attraction_offset[0]));
-			initialValues.push_back(std::string(Attraction_offset[1]));
-		}
-		else if(strcmp(slotName, "attractedObjectID") == 0)
-		{
-			initialValues.push_back(std::string("attractedObjectID"));
-			initialValues.push_back(std::string(attractedObjectID[0]));
-			initialValues.push_back(std::string(attractedObjectID[1]));
-		}
-		else if(strcmp(slotName, "AttractionMode") == 0)
-		{
-			initialValues.push_back(std::string("AttractionMode"));
-			std::stringstream ss;
-			ss << AttractionMode[0];
-			initialValues.push_back(std::string(ss.str()));
-			ss.str("");
-			ss << AttractionMode[1];
-			initialValues.push_back(std::string(ss.str()));
-		}
-		else if(strcmp(slotName, "Amount") == 0)
-		{
-			initialValues.push_back(std::string("Amount"));
-			std::stringstream ss;
-			ss << Amount[0];
-			initialValues.push_back(std::string(ss.str()));
-			ss.str("");
-			ss << Amount[1];
-			initialValues.push_back(std::string(ss.str()));
-		}
-		else{
-			//Save the values and add them onNewDataBlock
-			initialValues.push_back(std::string(slotName));
-			initialValues.push_back(std::string(newValue));
-		}
+		//Save the values and add them onNewDataBlock
+		initialValues.push_back(std::string(slotName));
+		initialValues.push_back(std::string(newValue));
 	}
+}
+
+void ParticleEmitterNode::UpdateEmitterValues()
+{
+	if(!mEmitter)
+		return;
+
+	if(saEmitter & saUpdateBits)
+		mEmitter->standAloneEmitter = standAloneEmitter;
+	if(saPeriod & saUpdateBits)
+		mEmitter->sa_ejectionPeriodMS = sa_ejectionPeriodMS;
+	if(saPeriodVar & saUpdateBits)
+		mEmitter->sa_periodVarianceMS = sa_periodVarianceMS;
+	
+	if(saVel & saUpdateBits)
+		mEmitter->sa_ejectionVelocity = sa_ejectionVelocity;
+	if(saVelVar & saUpdateBits)
+		mEmitter->sa_velocityVariance = sa_velocityVariance;
+	if(saOffset & saUpdateBits)
+		mEmitter->sa_ejectionOffset = sa_ejectionOffset;
+	
+	if(saGrounded & saUpdateBits)
+		mEmitter->grounded = sa_grounded;
+
+	if(saBehaviour & saUpdateBits)
+		for(int i = 0; i < ParticleBehaviourCount; i++)
+			mEmitter->ParticleBHVs[i] = ParticleBHVs[i];
+
+	saUpdateBits = 0;
 }
 
 void ParticleEmitterNode::onDynamicModified(const char* slotName, const char*newValue)

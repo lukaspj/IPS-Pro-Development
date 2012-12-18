@@ -79,12 +79,12 @@ public:
 	bool	GetTerrainHeightAndMat(const F32 &x, const F32 &y, F32 &height, StringTableEntry &mat, Point3F &normal);
 
 protected:
-	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx);
+	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, const MatrixF &trans);
 	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, ParticleEmitterNode* node);
 
 	//------- Variables -------
 public:
-
+	F32		sa_Radius;
 private:
 	Point3F parentNodePos;
 

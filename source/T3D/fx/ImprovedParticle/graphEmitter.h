@@ -105,7 +105,7 @@ public:
 	bool GetTerrainHeightAndNormal(const F32 x, const F32 y, F32 &height, Point3F &normal);
 
 protected:
-	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx);
+	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, const MatrixF& trans);
 	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, ParticleEmitterNode* node);
 
 	//------- Variables -------

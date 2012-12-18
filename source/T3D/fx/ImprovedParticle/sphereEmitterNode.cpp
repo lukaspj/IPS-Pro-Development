@@ -151,6 +151,9 @@ SphereEmitterNode::SphereEmitterNode()
 //-----------------------------------------------------------------------------
 void SphereEmitterNode::initPersistFields()
 {
+	addField( "emitter",  TYPEID< SphereEmitterData >(), Offset(mEmitterDatablock, SphereEmitterNode),
+		"Datablock to use when emitting particles." );
+
 	addGroup( "Independent emitters" );
 
 	addField( "sa_thetaMin", TYPEID< F32 >(), Offset(sa_thetaMin, SphereEmitterNode),
@@ -238,11 +241,22 @@ void SphereEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 
 void SphereEmitterNode::onStaticModified(const char* slotName, const char*newValue)
 {
-	if(strcmp(slotName, "sa_thetaMin") == 0 ||
-		strcmp(slotName, "sa_thetaMax") == 0 ||
-		strcmp(slotName, "sa_phiReferenceVel") == 0 ||
-		strcmp(slotName, "sa_phiVariance") == 0)
+	if( strcmp(slotName, "sa_thetaMin") == 0 ){
+		saUpdateBits |= saThetaMin;
 		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_thetaMax") == 0 ){
+		saUpdateBits |= saThetaMax;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_phiReferenceVel") == 0 ){
+		saUpdateBits |= saPhiRefVel;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_phiVariance") == 0 ){
+		saUpdateBits |= saPhiVar;
+		setMaskBits(emitterEdited);
+	}
 
 	Parent::onStaticModified(slotName, newValue);
 }
@@ -261,4 +275,21 @@ void SphereEmitterNode::advanceTime(F32 dt)
 		return;
 
 	mEmitter->emitParticles( (U32)(dt * DataBlock->timeMultiple * 1000.0f), this );
+}
+
+void SphereEmitterNode::UpdateEmitterValues()
+{
+	if(!mEmitter)
+		return;
+	SphereEmitter* emitter = (SphereEmitter*)mEmitter;
+	if(saThetaMin & saUpdateBits)
+		emitter->sa_thetaMin = sa_thetaMin;
+	if(saThetaMax & saUpdateBits)
+		emitter->sa_thetaMax = sa_thetaMax;
+	if(saPhiRefVel & saUpdateBits)
+		emitter->sa_phiReferenceVel = sa_phiReferenceVel;
+	if(saPhiVar & saUpdateBits)
+		emitter->sa_phiVariance = sa_phiVariance;
+
+	Parent::UpdateEmitterValues();
 }

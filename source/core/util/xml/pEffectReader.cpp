@@ -6,6 +6,7 @@
 #include <vector>
 using namespace std;
 
+// Parse the .pEffect file using RapidXML
 void pEffectReader::readFile(Torque::Path &path, Vector<emitter> &loadedEmitters)
 {
 	PROFILE_SCOPE(pEffectReadFile);
@@ -85,6 +86,7 @@ void pEffectReader::readFile(Torque::Path &path, Vector<emitter> &loadedEmitters
 	}
 }
 
+// Helper function, convert a string to an emitter type
 int pEffectReader::stringToEmitterType(char* str)
 {
 	UpToLow(str);
@@ -105,34 +107,54 @@ int pEffectReader::stringToEmitterType(char* str)
 	return 8;
 }
 
+// Helper function, convert a string to a value type
 int pEffectReader::stringToValueType(char* str)
 {
 	UpToLow(str);
+	int ret = 0;
 	if(!strcmp(str, "xposition"))
-		return 0;
+		return ret;
+	ret++;
 	if(!strcmp(str, "yposition"))
-		return 1;
+		return ret;
+	ret++;
 	if(!strcmp(str, "zposition"))
-		return 2;
+		return ret;
+	ret++;
 	if(!strcmp(str, "active"))
-		return 3;
+		return ret;
+	ret++;
 	if(!strcmp(str, "ejectionoffset"))
-		return 4;
+		return ret;
+	ret++;
 	if(!strcmp(str, "ejectionperiod"))
-		return 5;
+		return ret;
+	ret++;
 	if(!strcmp(str, "radius"))
-		return 7;
+		return ret;
+	ret++;
 	if(!strcmp(str, "upperboundary"))
-		return 8;
+		return ret;
+	ret++;
 	if(!strcmp(str, "lowerboundary"))
-		return 9;
+		return ret;
+	ret++;
 	if(!strcmp(str, "timescale"))
-		return 10;
+		return ret;
+	ret++;
 	if(!strcmp(str, "scale"))
-		return 11;
-	return 12;
+		return ret;
+	ret++;
+	if(!strcmp(str, "treshold_max"))
+		return ret;
+	ret++;
+	if(!strcmp(str, "treshold_min"))
+		return ret;
+	ret++;
+	return ret;
 }
 
+// Helper function, convert a string to an easing method
 S32 pEffectReader::stringToEase(char* str)
 {
 	UpToLow(str);
@@ -160,6 +182,7 @@ S32 pEffectReader::stringToEase(char* str)
 		return 7;
 }
 
+// Helper function, compose an inOut argument from 2 bools
 U8 pEffectReader::inOutCompose( bool in, bool out)
 {
 	if(in && out)
@@ -171,6 +194,7 @@ U8 pEffectReader::inOutCompose( bool in, bool out)
 	return 3;
 }
 
+// Helper function, Convert string to a boolean
 bool pEffectReader::stringToBoolean(char* str)
 {
 	if(strcmp(UpToLow(str), "true") == 0)
@@ -178,6 +202,7 @@ bool pEffectReader::stringToBoolean(char* str)
 	return false;
 }
 
+// Helper function, convert to lower case
 char* pEffectReader::UpToLow(char* str) {
     for (int i=0;i<strlen(str);i++) 
 		str[i] = tolower(str[i]);

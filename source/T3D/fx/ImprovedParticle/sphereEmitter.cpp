@@ -203,7 +203,8 @@ SphereEmitter::SphereEmitter()
 bool SphereEmitter::addParticle(const Point3F& pos,
 	const Point3F& axis,
 	const Point3F& vel,
-	const Point3F& axisx)
+	const Point3F& axisx, 
+	const MatrixF &trans)
 {
 	SphereEmitterData* DataBlock = getDataBlock();
 	n_parts++;
@@ -249,6 +250,7 @@ bool SphereEmitter::addParticle(const Point3F& pos,
 	initialVel    += (DataBlock->velocityVariance * 2.0f * gRandGen.randF()) - DataBlock->velocityVariance;
 
 	pNew->pos = pos + (ejectionAxis * DataBlock->ejectionOffset);
+	pNew->relPos = pNew->pos - pos;
 	pNew->vel = ejectionAxis * initialVel;
 	pNew->orientDir = ejectionAxis;
 	pNew->acc.set(0, 0, 0);
@@ -270,7 +272,6 @@ bool SphereEmitter::addParticle(const Point3F& pos,
 	const Point3F& axisx,
 	ParticleEmitterNode* pnodeDat)
 {
-	SphereEmitterNode* nodeDat = static_cast<SphereEmitterNode*>(pnodeDat);
 	n_parts++;
 	SphereEmitterData* DataBlock = getDataBlock();
 	if (n_parts > n_part_capacity || n_parts > DataBlock->partListInitSize)
@@ -297,12 +298,12 @@ bool SphereEmitter::addParticle(const Point3F& pos,
 	F32 phi;
 	F32 theta;
 
-	if(nodeDat->standAloneEmitter)
+	if(standAloneEmitter)
 	{
-		theta = (nodeDat->sa_thetaMax - nodeDat->sa_thetaMin) * gRandGen.randF() +
-			nodeDat->sa_thetaMin;
-		ref  = (F32(mInternalClock) / 1000.0) * nodeDat->sa_phiReferenceVel;
-		phi  = ref + gRandGen.randF() * nodeDat->sa_phiVariance;
+		theta = (sa_thetaMax - sa_thetaMin) * gRandGen.randF() +
+			sa_thetaMin;
+		ref  = (F32(mInternalClock) / 1000.0) * sa_phiReferenceVel;
+		phi  = ref + gRandGen.randF() * sa_phiVariance;
 	}
 	else{
 		theta = (DataBlock->thetaMax - DataBlock->thetaMin) * gRandGen.randF() +
@@ -323,20 +324,21 @@ bool SphereEmitter::addParticle(const Point3F& pos,
 	phiRot.setMatrix(&temp);
 	temp.mulP(ejectionAxis);
 	F32 initialVel;
-	if(nodeDat->standAloneEmitter)
+	if(standAloneEmitter)
 	{
-		initialVel = nodeDat->sa_ejectionVelocity;
-		initialVel    += (nodeDat->sa_velocityVariance * 2.0f * gRandGen.randF()) - nodeDat->sa_velocityVariance;
+		initialVel = sa_ejectionVelocity;
+		initialVel    += (sa_velocityVariance * 2.0f * gRandGen.randF()) - sa_velocityVariance;
 	}
 	else
 	{
 		initialVel = DataBlock->ejectionVelocity;
 		initialVel    += (DataBlock->velocityVariance * 2.0f * gRandGen.randF()) - DataBlock->velocityVariance;
 	}
-	if(nodeDat->standAloneEmitter)
-		pNew->pos = pos + (ejectionAxis * nodeDat->sa_ejectionOffset);
+	if(standAloneEmitter)
+		pNew->pos = pos + (ejectionAxis * sa_ejectionOffset);
 	else
 		pNew->pos = pos + (ejectionAxis * DataBlock->ejectionOffset);
+	pNew->relPos = pNew->pos - pos;
 	pNew->vel = ejectionAxis * initialVel;
 	pNew->orientDir = ejectionAxis;
 	pNew->acc.set(0, 0, 0);

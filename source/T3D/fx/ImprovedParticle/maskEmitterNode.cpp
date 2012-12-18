@@ -130,6 +130,8 @@ MaskEmitterNode::MaskEmitterNode()
 {
 	grounded = false;
 	sa_radius = 1;
+	sa_Treshold_min = 0;
+	sa_Treshold_max = 255;
 }
 
 //-----------------------------------------------------------------------------
@@ -137,10 +139,19 @@ MaskEmitterNode::MaskEmitterNode()
 //-----------------------------------------------------------------------------
 void MaskEmitterNode::initPersistFields()
 {
+	addField( "emitter",  TYPEID< MaskEmitterData >(), Offset(mEmitterDatablock, MaskEmitterNode),
+		"Datablock to use when emitting particles." );
+
 	addGroup( "MaskEmitter");
 
 	addField( "sa_radius", TYPEID< F32 >(), Offset(sa_radius, MaskEmitterNode),
 		"The amount to scale the expression with." );
+	
+	addField( "sa_Treshold_min", TypeS8, Offset(sa_Treshold_min, MaskEmitterNode),
+		"Distance along ejection Z axis from which to eject particles." );
+	
+	addField( "sa_Treshold_max", TypeS8, Offset(sa_Treshold_max, MaskEmitterNode),
+		"Distance along ejection Z axis from which to eject particles." );
 	
 	addField( "Grounded", TYPEID< bool >(), Offset(grounded, MaskEmitterNode),
 		"Reverse the graphEmitter." );
@@ -180,13 +191,15 @@ bool MaskEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 //-----------------------------------------------------------------------------
 U32 MaskEmitterNode::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
 {	
-	U32 retMask = Parent::packUpdate(con, mask, stream);
-
 	if( stream->writeFlag( mask & emitterEdited) )
 	{
 		stream->writeInt(sa_radius * 1000, 15);
 		stream->writeFlag(grounded);
+		stream->writeInt(sa_Treshold_min, 10);
+		stream->writeInt(sa_Treshold_max, 10);
 	}
+
+	U32 retMask = Parent::packUpdate(con, mask, stream);
 
 	return retMask;
 }
@@ -196,20 +209,37 @@ U32 MaskEmitterNode::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
 //-----------------------------------------------------------------------------
 void MaskEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 {
-	Parent::unpackUpdate(con, stream);
-
 	if(stream->readFlag())
 	{
 		sa_radius = stream->readInt(15) / 1000;
 		grounded = stream->readFlag();
+		sa_Treshold_min = stream->readInt(10);
+		sa_Treshold_max = stream->readInt(10);
 	}
+
+	Parent::unpackUpdate(con, stream);
 }
 
 void MaskEmitterNode::onStaticModified(const char* slotName, const char*newValue)
 {
-	if(strcmp(slotName, "Grounded") == 0 ||
-		strcmp(slotName, "sa_radius") == 0)
+	if(strcmp(slotName, "sa_radius") == 0)
 		setMaskBits(emitterEdited);
+	if( strcmp(slotName, "sa_Treshold_max") == 0 ){
+		saUpdateBits |= saTresMax;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_Treshold_min") == 0 ){
+		saUpdateBits |= saTresMin;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "sa_radius") == 0 ){
+		saUpdateBits |= saRadius;
+		setMaskBits(emitterEdited);
+	}
+	if( strcmp(slotName, "Grounded") == 0 ){
+		saUpdateBits |= saGrounded;
+		setMaskBits(emitterEdited);
+	}
 	Parent::onStaticModified(slotName, newValue);
 }
 
@@ -223,8 +253,24 @@ void MaskEmitterNode::advanceTime(F32 dt)
 	Parent::advanceTime(dt);
 
 	MaskEmitterNodeData* DataBlock = getDataBlock();
-	if(!mActive || !mEmitter->isProperlyAdded() || !DataBlock)
+	if(!mActive || !mEmitter || !mEmitter->isProperlyAdded() || !DataBlock)
 		return;
 
 	mEmitter->emitParticles( (U32)(dt * DataBlock->timeMultiple * 1000.0f), this );
+}
+
+void MaskEmitterNode::UpdateEmitterValues()
+{
+	MaskEmitter* emitter = getEmitter();
+	if(!emitter)
+		return;
+	if(saTresMax & saUpdateBits)
+		emitter->sa_Treshold_max = sa_Treshold_max;
+	if(saTresMin & saUpdateBits)
+		emitter->sa_Treshold_min = sa_Treshold_min;
+	if(saGrounded & saUpdateBits)
+		emitter->sa_Grounded = grounded;
+	if(saRadius & saUpdateBits)
+		emitter->sa_Radius = sa_radius;
+	Parent::UpdateEmitterValues();
 }

@@ -133,6 +133,9 @@ GroundEmitterNode::GroundEmitterNode()
 //-----------------------------------------------------------------------------
 void GroundEmitterNode::initPersistFields()
 {
+	addField( "emitter",  TYPEID< GroundEmitterData >(), Offset(mEmitterDatablock, GroundEmitterNode),
+		"Datablock to use when emitting particles." );
+
 	// Add our variables to the worldeditor
 	addGroup("GroundEmitter");
 
@@ -207,8 +210,10 @@ void GroundEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 
 void GroundEmitterNode::onStaticModified(const char* slotName, const char*newValue)
 {
-	if(strcmp(slotName, "sa_ejectionOffset") == 0)
+	if( strcmp(slotName, "Radius") == 0 ){
+		saUpdateBits |= saRadius;
 		setMaskBits(emitterEdited);
+	}
 
 	if(strcmp(slotName, "layers") == 0)
 		setMaskBits(layerEdited);
@@ -225,4 +230,20 @@ void GroundEmitterNode::advanceTime(F32 dt)
 		return;
 
 	mEmitter->emitParticles( (U32)(dt * DataBlock->timeMultiple * 1000.0f), this );
+}
+
+void GroundEmitterNode::setEmitterDataBlock(ParticleEmitterData* data)
+{
+	Parent::setEmitterDataBlock(data);
+}
+
+void GroundEmitterNode::UpdateEmitterValues()
+{
+	if(!mEmitter)
+		return;
+	GroundEmitter* emitter = getEmitter();
+	if(saRadius & saUpdateBits)
+		emitter->sa_Radius = sa_radius;
+
+	Parent::UpdateEmitterValues();
 }

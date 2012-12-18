@@ -57,16 +57,31 @@ public:
 
 	DECLARE_CONOBJECT(SphereEmitter);
 
+	bool onNewDataBlock( GameBaseData *dptr, bool reload ) { return Parent::onNewDataBlock(dptr, reload); };
+	void onStaticModified(const char* slotName, const char*newValue) { Parent::onStaticModified(slotName, newValue); };
+	
+	static void initPersistFields() { Parent::initPersistFields(); };
+
+	U32  packUpdate  (NetConnection *conn, U32 mask, BitStream* stream) { return Parent::packUpdate(conn, mask, stream); };
+	void unpackUpdate(NetConnection *conn,           BitStream* stream) {Parent::unpackUpdate(conn, stream); };
+
 
 protected:
-	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx);
+	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, const MatrixF &trans);
 
 	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, ParticleEmitterNode* node);
 
 private:
-
-private:
 	virtual SphereEmitterData* getDataBlock() { return static_cast<SphereEmitterData*>(Parent::getDataBlock()); }
+
+public:
+	// Variables
+
+	F32   sa_thetaMin;                           ///< Minimum angle, from the horizontal plane, to eject from
+	F32   sa_thetaMax;                           ///< Maximum angle, from the horizontal plane, to eject from
+
+	F32   sa_phiReferenceVel;                    ///< Reference angle, from the verticle plane, to eject from
+	F32   sa_phiVariance;                        ///< Varience from the reference angle, from 0 to n
 };
 
 

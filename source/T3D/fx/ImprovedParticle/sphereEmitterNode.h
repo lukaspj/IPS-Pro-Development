@@ -54,7 +54,17 @@ public:
 class SphereEmitterNode : public ParticleEmitterNode
 {
 	typedef ParticleEmitterNode Parent;
+	//------- Enums -------
+	enum EmitterUpdateBits
+	{
+		saThetaMin		= Parent::saNextFreeMask << 0,
+		saThetaMax		= Parent::saNextFreeMask << 1,
+		saPhiRefVel		= Parent::saNextFreeMask << 2,
+		saPhiVar		= Parent::saNextFreeMask << 3,
+		saNextFreeMask	= Parent::saNextFreeMask << 4
+	};
 
+	//------- Functions -------
 public:
 	SphereEmitterNode();
 	DECLARE_CONOBJECT(SphereEmitterNode);
@@ -69,6 +79,13 @@ protected:
 	void onStaticModified(const char* slotName, const char*newValue);
 	void onDynamicModified(const char* slotName, const char*newValue);
 
+	virtual SphereEmitterNodeData* getDataBlock() { return static_cast<SphereEmitterNodeData*>(Parent::getDataBlock()); }
+	virtual SphereEmitter* getEmitter() { return static_cast<SphereEmitter*>(Parent::getEmitter()); }
+	virtual ParticleEmitter* createEmitter() { return new SphereEmitter; };
+
+	virtual void UpdateEmitterValues();
+
+	//------- Variables -------
 public:
 	F32   sa_thetaMin;                           ///< Minimum angle, from the horizontal plane, to eject from
 	F32   sa_thetaMax;                           ///< Maximum angle, from the horizontal plane, to eject from
@@ -76,12 +93,6 @@ public:
 	F32   sa_phiReferenceVel;                    ///< Reference angle, from the verticle plane, to eject from
 	F32   sa_phiVariance;                        ///< Varience from the reference angle, from 0 to n
 
-private:
-	//SphereEmitterNodeData* mDataBlock;
-	virtual SphereEmitterNodeData* getDataBlock() { return static_cast<SphereEmitterNodeData*>(Parent::getDataBlock()); }
-	virtual SphereEmitter* getEmitter() { return static_cast<SphereEmitter*>(Parent::getEmitter()); }
-	virtual ParticleEmitter* createEmitter() { return new SphereEmitter; };
-	//SimObjectPtr<SphereEmitter> mEmitter;
 };
 
 #endif // SPHERE_EMITTERNODE_H_

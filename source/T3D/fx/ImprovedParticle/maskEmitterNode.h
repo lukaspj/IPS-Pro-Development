@@ -60,6 +60,15 @@ class MaskEmitterNode : public ParticleEmitterNode
 		NextFreeMask	= Parent::NextFreeMask << 0,
 	};
 
+	enum EmitterUpdateBits
+	{
+		saTresMax		= Parent::saNextFreeMask << 0,
+		saTresMin		= Parent::saNextFreeMask << 1,
+		saGrounded		= Parent::saNextFreeMask << 2,
+		saRadius		= Parent::saNextFreeMask << 3,
+		saNextFreeMask	= Parent::saNextFreeMask << 4
+	};
+
 	//------- Functions -------
 public:
 	MaskEmitterNode();
@@ -68,7 +77,6 @@ public:
 	void unpackUpdate(NetConnection *conn,           BitStream* stream);
 	static void initPersistFields();
 	void advanceTime(F32 dt);
-
 
 protected:
 	bool onNewDataBlock( GameBaseData *dptr, bool reload );
@@ -79,12 +87,14 @@ public:
 	virtual MaskEmitter* getEmitter() { return static_cast<MaskEmitter*>(Parent::getEmitter()); };
 	virtual ParticleEmitter* createEmitter() { return new MaskEmitter; };
 	void setEmitterDataBlock(ParticleEmitterData* data);
+	void UpdateEmitterValues();
 
 	//------- Variables -------
 public:
-
-	F32		sa_radius;
-	bool	grounded;
+	U8			sa_Treshold_min;
+	U8			sa_Treshold_max;
+	F32			sa_radius;
+	bool		grounded;
 };
 
 #endif // MASK_EMITTERNODE_H_

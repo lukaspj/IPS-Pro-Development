@@ -44,6 +44,8 @@ public:
 		TimeScale,
 		// Maskemitter specific values
 		Scale,
+		Treshold_max,
+		Treshold_min,
 		ENDOFVALUES
 	};
 	struct point{

@@ -78,6 +78,21 @@ class GraphEmitterNode : public ParticleEmitterNode
 		NextFreeMask	= Parent::NextFreeMask << 2,
 	};
 
+	enum EmitterUpdateBits
+	{
+		saXFunc			= Parent::saNextFreeMask << 0,
+		saYFunc			= Parent::saNextFreeMask << 1,
+		saZFunc			= Parent::saNextFreeMask << 2,
+		saReverse		= Parent::saNextFreeMask << 3,
+		saLoop			= Parent::saNextFreeMask << 4,
+		saGrounded		= Parent::saNextFreeMask << 5,
+		saTimeScale		= Parent::saNextFreeMask << 6,
+		safuncMax		= Parent::saNextFreeMask << 7,
+		safuncMin		= Parent::saNextFreeMask << 8,
+		saProgMode		= Parent::saNextFreeMask << 9,
+		saNextFreeMask	= Parent::saNextFreeMask << 10
+	};
+
 public:
 	enum EnumProgressMode {
 		byParticleCount = 0,
@@ -105,6 +120,7 @@ public:
 	virtual ParticleEmitter* createEmitter() { return new GraphEmitter; };
 	void updateMaxMinDistances();
 	void setEmitterDataBlock(ParticleEmitterData* data);
+	virtual void UpdateEmitterValues();
 
 	//------- Variables -------
 public:
@@ -126,19 +142,6 @@ public:
 	bool cb_Max;
 
 	F32	timeScale;								///< Amount to speed up the emitter
-
-	Parser xfuncParser;							///< The parser for xFunc
-	Parser yfuncParser;							///< The parser for yFunc
-	Parser zfuncParser;							///< The parser for zFunc
-
-	struct muVar{								///< A muParser variable struct
-		F32 value;
-		char token;
-	};
-
-	muVar xVariables[100];						///< All the variables for the xfuncParser
-	muVar yVariables[100];						///< All the variables for the yfuncParser
-	muVar zVariables[100];						///< All the variables for the zfuncParser
 
 	F32 xMxDist;
 	F32 xMnDist;

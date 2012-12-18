@@ -64,56 +64,56 @@ IMPLEMENT_CO_DATABLOCK_V1(MeshEmitterData);
 IMPLEMENT_CO_NETOBJECT_V1(MeshEmitter);
 
 ConsoleDocClass( MeshEmitter,
-	"@brief This object is responsible for spawning particles.\n\n"
+				"@brief This object is responsible for spawning particles.\n\n"
 
-	"@note This class is not normally instantiated directly - to place a simple "
-	"particle emitting object in the scene, use a MeshEmitterNode instead.\n\n"
+				"@note This class is not normally instantiated directly - to place a simple "
+				"particle emitting object in the scene, use a MeshEmitterNode instead.\n\n"
 
-	"This class is the main interface for creating particles - though it is "
-	"usually only accessed from within another object like MeshEmitterNode "
-	"or WheeledVehicle. If using this object class (via C++) directly, be aware "
-	"that it does <b>not</b> track changes in source axis or velocity over the "
-	"course of a single update, so emitParticles should be called at a fairly "
-	"fine grain.  The emitter will potentially track the last particle to be "
-	"created into the next call to this function in order to create a uniformly "
-	"random time distribution of the particles.\n\n"
+				"This class is the main interface for creating particles - though it is "
+				"usually only accessed from within another object like MeshEmitterNode "
+				"or WheeledVehicle. If using this object class (via C++) directly, be aware "
+				"that it does <b>not</b> track changes in source axis or velocity over the "
+				"course of a single update, so emitParticles should be called at a fairly "
+				"fine grain.  The emitter will potentially track the last particle to be "
+				"created into the next call to this function in order to create a uniformly "
+				"random time distribution of the particles.\n\n"
 
-	"If the object to which the emitter is attached is in motion, it should try "
-	"to ensure that for call (n+1) to this function, start is equal to the end "
-	"from call (n). This will ensure a uniform spatial distribution.\n\n"
+				"If the object to which the emitter is attached is in motion, it should try "
+				"to ensure that for call (n+1) to this function, start is equal to the end "
+				"from call (n). This will ensure a uniform spatial distribution.\n\n"
 
-	"@ingroup FX\n"
-	"@see MeshEmitterData\n"
-	"@see MeshEmitterNode\n"
-	);
+				"@ingroup FX\n"
+				"@see MeshEmitterData\n"
+				"@see MeshEmitterNode\n"
+				);
 
 ConsoleDocClass( MeshEmitterData,
-	"@brief Defines particle emission properties such as ejection angle, period "
-	"and velocity for a MeshEmitter.\n\n"
+				"@brief Defines particle emission properties such as ejection angle, period "
+				"and velocity for a MeshEmitter.\n\n"
 
-	"@tsexample\n"
-	"datablock MeshEmitterData( GrenadeExpDustEmitter )\n"
-	"{\n"
-	"   ejectionPeriodMS = 1;\n"
-	"   periodVarianceMS = 0;\n"
-	"   ejectionVelocity = 15;\n"
-	"   velocityVariance = 0.0;\n"
-	"   ejectionOffset = 0.0;\n"
-	"   thetaMin = 85;\n"
-	"   thetaMax = 85;\n"
-	"   phiReferenceVel = 0;\n"
-	"   phiVariance = 360;\n"
-	"   overrideAdvance = false;\n"
-	"   lifetimeMS = 200;\n"
-	"   particles = \"GrenadeExpDust\";\n"
-	"};\n"
-	"@endtsexample\n\n"
+				"@tsexample\n"
+				"datablock MeshEmitterData( GrenadeExpDustEmitter )\n"
+				"{\n"
+				"   ejectionPeriodMS = 1;\n"
+				"   periodVarianceMS = 0;\n"
+				"   ejectionVelocity = 15;\n"
+				"   velocityVariance = 0.0;\n"
+				"   ejectionOffset = 0.0;\n"
+				"   thetaMin = 85;\n"
+				"   thetaMax = 85;\n"
+				"   phiReferenceVel = 0;\n"
+				"   phiVariance = 360;\n"
+				"   overrideAdvance = false;\n"
+				"   lifetimeMS = 200;\n"
+				"   particles = \"GrenadeExpDust\";\n"
+				"};\n"
+				"@endtsexample\n\n"
 
-	"@ingroup FX\n"
-	"@see MeshEmitter\n"
-	"@see ParticleData\n"
-	"@see MeshEmitterNode\n"
-	);
+				"@ingroup FX\n"
+				"@see MeshEmitter\n"
+				"@see ParticleData\n"
+				"@see MeshEmitterNode\n"
+				);
 
 static const float sgDefaultEjectionOffset = 0.f;
 static const float sgDefaultPhiReferenceVel = 0.f;
@@ -178,8 +178,8 @@ typedef MeshEmitter::EnumAttractionMode mAttractionMode;
 DefineEnumType( mAttractionMode );
 
 ImplementEnumType( mAttractionMode,
-	"The way the particles are interacting with specific objects.\n"
-	"@ingroup FX\n\n")
+				  "The way the particles are interacting with specific objects.\n"
+				  "@ingroup FX\n\n")
 { MeshEmitter::none,		"Not attracted",        "The particles are not attracted to any object.\n" },
 { MeshEmitter::attract,		"Attract",				"The particles are attracted to the objects.\n" },
 { MeshEmitter::repulse,		"Repulse",				"The particles are repulsed by the object.\n" },
@@ -1458,12 +1458,23 @@ void MeshEmitter::addParticle(const F32 &vel)
 		mainTime++;
 
 		ShapeBase* SS = dynamic_cast<ShapeBase*>(SB);
-		const TSShape* shape;
+		const TSShapeInstance* model;
+		TSShape* shape;
 		if(SS)
-			shape = SS->getShape();
+			model = SS->getShapeInstance();
 		else{
-			shape = (dynamic_cast<TSStatic*>(SB))->getShape();
+			model = (dynamic_cast<TSStatic*>(SB))->getShapeInstance();
 		}
+		shape = model->getShape();
+		const TSShape::Detail& det = shape->details[model->getCurrentDetail()];
+		S32 od = det.objectDetailNum;
+		S32 start = shape->subShapeFirstObject[det.subShapeNum];
+		S32 end   = start + shape->subShapeNumObjects[det.subShapeNum];
+		S32 nodeStart = shape->subShapeFirstNode[det.subShapeNum];
+		S32 nodeEnd = nodeStart + shape->subShapeNumNodes[det.subShapeNum];
+		S32 node = shape->findNode("Bip01_Head");
+		if(node < 0)
+			return;
 		bool coHandled = false;
 		// -------------------------------------------------------------------------------------------------
 		// -- Per vertex BEGIN -----------------------------------------------------------------------------
@@ -1472,90 +1483,86 @@ void MeshEmitter::addParticle(const F32 &vel)
 		{
 			PROFILE_SCOPE(meshEmitVertex);
 #pragma region perVertex
-			for(U32 objIndex = 0; objIndex < shape->objects.size(); objIndex++)
+			for (S32 meshIndex = start; meshIndex < end; meshIndex++)
 			{
-				for (S32 meshIndex = 0; meshIndex < shape->meshes.size(); meshIndex++)
+				const TSShape::Object &obj = shape->objects[meshIndex];
+				TSMesh* mesh = ( od < obj.numMeshes ) ? shape->meshes[obj.startMeshIndex + od] : NULL;
+				if(!mesh)
+					continue;
+
+				TSSkinMesh* sMesh = dynamic_cast<TSSkinMesh*>(mesh);
+				//TSMesh::TSMeshVertexArray vertexList = shape->meshes[meshIndex]->mVertexData;
+				S32 numVerts;
+				numVerts = mesh->mVertexData.size();
+				if (sMesh)
+					numVerts = sMesh[meshIndex].mVertexData.size();
+
+				if(!numVerts)
+					continue;
+
+				vertexCount = numVerts;
+
+				if(co >= numVerts)
 				{
-
-					if(!shape->meshes[meshIndex])
-						continue;
-
-					TSSkinMesh* sMesh = dynamic_cast<TSSkinMesh*>(shape->meshes[meshIndex]);
-					//TSMesh::TSMeshVertexArray vertexList = shape->meshes[meshIndex]->mVertexData;
-					S32 numVerts;
-					numVerts = shape->meshes[meshIndex]->mVertexData.size();
-					if (sMesh)
-						numVerts = sMesh[meshIndex].mVertexData.size();
-
-					if(!numVerts)
-						continue;
-
-					vertexCount = numVerts;
-
-					if(co >= numVerts)
-					{
-						co -= numVerts;
-						continue;
-					}
-					coHandled = true;
-
-					// Apparently, creating a TSMesh::TSMeshVertexArray vertexList instead of 
-					//  - accessing the vertexdata directly can cause the program to crash on shutdown and startup.
-					//  - It calls it's deconstructor when it goes out of scope. Seems like a bug.
-					const Point3F *vertPos;
-					const Point3F *vertNorm;
-					if (sMesh)
-					{
-						vertPos = new const Point3F(sMesh[meshIndex].mVertexData[co].vert());
-						vertNorm = new const Point3F(sMesh[meshIndex].mVertexData[co].normal());
-					}
-					else
-					{
-						vertPos = new const Point3F(shape->meshes[meshIndex]->mVertexData[co].vert());
-						vertNorm = new const Point3F(shape->meshes[meshIndex]->mVertexData[co].normal());
-					}
-
-					// Get the transform of the object to get the transform matrix.
-					//  - If it is a TSStatic we need to access the rootnode aswell
-					//  - Which contains the rotation information.
-					MatrixF trans;
-					MatrixF nodetrans;
-					MatrixF mat;
-					if(SS)
-					{
-						trans = SS->getTransform();
-					}
-					else
-					{
-						trans = (dynamic_cast<TSStatic*>(SB))->getTransform();
-						nodetrans = dynamic_cast<TSStatic*>(SB)->getShapeInstance()->mNodeTransforms[0];
-						mat.mul(trans, nodetrans);
-					}
-
-					Point3F* p = new Point3F();
-					if(SS)
-					{
-						trans.mulV(*vertPos,p);
-						pNew->pos = SS->getPosition() + *p + (*vertNorm * ejectionOffset);
-					}
-					else{
-						mat.mulV((*vertPos * dynamic_cast<TSStatic*>(SB)->getScale()),p);
-						pNew->pos = dynamic_cast<TSStatic*>(SB)->getPosition() + *p + (*vertNorm * ejectionOffset);
-					}
-					// Set the relative position for later use.
-					pNew->relPos = *p +(*vertNorm * ejectionOffset);
-					// Velocity is based on the normal of the vertex
-					pNew->vel = *vertNorm * initialVel;
-					pNew->orientDir = *vertNorm;
-
-					// Clean up
-					delete(*p);
-					delete(*vertPos);
-					// Exit the loop
-					break;
+					co -= numVerts;
+					continue;
 				}
-				if(coHandled)
-					break;
+				coHandled = true;
+
+				// Apparently, creating a TSMesh::TSMeshVertexArray vertexList instead of 
+				//  - accessing the vertexdata directly can cause the program to crash on shutdown and startup.
+				//  - It calls it's deconstructor when it goes out of scope. Seems like a bug.
+				const Point3F *vertPos;
+				const Point3F *vertNorm;
+				if (sMesh)
+				{
+					vertPos = new const Point3F(sMesh->mVertexData[co].vert());
+					vertNorm = new const Point3F(sMesh->mVertexData[co].normal());
+				}
+				else
+				{
+					vertPos = new const Point3F(mesh->mVertexData[co].vert());
+					vertNorm = new const Point3F(mesh->mVertexData[co].normal());
+				}
+
+				// Get the transform of the object to get the transform matrix.
+				//  - If it is a TSStatic we need to access the rootnode aswell
+				//  - Which contains the rotation information.
+				MatrixF trans;
+				MatrixF nodetrans;
+				MatrixF mat;
+				if(SS)
+				{
+					trans = SS->getTransform();
+				}
+				else
+				{
+					trans = (dynamic_cast<TSStatic*>(SB))->getTransform();
+					nodetrans = dynamic_cast<TSStatic*>(SB)->getShapeInstance()->mNodeTransforms[0];
+					mat.mul(trans, nodetrans);
+				}
+
+				Point3F* p = new Point3F();
+				if(SS)
+				{
+					trans.mulV(*vertPos,p);
+					pNew->pos = SS->getPosition() + *p + (*vertNorm * ejectionOffset);
+				}
+				else{
+					mat.mulV((*vertPos * dynamic_cast<TSStatic*>(SB)->getScale()),p);
+					pNew->pos = dynamic_cast<TSStatic*>(SB)->getPosition() + *p + (*vertNorm * ejectionOffset);
+				}
+				// Set the relative position for later use.
+				pNew->relPos = *p +(*vertNorm * ejectionOffset);
+				// Velocity is based on the normal of the vertex
+				pNew->vel = *vertNorm * initialVel;
+				pNew->orientDir = *vertNorm;
+
+				// Clean up
+				delete(*p);
+				delete(*vertPos);
+				// Exit the loop
+				break;
 			}
 #pragma endregion
 		}
@@ -1573,9 +1580,11 @@ void MeshEmitter::addParticle(const F32 &vel)
 			TSMesh* Mesh;
 			bool accepted = false;
 			bool skinmesh = false;
-			for(meshIndex = 0; meshIndex < shape->meshes.size(); meshIndex++)
+			for(meshIndex = start; meshIndex < end; meshIndex++)
 			{
-				sMesh = dynamic_cast<TSSkinMesh*>(shape->meshes[meshIndex]);
+				const TSShape::Object &obj = shape->objects[meshIndex];
+				TSMesh* mesh = ( od < obj.numMeshes ) ? shape->meshes[obj.startMeshIndex + od] : NULL;
+				sMesh = dynamic_cast<TSSkinMesh*>(mesh);
 				if(sMesh)
 				{
 					if(sMesh->mVertexData.size()){
@@ -1592,13 +1601,14 @@ void MeshEmitter::addParticle(const F32 &vel)
 				// Pick a random mesh and test it.
 				//  - This prevents the uneven emission from 
 				//  - being as linear as it is with per vertex.
-				meshIndex = rand() % shape->meshes.size();
-				Mesh = shape->meshes[meshIndex];
+				meshIndex = (rand() % (end - start)) + start;
+				const TSShape::Object &obj = shape->objects[meshIndex];
+				TSMesh* Mesh = ( od < obj.numMeshes ) ? shape->meshes[obj.startMeshIndex + od] : NULL;
 				if(Mesh)
 					accepted = true;
 				if(skinmesh)
 				{
-					sMesh = dynamic_cast<TSSkinMesh*>(shape->meshes[meshIndex]);
+					sMesh = dynamic_cast<TSSkinMesh*>(Mesh);
 					if(sMesh)
 					{
 						if(sMesh->mVertexData.size()){
@@ -1611,7 +1621,7 @@ void MeshEmitter::addParticle(const F32 &vel)
 					else
 						accepted = false;
 				}
-				if(!skinmesh)
+				if(!skinmesh && Mesh)
 				{
 					if(Mesh->verts.size() > 0)
 						accepted = true;
@@ -1738,7 +1748,12 @@ void MeshEmitter::addParticle(const F32 &vel)
 									}
 									else
 									{
-										Con::printf("Not tris?");
+										if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Fan) 
+											Con::warnf("Was a fan DrawPrimitive not TrisDrawPrimitive");
+										else if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Strip) 
+											Con::warnf("Was a Strip DrawPrimitive not TrisDrawPrimitive");
+										else
+											Con::warnf("Couldn't determine primitive type");
 									}
 								}
 							}
@@ -1750,94 +1765,102 @@ void MeshEmitter::addParticle(const F32 &vel)
 				// Same procedure as above
 				if(!skinmesh)
 				{
-					S32 numVerts = Mesh->mVertexData.size();
-					if(numVerts)
+					if(Mesh)
 					{
-						S32 numPrims = Mesh->primitives.size();
-						if(numPrims)
+						S32 numVerts = Mesh->mVertexData.size();
+						if(numVerts)
 						{
-							S32 numIndices = Mesh->indices.size();
-							if(numIndices)
+							S32 numPrims = Mesh->primitives.size();
+							if(numPrims)
 							{
-								S32 primIndex = rand() % numPrims;
-								S32 start = Mesh->primitives[primIndex].start;
-								S16 numElements = Mesh->primitives[primIndex].numElements;
-
-								TSMesh::__TSMeshVertexBase v1, v2, v3;
-								Point3F vp1;
-
-								if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Triangles)
+								S32 numIndices = Mesh->indices.size();
+								if(numIndices)
 								{
-									coHandled = true;
-									U32 triStart = (rand() % (numElements/3));
-									U8 indiceBool = (triStart * 3) % 2;
-									if(indiceBool = 0)
+									S32 primIndex = rand() % numPrims;
+									S32 start = Mesh->primitives[primIndex].start;
+									S16 numElements = Mesh->primitives[primIndex].numElements;
+									
+									TSMesh::__TSMeshVertexBase v1, v2, v3;
+									Point3F vp1;
+
+									if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Triangles)
 									{
-										v1 = Mesh->mVertexData[Mesh->indices[start + (triStart*3)]];
-										v2 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 1]];
-										v3 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 2]];
+										coHandled = true;
+										U32 triStart = (rand() % (numElements/3));
+										U8 indiceBool = (triStart * 3) % 2;
+										if(indiceBool = 0)
+										{
+											v1 = Mesh->mVertexData[Mesh->indices[start + (triStart*3)]];
+											v2 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 1]];
+											v3 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 2]];
+										}
+										else
+										{
+											v3 = Mesh->mVertexData[Mesh->indices[start + (triStart*3)]];
+											v2 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 1]];
+											v1 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 2]];
+											/*
+											v1
+											v3
+											v2
+											*/
+										}
+										Point3F p1 = v1.vert();
+										Point3F p2 = v2.vert();
+										Point3F p3 = v3.vert();
+										Point3F vec1;
+										Point3F vec2;
+										vec1 = p2-p1;
+										vec2 = p3-p2;
+										F32 K1 = rand() % 1000 + 1;
+										F32 K2 = rand() % 1000 + 1;
+										Point3F planeVec;
+										if(K2 <= K1)
+											planeVec = p1 + (vec1 * (K1 / 1000)) + (vec2 * (K2 / 1000));
+										else
+											planeVec = p1 + (vec1 * (1-(K1 / 1000))) + (vec2 * (1-(K2 / 1000)));
+
+										// Construct a vector from the 3 results
+										const Point3F *vertPos = new const Point3F(planeVec);
+
+										Point3F* normalV = new Point3F((v1.normal()+v2.normal()+v3.normal())/3);
+										normalV->normalize();
+
+										MatrixF trans;
+										MatrixF nodetrans;
+										MatrixF mat;
+										if(SS)
+										{
+											trans = SS->getTransform();
+										}
+										else
+										{
+											trans = (dynamic_cast<TSStatic*>(SB))->getTransform();
+											nodetrans = dynamic_cast<TSStatic*>(SB)->getShapeInstance()->mNodeTransforms[0];
+											mat.mul(trans, nodetrans);
+										}
+										// Rotate our point by the rotation matrix
+										Point3F* p = new Point3F();
+
+										if(SS)
+										{
+											trans.mulV(*vertPos,p);
+											pNew->pos = SS->getPosition() + *p + (*normalV * ejectionOffset);
+										}
+										else{
+											mat.mulV((*vertPos * dynamic_cast<TSStatic*>(SB)->getScale()),p);
+											pNew->pos = dynamic_cast<TSStatic*>(SB)->getPosition() + *p + (*normalV * ejectionOffset);
+										}
 									}
 									else
 									{
-										v3 = Mesh->mVertexData[Mesh->indices[start + (triStart*3)]];
-										v2 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 1]];
-										v1 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 2]];
-										/*
-										v1
-										v3
-										v2
-										*/
+										if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Fan) 
+											Con::warnf("Was a fan DrawPrimitive not TrisDrawPrimitive");
+										else if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Strip) 
+											Con::warnf("Was a Strip DrawPrimitive not TrisDrawPrimitive");
+										else
+											Con::warnf("Couldn't determine primitive type");
 									}
-									Point3F p1 = v1.vert();
-									Point3F p2 = v2.vert();
-									Point3F p3 = v3.vert();
-									Point3F vec1;
-									Point3F vec2;
-									vec1 = p2-p1;
-									vec2 = p3-p2;
-									F32 K1 = rand() % 1000 + 1;
-									F32 K2 = rand() % 1000 + 1;
-									Point3F planeVec;
-									if(K2 <= K1)
-										planeVec = p1 + (vec1 * (K1 / 1000)) + (vec2 * (K2 / 1000));
-									else
-										planeVec = p1 + (vec1 * (1-(K1 / 1000))) + (vec2 * (1-(K2 / 1000)));
-
-									// Construct a vector from the 3 results
-									const Point3F *vertPos = new const Point3F(planeVec);
-
-									Point3F* normalV = new Point3F((v1.normal()+v2.normal()+v3.normal())/3);
-									normalV->normalize();
-
-									MatrixF trans;
-									MatrixF nodetrans;
-									MatrixF mat;
-									if(SS)
-									{
-										trans = SS->getTransform();
-									}
-									else
-									{
-										trans = (dynamic_cast<TSStatic*>(SB))->getTransform();
-										nodetrans = dynamic_cast<TSStatic*>(SB)->getShapeInstance()->mNodeTransforms[0];
-										mat.mul(trans, nodetrans);
-									}
-									// Rotate our point by the rotation matrix
-									Point3F* p = new Point3F();
-
-									if(SS)
-									{
-										trans.mulV(*vertPos,p);
-										pNew->pos = SS->getPosition() + *p + (*normalV * ejectionOffset);
-									}
-									else{
-										mat.mulV((*vertPos * dynamic_cast<TSStatic*>(SB)->getScale()),p);
-										pNew->pos = dynamic_cast<TSStatic*>(SB)->getPosition() + *p + (*normalV * ejectionOffset);
-									}
-								}
-								else
-								{
-									Con::printf("Not tris?");
 								}
 							}
 						}
@@ -1855,7 +1878,9 @@ void MeshEmitter::addParticle(const F32 &vel)
 					//  - Just slightly simplified
 					S32 faceIndex = rand() % emitfaces.size();
 					face tris = emitfaces[faceIndex];
-					Mesh = shape->meshes[tris.meshIndex];
+					const TSShape::Object &obj = shape->objects[tris.meshIndex];
+					TSMesh* Mesh = ( od < obj.numMeshes ) ? shape->meshes[obj.startMeshIndex + od] : NULL;
+					sMesh = dynamic_cast<TSSkinMesh*>(Mesh);
 					TSMesh::__TSMeshVertexBase v1, v2, v3;
 					Point3F p1, p2, p3;
 					if(tris.skinMesh)
@@ -1952,6 +1977,253 @@ void MeshEmitter::addParticle(const F32 &vel)
 			// -- Per triangle END -----------------------------------------------------------------------------
 			// -------------------------------------------------------------------------------------------------
 		}
+#pragma region Test
+
+		if(true)
+		{
+			for (U32 meshIndex = start; meshIndex < end; meshIndex++)
+			{
+				const TSShape::Object &obj = shape->objects[meshIndex];
+				TSMesh* mesh = ( od < obj.numMeshes ) ? shape->meshes[obj.startMeshIndex + od] : NULL;
+				if(!mesh)
+					continue;
+				
+			
+				
+				Vector<S32> vertIDX;
+				TSSkinMesh* sMesh = dynamic_cast<TSSkinMesh*>(mesh);
+				if(sMesh->batchData.transformKeys.size() == 0)
+					continue;
+				S32 * curVtx = sMesh->vertexIndex.begin();
+			   S32 * curBone = sMesh->boneIndex.begin();
+			   F32 * curWeight = sMesh->weight.begin();
+			   const S32 * endVtx = sMesh->vertexIndex.end();
+
+			   // Temp vector to build batch operations
+			   Vector<TSSkinMesh::BatchData::BatchedVertex> batchOperations;
+
+			   // Build the batch operations
+			   while( curVtx != endVtx )
+			   {
+				  const S32 vidx = *curVtx;
+				  ++curVtx;
+
+				  const S32 midx = *curBone;
+				  ++curBone;
+
+				  const F32 w = *curWeight;
+				  ++curWeight;
+
+				  if( !batchOperations.empty() &&
+					 batchOperations.last().vertexIndex == vidx )
+				  {
+					  vertIDX.push_back(vidx);
+					const int opIdx = batchOperations.last().transformCount++;
+					
+					 batchOperations.last().transform[opIdx].transformIndex = midx;
+					 batchOperations.last().transform[opIdx].weight = w;
+				  }
+				  else
+				  {
+					 batchOperations.increment();
+					 batchOperations.last().vertexIndex = vidx;
+					 batchOperations.last().transformCount = 1;
+
+					 batchOperations.last().transform[0].transformIndex = midx;
+					 batchOperations.last().transform[0].weight = w;
+				  }
+				  //Con::printf( "[%d] transform idx %d, weight %1.5f", vidx, midx, w );
+			   }
+				U32 IDX = gRandGen.randI() % vertIDX.size();
+				U32 VIDX = vertIDX[IDX];
+
+				//TSMesh::TSMeshVertexArray vertexList = shape->meshes[meshIndex]->mVertexData;
+				S32 numVerts;
+				numVerts = mesh->mVertexData.size();
+				if (sMesh)
+					numVerts = sMesh[meshIndex].mVertexData.size();
+
+				if(!numVerts)
+					continue;
+
+				vertexCount = numVerts;
+
+				if(co >= numVerts)
+				{
+					co -= numVerts;
+					continue;
+				}
+
+
+			const Point3F *vertPos;
+			const Point3F *vertNorm;
+			vertPos = new const Point3F(sMesh->mVertexData[vertIDX[IDX]].vert());
+			vertNorm = new const Point3F(sMesh->mVertexData[vertIDX[IDX]].normal());
+
+			// Get the transform of the object to get the transform matrix.
+			//  - If it is a TSStatic we need to access the rootnode aswell
+			//  - Which contains the rotation information.
+			MatrixF trans;
+			MatrixF nodetrans;
+			MatrixF mat;
+			if(SS)
+			{
+				trans = SS->getTransform();
+			}
+			else
+			{
+				trans = (dynamic_cast<TSStatic*>(SB))->getTransform();
+				nodetrans = dynamic_cast<TSStatic*>(SB)->getShapeInstance()->mNodeTransforms[0];
+				mat.mul(trans, nodetrans);
+			}
+
+			Point3F* p = new Point3F();
+			if(SS)
+			{
+				trans.mulV(*vertPos,p);
+				pNew->pos = SS->getPosition() + *p + (*vertNorm * ejectionOffset);
+			}
+			else{
+				mat.mulV((*vertPos * dynamic_cast<TSStatic*>(SB)->getScale()),p);
+				pNew->pos = dynamic_cast<TSStatic*>(SB)->getPosition() + *p + (*vertNorm * ejectionOffset);
+			}
+			// Set the relative position for later use.
+			pNew->relPos = *p +(*vertNorm * ejectionOffset);
+			// Velocity is based on the normal of the vertex
+			pNew->vel = *vertNorm * initialVel;
+			pNew->orientDir = *vertNorm;
+
+			// Clean up
+			delete(*p);
+			delete(*vertPos);
+			break;
+			}
+
+#ifdef notdefined
+			Vector<Point3F> normList = shape->meshes[meshIndex]->norms;
+			if (sMesh)
+			{
+				S32 numVerts = sMesh->mVertexData.size();
+				if(numVerts)
+				{
+					S32 numPrims = sMesh->primitives.size();
+					if(numPrims)
+					{
+						S32 numIndices = sMesh->indices.size();
+						if(numIndices)
+						{
+							// Get a random primitive
+							S32 primIndex = rand() % numPrims;
+							S32 start = sMesh->primitives[primIndex].start;
+							S16 numElements = sMesh->primitives[primIndex].numElements;
+
+							// Define some variables we will use later
+							TSMesh::__TSMeshVertexBase v1, v2, v3;
+							Point3F vp1;
+
+							// Test if the primitive is a triangle. Which it should be.
+							//  - Theres no handler for other primitives than triangles,
+							//  - if such is needed email me at LukasPJ@FuzzyVoidStudio.com
+							if ( (shape->meshes[meshIndex]->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Triangles)
+							{
+								coHandled = true;
+								// Get a random triangle
+								U32 triStart = (rand() % (numElements/3));
+								// This is not really necessary due to the way we handle the
+								//  - triangles, but it is an useful snippet for modifications!
+								//  - due to some rendering thing, every other triangle is 
+								//  - counter clock wise. Read about it in the official DX9 docs.
+								U8 indiceBool = (triStart * 3) % 2;
+								if(indiceBool = 0)
+								{
+									v1 = sMesh->mVertexData[sMesh->indices[start + (triStart*3)]];
+									v2 = sMesh->mVertexData[sMesh->indices[start + (triStart*3) + 1]];
+									v3 = sMesh->mVertexData[sMesh->indices[start + (triStart*3) + 2]];
+								}
+								else
+								{
+									v3 = sMesh->mVertexData[sMesh->indices[start + (triStart*3)]];
+									v2 = sMesh->mVertexData[sMesh->indices[start + (triStart*3) + 1]];
+									v1 = sMesh->mVertexData[sMesh->indices[start + (triStart*3) + 2]];
+									/*
+									v1
+									v3
+									v2
+									*/
+								}
+								// Create 2 vectors from the 3 points that make up the triangle
+								Point3F p1 = v1.vert();
+								Point3F p2 = v2.vert();
+								Point3F p3 = v3.vert();
+								Point3F vec1;
+								Point3F vec2;
+								vec1 = p2-p1;
+								vec2 = p3-p2;
+								// Get 2 random coefficients
+								F32 K1 = rand() % 1000 + 1;
+								F32 K2 = rand() % 1000 + 1;
+								Point3F planeVec;
+								// If the point is outside of the triangle, mirror it in so it fits
+								//  - into the triangle. This is for a perfectly even result on a 
+								//  - per face basis.
+								if(K2 <= K1)
+									planeVec = p1 + (vec1 * (K1 / 1000)) + (vec2 * (K2 / 1000));
+								else
+									planeVec = p1 + (vec1 * (1-(K1 / 1000))) + (vec2 * (1-(K2 / 1000)));
+
+								// Add up the normals of the three vertices and normalize them to get
+								//  - the correct normal of the plane.
+								Point3F* normalV = new Point3F((v1.normal()+v2.normal()+v3.normal())/3);
+								normalV->normalize();
+
+								// Get the transform of the object to get the transform matrix.
+								//  - If it is a TSStatic we need to access the rootnode aswell
+								//  - Which contains the rotation information.
+								MatrixF trans;
+								MatrixF nodetrans;
+								MatrixF mat;
+								if(SS)
+								{
+									trans = SS->getTransform();
+								}
+								else
+								{
+									trans = (dynamic_cast<TSStatic*>(SB))->getTransform();
+									nodetrans = dynamic_cast<TSStatic*>(SB)->getShapeInstance()->mNodeTransforms[0];
+									mat.mul(trans, nodetrans);
+								}
+
+								Point3F* p = new Point3F();
+
+								if(SS)
+								{
+									trans.mulV(planeVec,p);
+									pNew->pos = SS->getPosition() + *p + (*normalV * ejectionOffset);
+								}
+								else{
+									mat.mulV((*planeVec * dynamic_cast<TSStatic*>(SB)->getScale()),p);
+									pNew->pos = dynamic_cast<TSStatic*>(SB)->getPosition() + *p + (*normalV * ejectionOffset);
+								}
+								delete(*p);
+								delete(*normalV);
+							}
+							else
+							{
+								if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Fan) 
+									Con::warnf("Was a fan DrawPrimitive not TrisDrawPrimitive");
+								else if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Strip) 
+									Con::warnf("Was a Strip DrawPrimitive not TrisDrawPrimitive");
+								else
+									Con::warnf("Couldn't determine primitive type");
+							}
+						}
+					}
+				}
+			}
+#endif
+		}
+#pragma endregion
+
 		if(evenEmission && mainTime == U32_MAX)
 			mainTime = 0;
 		if(!evenEmission && !coHandled)
@@ -1986,7 +2258,7 @@ void MeshEmitter::processTick(const Move* move)
 
 		if( mSceneManager )
 			mSceneManager->notifyObjectDirty( this );
-		
+
 	}
 	else
 	{
@@ -2007,120 +2279,120 @@ void MeshEmitter::processTick(const Move* move)
 /*
 bool MeshEmitter::isObjectCulled()
 {
-	PROFILE_SCOPE(isObjectCulled);
-	// Must have a connection and control object
-	GameConnection* conn = GameConnection::getConnectionToServer();
-	if (!conn) return true;
-	GameBase * control = dynamic_cast<GameBase*>(conn->getControlObject());
-	if (!control) return true;
+PROFILE_SCOPE(isObjectCulled);
+// Must have a connection and control object
+GameConnection* conn = GameConnection::getConnectionToServer();
+if (!conn) return true;
+GameBase * control = dynamic_cast<GameBase*>(conn->getControlObject());
+if (!control) return true;
 
-	// Get control camera info
-	MatrixF cam;
-	Point3F camPos;
-	VectorF camDir;
-	//cam = conn->getCameraObject()->getTransform();
-	conn->getControlCameraTransform(0,&cam);
-	cam.getColumn(3, &camPos);
-	cam.getColumn(1, &camDir);
+// Get control camera info
+MatrixF cam;
+Point3F camPos;
+VectorF camDir;
+//cam = conn->getCameraObject()->getTransform();
+conn->getControlCameraTransform(0,&cam);
+cam.getColumn(3, &camPos);
+cam.getColumn(1, &camDir);
 
-	F32 camFov;
-	conn->getControlCameraFov(&camFov);
-	camFov = mDegToRad(camFov) / 2;
+F32 camFov;
+conn->getControlCameraFov(&camFov);
+camFov = mDegToRad(camFov) / 2;
 
-	// Visible distance info
-	F32 visDistance = gClientSceneGraph->getVisibleDistance();
-	F32 visDistanceSqr = visDistance * visDistance;
+// Visible distance info
+F32 visDistance = gClientSceneGraph->getVisibleDistance();
+F32 visDistanceSqr = visDistance * visDistance;
 
-	// Collision info. We're going to be running LOS tests and we
-	// don't want to collide with the control object.
-	static U32 losMask = TerrainObjectType | InteriorObjectType | ShapeBaseObjectType;
+// Collision info. We're going to be running LOS tests and we
+// don't want to collide with the control object.
+static U32 losMask = TerrainObjectType | InteriorObjectType | ShapeBaseObjectType;
 
-	SimObject* SB = dynamic_cast<SimObject*>(Sim::findObject(emitMesh));
-	if(!SB)
-		SB = dynamic_cast<SimObject*>(Sim::findObject(atoi(emitMesh)));
+SimObject* SB = dynamic_cast<SimObject*>(Sim::findObject(emitMesh));
+if(!SB)
+SB = dynamic_cast<SimObject*>(Sim::findObject(atoi(emitMesh)));
 
-	// All ghosted objects are added to the server connection group,
-	// so we can find all the shape base objects by iterating through
-	// our current connection.
-	ShapeBase* shape = dynamic_cast< ShapeBase* >(SB);
-	//GameBase* GB = dynamic_cast< GameBase* >(SB);
-	TSStatic* TSshape = dynamic_cast<TSStatic*>(SB);
-	if ( shape ) {
-		// Target pos to test, if it's a player run the LOS to his eye
-		// point, otherwise we'll grab the generic box center.
-		Point3F shapePos;
-		if (shape->getTypeMask() & PlayerObjectType) 
-		{
-			MatrixF eye;
+// All ghosted objects are added to the server connection group,
+// so we can find all the shape base objects by iterating through
+// our current connection.
+ShapeBase* shape = dynamic_cast< ShapeBase* >(SB);
+//GameBase* GB = dynamic_cast< GameBase* >(SB);
+TSStatic* TSshape = dynamic_cast<TSStatic*>(SB);
+if ( shape ) {
+// Target pos to test, if it's a player run the LOS to his eye
+// point, otherwise we'll grab the generic box center.
+Point3F shapePos;
+if (shape->getTypeMask() & PlayerObjectType) 
+{
+MatrixF eye;
 
-			// Use the render eye transform, otherwise we'll see jittering
-			shape->getRenderEyeTransform(&eye);
-			eye.getColumn(3, &shapePos);
-		} 
-		else 
-		{
-			// Use the render transform instead of the box center
-			// otherwise it'll jitter.
-			MatrixF srtMat = shape->getRenderTransform();
-			srtMat.getColumn(3, &shapePos);
-		}
-		VectorF shapeDir = shapePos - camPos;
+// Use the render eye transform, otherwise we'll see jittering
+shape->getRenderEyeTransform(&eye);
+eye.getColumn(3, &shapePos);
+} 
+else 
+{
+// Use the render transform instead of the box center
+// otherwise it'll jitter.
+MatrixF srtMat = shape->getRenderTransform();
+srtMat.getColumn(3, &shapePos);
+}
+VectorF shapeDir = shapePos - camPos;
 
-		// Test to see if it's in range
-		F32 shapeDist = shapeDir.lenSquared();
-		if (shapeDist == 0 || shapeDist > visDistanceSqr)
-			return true;
-		shapeDist = mSqrt(shapeDist);
+// Test to see if it's in range
+F32 shapeDist = shapeDir.lenSquared();
+if (shapeDist == 0 || shapeDist > visDistanceSqr)
+return true;
+shapeDist = mSqrt(shapeDist);
 
-		// Test to see if it's within our viewcone, this test doesn't
-		// actually match the viewport very well, should consider
-		// projection and box test.
-		shapeDir.normalize();
-		F32 dot = mDot(shapeDir, camDir);
-		if (dot < camFov)
-			return true;
+// Test to see if it's within our viewcone, this test doesn't
+// actually match the viewport very well, should consider
+// projection and box test.
+shapeDir.normalize();
+F32 dot = mDot(shapeDir, camDir);
+if (dot < camFov)
+return true;
 
-		// Don't raytest, if the object is slightly below the terrain (houses etc)
-		//  - then a ray test will exclude it, ruining the effect.
+// Don't raytest, if the object is slightly below the terrain (houses etc)
+//  - then a ray test will exclude it, ruining the effect.
 
-		// The object is not culled
-		return false;
-	}
+// The object is not culled
+return false;
+}
 
-	else if( TSshape )
-	{
-		Point3F shapePos;
-		// Use the render transform instead of the box center
-		// otherwise it'll jitter.
-		MatrixF srtMat = TSshape->getRenderTransform();
-		srtMat.getColumn(3, &shapePos);
+else if( TSshape )
+{
+Point3F shapePos;
+// Use the render transform instead of the box center
+// otherwise it'll jitter.
+MatrixF srtMat = TSshape->getRenderTransform();
+srtMat.getColumn(3, &shapePos);
 
-		VectorF shapeDir = shapePos - camPos;
+VectorF shapeDir = shapePos - camPos;
 
-		// Test to see if it's in range
-		F32 shapeDist = shapeDir.lenSquared();
-		if (shapeDist == 0 || shapeDist > visDistanceSqr)
-			return true;
-		shapeDist = mSqrt(shapeDist);
+// Test to see if it's in range
+F32 shapeDist = shapeDir.lenSquared();
+if (shapeDist == 0 || shapeDist > visDistanceSqr)
+return true;
+shapeDist = mSqrt(shapeDist);
 
-		// Test to see if it's within our viewcone, this test doesn't
-		// actually match the viewport very well, should consider
-		// projection and box test.
-		shapeDir.normalize();
-		F32 dot = mDot(shapeDir, camDir);
-		if (dot < camFov)
-			return true;
+// Test to see if it's within our viewcone, this test doesn't
+// actually match the viewport very well, should consider
+// projection and box test.
+shapeDir.normalize();
+F32 dot = mDot(shapeDir, camDir);
+if (dot < camFov)
+return true;
 
-		// Don't raytest, if the object is slightly below the terrain (houses etc)
-		//  - then a ray test will exclude it, ruining the effect.
+// Don't raytest, if the object is slightly below the terrain (houses etc)
+//  - then a ray test will exclude it, ruining the effect.
 
-		// Test to see if it's behind something, and we want to
-		// ignore anything it's mounted on when we run the LOS.
+// Test to see if it's behind something, and we want to
+// ignore anything it's mounted on when we run the LOS.
 
-		// The object is not culled
-		return false;
-	}
-	return true;
+// The object is not culled
+return false;
+}
+return true;
 }
 */
 //-----------------------------------------------------------------------------
@@ -2549,10 +2821,10 @@ void MeshEmitter::copyToVB( const Point3F &camPos, const ColorF &ambientColor )
 // Not changed
 //-----------------------------------------------------------------------------
 void MeshEmitter::setupBillboard( Particle *part,
-	Point3F *basePts,
-	const MatrixF &camView,
-	const ColorF &ambientColor,
-	ParticleVertexType *lVerts )
+								 Point3F *basePts,
+								 const MatrixF &camView,
+								 const ColorF &ambientColor,
+								 ParticleVertexType *lVerts )
 {
 	F32 width     = part->size * 0.5f;
 	F32 spinAngle = part->spinSpeed * part->currentAge * AgedSpinToRadians;
@@ -2635,9 +2907,9 @@ void MeshEmitter::setupBillboard( Particle *part,
 // Not changed
 //-----------------------------------------------------------------------------
 void MeshEmitter::setupOriented( Particle *part,
-	const Point3F &camPos,
-	const ColorF &ambientColor,
-	ParticleVertexType *lVerts )
+								const Point3F &camPos,
+								const ColorF &ambientColor,
+								ParticleVertexType *lVerts )
 {
 	Point3F dir;
 
@@ -2726,8 +2998,8 @@ void MeshEmitter::setupOriented( Particle *part,
 }
 
 void MeshEmitter::setupAligned( const Particle *part, 
-	const ColorF &ambientColor,
-	ParticleVertexType *lVerts )
+							   const ColorF &ambientColor,
+							   ParticleVertexType *lVerts )
 {
 	// The aligned direction will always be normalized.
 	Point3F dir = alignDirection;
@@ -3138,18 +3410,18 @@ void MeshEmitter::loadFaces()
 		SB = dynamic_cast<SimObject*>(Sim::findObject(atoi(emitMesh)));
 	if(dynamic_cast<GameBase*>(SB) || dynamic_cast<TSStatic*>(SB)){
 		ShapeBase* SS = dynamic_cast<ShapeBase*>(SB);
-		TSShapeInstance* shape;
+		TSShapeInstance* model;
 		if(SS)
-			shape = SS->getShapeInstance();
+			model = SS->getShapeInstance();
 		else{
-			shape = (dynamic_cast<TSStatic*>(SB))->getShapeInstance();
+			model = (dynamic_cast<TSStatic*>(SB))->getShapeInstance();
 		}
 		std::vector<face> triangles/* = *new std::vector<float>()*/;
 		U32 trisIndex = 0;
 		bool skinmesh = false;
-		for(S32 meshIndex = 0; meshIndex < shape->getShape()->meshes.size(); meshIndex++)
+		for(S32 meshIndex = 0; meshIndex < model->getShape()->meshes.size(); meshIndex++)
 		{
-			TSSkinMesh* sMesh = dynamic_cast<TSSkinMesh*>(shape->getShape()->meshes[meshIndex]);
+			TSSkinMesh* sMesh = dynamic_cast<TSSkinMesh*>(model->getShape()->meshes[meshIndex]);
 			if(sMesh)
 			{
 				if(sMesh->mVertexData.size()){
@@ -3158,14 +3430,22 @@ void MeshEmitter::loadFaces()
 				}
 			}
 		}
-		for (S32 meshIndex = 0; meshIndex < shape->getShape()->meshes.size(); meshIndex++)  
+		TSShape* shape = model->getShape();
+		const TSShape::Detail& det = shape->details[model->getCurrentDetail()];
+		S32 od = det.objectDetailNum;
+		S32 start = shape->subShapeFirstObject[det.subShapeNum];
+		S32 end = start + shape->subShapeNumObjects[det.subShapeNum];
+		for (S32 meshIndex = start; meshIndex < end; meshIndex++)  
 		{
 			TSSkinMesh* sMesh;
-			TSMesh* Mesh;
+			//TSMesh* Mesh;
 
-			Mesh = shape->getShape()->meshes[meshIndex];
+			//Mesh = shape->meshes[meshIndex];
 
-			sMesh = dynamic_cast<TSSkinMesh*>(shape->getShape()->meshes[meshIndex]);
+			const TSShape::Object &obj = shape->objects[meshIndex];
+			TSMesh* Mesh = ( od < obj.numMeshes ) ? shape->meshes[obj.startMeshIndex + od] : NULL;
+
+			sMesh = dynamic_cast<TSSkinMesh*>(Mesh);
 
 #pragma region skinMesh
 			if(skinmesh)
@@ -3185,12 +3465,11 @@ void MeshEmitter::loadFaces()
 				S32 numIndices = sMesh->indices.size();
 				if(!numIndices)
 					continue;
-
-				for( S32 primIndex = 0; primIndex < numPrims; primIndex++ )
+				for( U32 primIndex = 0; primIndex < numPrims; primIndex++ )
 				{
-					S32 start = sMesh->primitives[primIndex].start;
+					U32 start = sMesh->primitives[primIndex].start;
 
-					S32 numElements = sMesh->primitives[primIndex].numElements;
+					U32 numElements = sMesh->primitives[primIndex].numElements;
 
 					if ( (sMesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Triangles) 
 					{
@@ -3198,7 +3477,7 @@ void MeshEmitter::loadFaces()
 						TSMesh::__TSMeshVertexBase v1, v2, v3;
 						Point3F p1, p2, p3;
 
-						for (S16 triIndex = 0; triIndex < numElements; triIndex+=3)
+						for (U32 triIndex = 0; triIndex < numElements; triIndex+=3)
 						{
 							U32 triStart = start + triIndex;
 							v1 = sMesh->mVertexData[sMesh->indices[triStart]];
@@ -3229,7 +3508,12 @@ void MeshEmitter::loadFaces()
 					}
 					else
 					{
-						Con::printf("Not tris");
+						if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Fan) 
+							Con::warnf("Was a fan DrawPrimitive not TrisDrawPrimitive");
+						else if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Strip) 
+							Con::warnf("Was a Strip DrawPrimitive not TrisDrawPrimitive");
+						else
+							Con::warnf("Couldn't determine primitive type");
 					}
 				}
 
@@ -3238,6 +3522,8 @@ void MeshEmitter::loadFaces()
 #pragma region !skinMesh
 			if(!skinmesh)
 			{
+				if(!Mesh)
+					continue;
 				S32 numVerts = Mesh->mVertexData.size();
 				if(!numVerts)
 					continue;
@@ -3290,7 +3576,12 @@ void MeshEmitter::loadFaces()
 					}
 					else
 					{
-						Con::printf("Not tris");
+						if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Fan) 
+							Con::warnf("Was a fan DrawPrimitive not TrisDrawPrimitive");
+						else if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Strip) 
+							Con::warnf("Was a Strip DrawPrimitive not TrisDrawPrimitive");
+						else
+							Con::warnf("Couldn't determine primitive type");
 					}
 				}
 
@@ -3323,15 +3614,15 @@ void MeshEmitter::loadFaces()
 }
 
 DefineEngineMethod(MeshEmitterData, reload, void,(),,
-	"Reloads the ParticleData datablocks and other fields used by this emitter.\n"
-	"@tsexample\n"
-	"// Get the editor's current particle emitter\n"
-	"%emitter = PE_EmitterEditor.currEmitter\n\n"
-	"// Change a field value\n"
-	"%emitter.setFieldValue( %propertyField, %value );\n\n"
-	"// Reload this emitter\n"
-	"%emitter.reload();\n"
-	"@endtsexample\n")
+				   "Reloads the ParticleData datablocks and other fields used by this emitter.\n"
+				   "@tsexample\n"
+				   "// Get the editor's current particle emitter\n"
+				   "%emitter = PE_EmitterEditor.currEmitter\n\n"
+				   "// Change a field value\n"
+				   "%emitter.setFieldValue( %propertyField, %value );\n\n"
+				   "// Reload this emitter\n"
+				   "%emitter.reload();\n"
+				   "@endtsexample\n")
 {
 	object->reload();
 }

@@ -110,6 +110,8 @@ GraphEmitterData::GraphEmitterData()
 	Reverse = false;
 	Loop = true;
 	Grounded = false;
+
+	timeScale = 1.0;
 }
 
 //-----------------------------------------------------------------------------
@@ -228,13 +230,15 @@ GraphEmitter::GraphEmitter()
 	funcMax = 2000;
 	funcMin = 0;
 
+	particleProg = 0;
+
 	ProgressMode = 0;
 
 	Reverse = false;
 	Loop = true;
 	Grounded = false;
 
-	timeScale = 0.1f;
+	timeScale = 1.0;
 
 	for(int i=0;i<100;i++)
 	{
@@ -532,8 +536,11 @@ bool GraphEmitter::onNewDataBlock( GameBaseData *dptr, bool reload )
 bool GraphEmitter::addParticle(const Point3F& pos,
 	const Point3F& axis,
 	const Point3F& vel,
-	const Point3F& axisx)
+	const Point3F& axisx,
+	const MatrixF& trans)
 {
+	PROFILE_SCOPE(GraphEmitAddPart);
+	IPSBenchmarkBegin;
 	GraphEmitterData* DataBlock = getDataBlock();
 	n_parts++;
 	if (n_parts > n_part_capacity || n_parts > DataBlock->partListInitSize)
@@ -548,28 +555,165 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 			store_block[i].next = part_freelist;
 			part_freelist = &store_block[i];
 		}
-		DataBlock->allocPrimBuffer(n_part_capacity); // allocate larger primitive buffer or will crash 
+		mDataBlock->allocPrimBuffer(n_part_capacity); // allocate larger primitive buffer or will crash 
 	}
 	Particle* pNew = part_freelist;
 	part_freelist = pNew->next;
 	pNew->next = part_list_head.next;
 	part_list_head.next = pNew;
 
-	Point3F ejectionAxis = axis;
+	F32 initialVel;
+	// If it is a standAloneEmitter, then we want it to use the sa values from the node
+	/*if(standAloneEmitter)
+	{
+		initialVel = nodeDat->sa_ejectionVelocity;
+		initialVel    += (nodeDat->sa_velocityVariance * 2.0f * gRandGen.randF()) - nodeDat->sa_velocityVariance;
+	}
+	else
+	{*/
+		initialVel = DataBlock->ejectionVelocity;
+		initialVel    += (DataBlock->velocityVariance * 2.0f * gRandGen.randF()) - DataBlock->velocityVariance;
+	//}
+	// Set the time since this code was last run
+	U32 dt = mInternalClock - oldTime;
+	oldTime = mInternalClock;
 
-	F32 initialVel = DataBlock->ejectionVelocity;
-	initialVel    += (DataBlock->velocityVariance * 2.0f * gRandGen.randF()) - DataBlock->velocityVariance;
+	// Did we hit the upper limit?
+	if(particleProg > funcMax)
+	{
+		if(Loop)
+			particleProg = funcMin;
+		//onBoundaryLimit(true, nodeDat);
+	}
+	// Did we hit the lower limit?
+	if(particleProg < funcMin)
+	{
+		if(Loop)
+			particleProg = funcMax;
+		//onBoundaryLimit(false, nodeDat);
+	}
+	// We don't want to risk dividing by zero.
+	//  - We don't care too much about accuracy, so whatever is close to zero is fine.
+	if(particleProg == 0)
+	{
+		particleProg = F32_MIN;
+	}
 
-	pNew->pos = pos + (ejectionAxis * DataBlock->ejectionOffset);
-	pNew->vel = ejectionAxis * initialVel;
-	pNew->orientDir = ejectionAxis;
-	pNew->acc.set(0, 0, 0);
-	pNew->currentAge = 0;
+	F32 resultx = 0;
+	F32 resulty = 0;
+	F32 resultz = 0;
+	// Evaluate the expressions and get the results.
+	try{
+		resultx = xfuncParser.Eval();
+		resulty = yfuncParser.Eval();
+		resultz = zfuncParser.Eval();
+	}
+	catch(mu::Parser::exception_type &e)
+	{
+		std::string expr = e.GetExpr();
+		std::string tok = e.GetToken();
+		size_t pos = e.GetPos();
+		std::string msg = e.GetMsg();
+		Con::errorf("Parsing error! Failed to parse: \n %s\nAt token: %s\nAt position: %u\nMessage: %s",expr.c_str(),tok.c_str(),pos,msg.c_str());
+	}
 
-	// Choose a new particle datablack randomly from the list
-	U32 dBlockIndex = gRandGen.randI() % DataBlock->particleDataBlocks.size();
-	DataBlock->particleDataBlocks[dBlockIndex]->initializeParticle(pNew, vel);
-	updateKeyData( pNew );
+	if(Grounded)
+	{
+		F32 theHeight;
+		Point3F TerNorm;
+		bool foundTerrain = GetTerrainHeightAndNormal(pos.x+resultx, pos.y+resulty, theHeight, TerNorm);
+		resultz += theHeight;
+		// Construct a vector from the 3 results
+		Point3F funcPos = Point3F(resultx, resulty, resultz - pos.z);
+		// Rotate our point by the rotation matrix
+		trans.mulV(funcPos);
+
+		// Add the position of the node to get coordinates in object space
+		//  - and set the position of the new particle.
+		/*if(nodeDat->standAloneEmitter){
+			pNew->pos = pos + funcPos + (TerNorm * nodeDat->sa_ejectionOffset);
+
+			pNew->relPos = funcPos + TerNorm * nodeDat->sa_ejectionOffset;
+		}
+		else{*/
+			pNew->pos = pos + funcPos + (TerNorm * mDataBlock->ejectionOffset);
+
+			pNew->relPos = funcPos + TerNorm * mDataBlock->ejectionOffset;
+		//}
+	}
+	else{
+		// Construct a vector from the 3 results
+		const Point3F *funcPos = new const Point3F(resultx, resulty, resultz);
+
+		// Rotate our point by the rotation matrix
+		Point3F p;
+		//Point3F axis = vel;  
+	   //axis.normalize();  
+  
+	   Point3F axisZ(axis.x,axis.y,0.0f);  
+	   if(axisZ.isZero())  
+		  axisZ.set(1.0,0.0,0.0);  
+	   else  
+		  axisZ.normalize();  
+  
+	   //Point3F axisX;  
+	   //mCross(axis,axisZ,&axisX);  
+	   mCross(axis,axisx,&axisZ);  
+  
+	   MatrixF rotMat;
+	   rotMat.setColumn(0,axisx);  
+	   rotMat.setColumn(1,axis);  
+	   rotMat.setColumn(2,axisZ);
+
+	   rotMat.mulV(*funcPos, &p);
+		//trans.mulV(*funcPos, &p);
+
+		// Add the position of the node to get coordinates in object space
+		//  - and set the position of the new particle.
+		/*if(nodeDat->standAloneEmitter){
+			pNew->pos = pos + (p * nodeDat->sa_ejectionOffset);
+
+			pNew->relPos = p * nodeDat->sa_ejectionOffset;
+		}
+		else{*/
+			pNew->pos = pos + (p * mDataBlock->ejectionOffset);
+
+			pNew->relPos = p * mDataBlock->ejectionOffset;
+		//}
+
+		delete(funcPos);
+
+		//pNew->parent = *nodeDat;
+
+
+		// Increment the t value based on the progressmode
+		if(ProgressMode == gProgressMode::byParticleCount){
+			if(Reverse)
+				particleProg = (particleProg - (1 * timeScale));
+			else
+				particleProg = (particleProg + (1 * timeScale));
+		}
+		if(ProgressMode == gProgressMode::byTime){
+			if(Reverse)
+				particleProg = (particleProg - (dt * timeScale));
+			else
+				particleProg = (particleProg + (dt * timeScale));
+		}
+
+		parentNodePos = pos;
+		Point3F relNorm = pNew->relPos;
+		relNorm.normalize();
+		pNew->vel = axis * initialVel;
+		pNew->orientDir = axis;
+		pNew->acc.set(0, 0, 0);
+		pNew->currentAge = 0;
+
+		// Choose a new particle datablack randomly from the list
+		U32 dBlockIndex = gRandGen.randI() % mDataBlock->particleDataBlocks.size();
+		mDataBlock->particleDataBlocks[dBlockIndex]->initializeParticle(pNew, vel);
+		updateKeyData( pNew );
+	}
+	IPSBenchmarkEnd("----Graph---- addPart");
 	return true;
 }
 
@@ -608,10 +752,10 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 
 	F32 initialVel;
 	// If it is a standAloneEmitter, then we want it to use the sa values from the node
-	if(nodeDat->standAloneEmitter)
+	if(standAloneEmitter)
 	{
-		initialVel = nodeDat->sa_ejectionVelocity;
-		initialVel    += (nodeDat->sa_velocityVariance * 2.0f * gRandGen.randF()) - nodeDat->sa_velocityVariance;
+		initialVel = sa_ejectionVelocity;
+		initialVel    += (sa_velocityVariance * 2.0f * gRandGen.randF()) - sa_velocityVariance;
 	}
 	else
 	{
@@ -626,24 +770,24 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 		oldTime = mInternalClock;
 
 		// Did we hit the upper limit?
-		if(nodeDat->particleProg > nodeDat->funcMax)
+		if(particleProg > funcMax)
 		{
-			if(nodeDat->Loop)
-				nodeDat->particleProg = nodeDat->funcMin;
-			nodeDat->onBoundaryLimit(true);
+			if(Loop)
+				particleProg = funcMin;
+			onBoundaryLimit(true, nodeDat);
 		}
 		// Did we hit the lower limit?
-		if(nodeDat->particleProg < nodeDat->funcMin)
+		if(particleProg < funcMin)
 		{
-			if(nodeDat->Loop)
-				nodeDat->particleProg = nodeDat->funcMax;
-			nodeDat->onBoundaryLimit(false);
+			if(Loop)
+				particleProg = funcMax;
+			onBoundaryLimit(false, nodeDat);
 		}
 		// We don't want to risk dividing by zero.
 		//  - We don't care too much about accuracy, so whatever is close to zero is fine.
-		if(nodeDat->particleProg == 0)
+		if(particleProg == 0)
 		{
-			nodeDat->particleProg = F32_MIN;
+			particleProg = F32_MIN;
 		}
 
 		F32 resultx = 0;
@@ -651,9 +795,9 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 		F32 resultz = 0;
 		// Evaluate the expressions and get the results.
 		try{
-			resultx = nodeDat->xfuncParser.Eval();
-			resulty = nodeDat->yfuncParser.Eval();
-			resultz = nodeDat->zfuncParser.Eval();
+			resultx = xfuncParser.Eval();
+			resulty = yfuncParser.Eval();
+			resultz = zfuncParser.Eval();
 		}
 		catch(mu::Parser::exception_type &e)
 		{
@@ -664,7 +808,7 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 			Con::errorf("Parsing error! Failed to parse: \n %s\nAt token: %s\nAt position: %u\nMessage: %s",expr.c_str(),tok.c_str(),pos,msg.c_str());
 		}
 
-		if(nodeDat->Grounded)
+		if(Grounded)
 		{
 			F32 theHeight;
 			Point3F TerNorm;
@@ -673,16 +817,16 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 			// Construct a vector from the 3 results
 			Point3F funcPos = Point3F(resultx, resulty, resultz - pos.z);
 			// Get the transform of the node to get the rotation matrix
-			MatrixF trans = nodeDat->getTransform();
+			MatrixF trans = getTransform();
 			// Rotate our point by the rotation matrix
 			trans.mulV(funcPos);
 
 			// Add the position of the node to get coordinates in object space
 			//  - and set the position of the new particle.
-			if(nodeDat->standAloneEmitter){
-				pNew->pos = pos + funcPos + (TerNorm * nodeDat->sa_ejectionOffset);
+			if(standAloneEmitter){
+				pNew->pos = pos + funcPos + (TerNorm * sa_ejectionOffset);
 
-				pNew->relPos = funcPos + TerNorm * nodeDat->sa_ejectionOffset;
+				pNew->relPos = funcPos + TerNorm * sa_ejectionOffset;
 			}
 			else{
 				pNew->pos = pos + funcPos + (TerNorm * mDataBlock->ejectionOffset);
@@ -702,10 +846,10 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 
 			// Add the position of the node to get coordinates in object space
 			//  - and set the position of the new particle.
-			if(nodeDat->standAloneEmitter){
-				pNew->pos = pos + (p * nodeDat->sa_ejectionOffset);
+			if(standAloneEmitter){
+				pNew->pos = pos + (p * sa_ejectionOffset);
 
-				pNew->relPos = p * nodeDat->sa_ejectionOffset;
+				pNew->relPos = p * sa_ejectionOffset;
 			}
 			else{
 				pNew->pos = pos + (p * mDataBlock->ejectionOffset);
@@ -720,17 +864,17 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 
 
 		// Increment the t value based on the progressmode
-		if(nodeDat->ProgressMode == gProgressMode::byParticleCount){
-			if(nodeDat->Reverse)
-				nodeDat->particleProg = (nodeDat->particleProg - (1 * nodeDat->timeScale));
+		if(ProgressMode == gProgressMode::byParticleCount){
+			if(Reverse)
+				particleProg = (particleProg - (1 * timeScale));
 			else
-				nodeDat->particleProg = (nodeDat->particleProg + (1 * nodeDat->timeScale));
+				particleProg = (particleProg + (1 * timeScale));
 		}
-		if(nodeDat->ProgressMode == gProgressMode::byTime){
-			if(nodeDat->Reverse)
-				nodeDat->particleProg = (nodeDat->particleProg - (dt * nodeDat->timeScale));
+		if(ProgressMode == gProgressMode::byTime){
+			if(Reverse)
+				particleProg = (particleProg - (dt * timeScale));
 			else
-				nodeDat->particleProg = (nodeDat->particleProg + (dt * nodeDat->timeScale));
+				particleProg = (particleProg + (dt * timeScale));
 		}
 		parentNodePos = pos;
 		Point3F relNorm = pNew->relPos;

@@ -20,60 +20,16 @@
 //  - if you have further questions regarding license
 // http://fuzzyvoidstudio.com
 //-----------------------------------------------------------------------------
-#ifndef _PIXELMASK_H_
-#define _PIXELMASK_H_
 
-#ifndef __RESOURCE_H__
-#include "core/resource.h"
-#endif
-#include "math\mPoint2.h"
+#include "particleBehaviour.h";
 
-#ifndef _SIMOBJECT_H_
-#include "console/simObject.h"
-#endif
+IMPLEMENT_CONOBJECT(IParticleBehaviour);
 
-#ifndef _GAMEBASE_H_
-#include "T3D/gameBase/gameBase.h"
-#endif
+void IParticleBehaviour::updateParticle(ParticleEmitter* emitter, Particle* part, F32 time) { return; }
 
-//--------------------------------------------------------------------------
-class PixelMask : public GameBaseData
-{
-	typedef GameBaseData Parent;
-
-public:
-	struct Cache{
-		U8 Treshold_max;
-		U8 Treshold_min;
-		U32 Size;
-		Vector<int> Sizes;
-		bool firstRun;
-	};
-private:
-
-	U32 Height;
-	U32 Width;
-	Vector<Point2I> pixels[256];
-	FileName thePath;
-public:
-	void compile(const Torque::Path &path);
-	void loadFromImage(const Torque::Path &path);
-	void loadFromCompiledFile(const Torque::Path &path);
-	Point2F getRandomUnitPixel(U8 treshold_min, U8 treshold_max, Cache &cache);
-
-	// SimObject
-	virtual bool onAdd();
-	virtual void onRemove();
-
-	// ConsoleObject
-	static void initPersistFields();
-
-	PixelMask();
-	~PixelMask();
-
-
-	DECLARE_CONOBJECT(PixelMask);
-};
-
-#endif // _PIXELMASK_H_
+bool IParticleBehaviour::onAdd() { return Parent::onAdd(); }
+void IParticleBehaviour::packData(BitStream* stream) { Parent::packData(stream); }
+void IParticleBehaviour::unpackData(BitStream* stream) { Parent::unpackData(stream); }
+bool IParticleBehaviour::preload(bool server, String &errorStr) { return Parent::preload(server, errorStr); }
+void IParticleBehaviour::initPersistFields() { Parent::initPersistFields(); }
 

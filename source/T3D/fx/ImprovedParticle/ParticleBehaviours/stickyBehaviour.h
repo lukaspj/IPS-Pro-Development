@@ -20,60 +20,41 @@
 //  - if you have further questions regarding license
 // http://fuzzyvoidstudio.com
 //-----------------------------------------------------------------------------
-#ifndef _PIXELMASK_H_
-#define _PIXELMASK_H_
 
-#ifndef __RESOURCE_H__
-#include "core/resource.h"
-#endif
-#include "math\mPoint2.h"
+#ifndef STICKY_BEHAVIOUR_H
+#define STICKY_BEHAVIOUR_H
 
-#ifndef _SIMOBJECT_H_
-#include "console/simObject.h"
+#ifndef PARTICLE_BEHAVIOUR_H
+#include "particleBehaviour.h"
 #endif
 
-#ifndef _GAMEBASE_H_
-#include "T3D/gameBase/gameBase.h"
-#endif
-
-//--------------------------------------------------------------------------
-class PixelMask : public GameBaseData
+class StickyBehaviour : public IParticleBehaviour
 {
-	typedef GameBaseData Parent;
-
+	typedef IParticleBehaviour Parent;
 public:
-	struct Cache{
-		U8 Treshold_max;
-		U8 Treshold_min;
-		U32 Size;
-		Vector<int> Sizes;
-		bool firstRun;
-	};
-private:
-
-	U32 Height;
-	U32 Width;
-	Vector<Point2I> pixels[256];
-	FileName thePath;
-public:
-	void compile(const Torque::Path &path);
-	void loadFromImage(const Torque::Path &path);
-	void loadFromCompiledFile(const Torque::Path &path);
-	Point2F getRandomUnitPixel(U8 treshold_min, U8 treshold_max, Cache &cache);
-
-	// SimObject
-	virtual bool onAdd();
-	virtual void onRemove();
-
-	// ConsoleObject
+	//--------------------------------------------
+	// SimDataBlock
+	//--------------------------------------------
+	bool onAdd();
+	void packData(BitStream*);
+	void unpackData(BitStream*);
+	bool preload(bool server, String &errorStr);
 	static void initPersistFields();
+	
+	//--------------------------------------------
+	// IParticleBehaviour
+	//--------------------------------------------
+	void updateParticle(ParticleEmitter* emitter, Particle* part, F32 time);
+	U8 getPriority() { return 21; };
+	virtual behaviourType getType() { return behaviourType::Position; };
 
-	PixelMask();
-	~PixelMask();
+	//--------------------------------------------
+	// CollisionBehaviour
+	//--------------------------------------------
+	// Nothing yet
+	StickyBehaviour();
 
-
-	DECLARE_CONOBJECT(PixelMask);
+	DECLARE_CONOBJECT(StickyBehaviour);
 };
 
-#endif // _PIXELMASK_H_
-
+#endif // STICKY_BEHAVIOUR_H

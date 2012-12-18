@@ -145,6 +145,7 @@ bool GroundEmitterData::onAdd()
 //-----------------------------------------------------------------------------
 GroundEmitter::GroundEmitter()
 {
+	sa_Radius = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -176,7 +177,8 @@ bool GroundEmitter::onNewDataBlock( GameBaseData *dptr, bool reload )
 bool GroundEmitter::addParticle(const Point3F& pos,
 	const Point3F& axis,
 	const Point3F& vel,
-	const Point3F& axisx)
+	const Point3F& axisx, 
+	const MatrixF &trans)
 {
 	GroundEmitterData* DataBlock = getDataBlock();
 	PROFILE_SCOPE(GroundEmitAddPart);
@@ -257,8 +259,8 @@ bool GroundEmitter::addParticle(const Point3F& pos,
 
 	parentNodePos = nodeDat->getPosition();
 	U32 rand = gRandGen.randI();
-	F32 relx = cos((F32)rand) * gRandGen.randF() * nodeDat->sa_radius;
-	F32 rely = sin((F32)rand) * gRandGen.randF() * nodeDat->sa_radius;
+	F32 relx = cos((F32)rand) * gRandGen.randF() * sa_Radius;
+	F32 rely = sin((F32)rand) * gRandGen.randF() * sa_Radius;
 	F32 x = parentNodePos.x + relx;
 	F32 y = parentNodePos.y + rely;
 	F32 z;

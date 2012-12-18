@@ -25,8 +25,17 @@
 #include "gfx/D3D9/360/gfx360MemVertexBuffer.h"
 #endif
 
+#ifndef PARTICLE_BEHAVIOUR_H
+#include "ImprovedParticle\ParticleBehaviours\particleBehaviour.h"
+#endif
+
+#ifndef ParticleBehaviourCount
+#define ParticleBehaviourCount (U8)8
+#endif
+
 class RenderPassManager;
 class ParticleData;
+class IParticleBehaviour;
 
 //*****************************************************************************
 // Particle Emitter Data
@@ -92,6 +101,19 @@ public:
 	bool                  highResOnly;        ///< This particle system should not use the mixed-resolution particle rendering
 	bool                  renderReflection;   ///< Enables this emitter to render into reflection passes.
 
+	//------------------------- Stand alone variables
+	bool				standAloneEmitter;
+	/*S32					sa_ejectionPeriodMS;                   ///< Time, in Milliseconds, between particle ejection
+	S32					sa_periodVarianceMS;                   ///< Varience in ejection peroid between 0 and n
+	
+	F32					sa_ejectionVelocity;                   ///< Ejection velocity
+	F32					sa_velocityVariance;                   ///< Variance for velocity between 0 and n
+	F32					sa_ejectionOffset;                     ///< Z offset from emitter point to eject from*/
+
+	bool				grounded;
+
+	SimDataBlock* ParticleBHVs[ParticleBehaviourCount];
+
 	bool reload();
 };
 
@@ -101,17 +123,35 @@ public:
 class ParticleEmitter : public GameBase
 {
 	typedef GameBase Parent;
-
 public:
-	bool		sticky;
-	bool		ParticleCollision;
-	F32		attractionrange;
-	S32		AttractionMode[attrobjectCount];
-	F32		Amount[attrobjectCount];
-	StringTableEntry	Attraction_offset[attrobjectCount];
-	StringTableEntry attractedObjectID[attrobjectCount];
+	//------- Enums -------
+	enum MaskBits
+	{
+		sa_Mask		 =	Parent::NextFreeMask << 0,
+		NextFreeMask =	Parent::NextFreeMask << 1,
+	};
+
+	//------------------------- Stand alone variables
+	bool				standAloneEmitter;
+	S32					sa_ejectionPeriodMS;                   ///< Time, in Milliseconds, between particle ejection
+	S32					sa_periodVarianceMS;                   ///< Varience in ejection peroid between 0 and n
+	
+	F32					sa_ejectionVelocity;                   ///< Ejection velocity
+	F32					sa_velocityVariance;                   ///< Variance for velocity between 0 and n
+	F32					sa_ejectionOffset;                     ///< Z offset from emitter point to eject from
+
+	bool				grounded;
+	SimDataBlock* ParticleBHVs[ParticleBehaviourCount];
+
 	U32					oldTime;
 	Point3F				parentNodePos;
+	bool				Dirty;
+
+	
+	U32  packUpdate  (NetConnection *conn, U32 mask, BitStream* stream);
+	void unpackUpdate(NetConnection *conn,           BitStream* stream);
+
+	virtual void onStaticModified(const char* slotName, const char*newValue);
 
 #if defined(TORQUE_OS_XENON)
 	typedef GFXVertexPCTT ParticleVertexType;
@@ -187,7 +227,7 @@ public:
 	/// @param   axis
 	/// @param   vel   Initial velocity
 	/// @param   axisx
-	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx) = 0;
+	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, const MatrixF& trans) = 0;
 
 	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, ParticleEmitterNode* node) = 0;
 

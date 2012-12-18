@@ -1,3 +1,21 @@
+#include <algorithm>
+
+// This is a small hack to prevent including in tAlgorithm.h's swap template function
+// that would have broken STL's existing swap template causing compiling errors upon
+// usage of std::sort() within this source file. --Nathan Martin
+#define _TALGORITHM_H_
+
+// simSet needs this from tAlgorithm.h so we will have a copy of it here.
+/// Finds the first matching value within the container
+/// returning the the element or last if its not found.
+template <class Iterator, class Value>
+Iterator find(Iterator first, Iterator last, Value value)
+{
+   while (first != last && *first != value)
+      ++first;
+   return first;
+}
+
 #include "platform/platform.h"
 #include "T3D/fx/particleEmitter.h"
 
@@ -16,6 +34,8 @@
 #include "console/engineAPI.h"
 #include "materials/materialManager.h"
 
+
+
 Point3F ParticleEmitter::mWindVelocity( 0.0, 0.0, 0.0 );
 const F32 ParticleEmitter::AgedSpinToRadians = (1.0f/1000.0f) * (1.0f/360.0f) * M_PI_F * 2.0f;
 
@@ -27,8 +47,8 @@ typedef ParticleRenderInst::BlendStyle ParticleBlendStyle;
 DefineEnumType( ParticleBlendStyle );
 
 ImplementEnumType( ParticleBlendStyle,
-	"The type of visual blending style to apply to the particles.\n"
-	"@ingroup FX\n\n")
+				  "The type of visual blending style to apply to the particles.\n"
+				  "@ingroup FX\n\n")
 { ParticleRenderInst::BlendNormal,         "NORMAL",        "No blending style.\n" },
 { ParticleRenderInst::BlendAdditive,       "ADDITIVE",      "Adds the color of the pixel to the frame buffer with full alpha for each pixel.\n" },
 { ParticleRenderInst::BlendSubtractive,    "SUBTRACTIVE",   "Subtractive Blending. Reverses the color model, causing dark colors to have a stronger visual effect.\n" },
@@ -77,6 +97,11 @@ ParticleEmitterData::ParticleEmitterData()
 
 	alignParticles = false;
 	alignDirection = Point3F(0.0f, 1.0f, 0.0f);
+
+	standAloneEmitter = false;
+
+	for(int i = 0; i < ParticleBehaviourCount; i++)
+		ParticleBHVs[i] = NULL;
 }
 
 void ParticleEmitterData::initPersistFields()
@@ -88,7 +113,7 @@ void ParticleEmitterData::initPersistFields()
 
 	addField("periodVarianceMS", TYPEID< S32 >(), Offset(periodVarianceMS,   ParticleEmitterData),
 		"Variance in ejection period, from 1 - ejectionPeriodMS." );
-	
+
 	addField( "ejectionVelocity", TYPEID< F32 >(), Offset(ejectionVelocity, ParticleEmitterData),
 		"Particle ejection velocity." );
 
@@ -177,6 +202,14 @@ void ParticleEmitterData::initPersistFields()
 
 	endGroup( "ParticleEmitterData" );
 
+	addGroup( "ParticleBehaviours" );
+
+	addField("ParticleBehaviour", TYPEID<IParticleBehaviour>(), Offset(ParticleBHVs, ParticleEmitterData), ParticleBehaviourCount,
+		"Null");
+
+	endGroup( "ParticleBehaviours" );
+
+
 	Parent::initPersistFields();
 }
 
@@ -216,7 +249,7 @@ bool ParticleEmitterData::onAdd()
 		Con::warnf(ConsoleLogEntry::General, "ParticleEmitterData(%s) ejectionOffset < 0", getName());
 		ejectionOffset = 0.0f;
 	}
-	
+
 	if ( softnessDistance < 0.0f )
 	{
 		Con::warnf( ConsoleLogEntry::General, "ParticleEmitterData(%s) invalid softnessDistance", getName() );
@@ -414,6 +447,18 @@ void ParticleEmitterData::packData(BitStream* stream)
 	stream->writeFlag(highResOnly);
 	stream->writeFlag(renderReflection);
 	stream->writeInt( blendStyle, 4 );
+
+	stream->writeFlag( standAloneEmitter );
+
+	for(int i = 0; i < ParticleBehaviourCount; i++)
+	{
+		if(stream->writeFlag(ParticleBHVs[i]))
+		{
+			stream->writeRangedU32( ParticleBHVs[i]->getId(),
+				DataBlockObjectIdFirst,
+				DataBlockObjectIdLast );
+		}
+	}
 }
 
 void ParticleEmitterData::unpackData(BitStream* stream)
@@ -459,6 +504,21 @@ void ParticleEmitterData::unpackData(BitStream* stream)
 	highResOnly = stream->readFlag();
 	renderReflection = stream->readFlag();
 	blendStyle = stream->readInt( 4 );
+
+	standAloneEmitter = stream->readFlag();
+
+	// DataBlockMask
+	for(int i = 0; i < ParticleBehaviourCount; i++)
+	{
+		if ( stream->readFlag() )
+		{
+			SimDataBlock *dptr = 0;
+			SimObjectId id = stream->readRangedU32( DataBlockObjectIdFirst,
+				DataBlockObjectIdLast );
+			if ( !Sim::findObject( id, dptr ) )
+				ParticleBHVs[i] = dptr;
+		}
+	}
 }
 
 bool ParticleEmitterData::_setAlignDirection( void *object, const char *index, const char *data )
@@ -562,19 +622,20 @@ ParticleEmitter::ParticleEmitter()
 
 	mDead = false;
 
-	sticky = false;
-	ParticleCollision = false;
-	attractionrange = 50;
-	for(int i = 0; i < attrobjectCount; i++)
-	{
-		AttractionMode[i] = 0;
-		Amount[i] = 1;
-		Attraction_offset[i] = "0 0 0";
-		attractedObjectID[i] = "";
-	}
-
 	oldTime = 0;
 	parentNodePos = Point3F(0);
+
+	standAloneEmitter = false;
+
+	sa_ejectionPeriodMS = 100;    // 10 Particles Per second
+	sa_periodVarianceMS = 0;      // exactly
+
+	sa_ejectionVelocity = 2.0f;   // From 1.0 - 3.0 meters per sec
+	sa_velocityVariance = 1.0f;
+	sa_ejectionOffset   = 0.0f;   // ejection from the emitter point
+
+	for(int i = 0; i < ParticleBehaviourCount; i++)
+		ParticleBHVs[i] = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -604,7 +665,7 @@ bool ParticleEmitter::onAdd()
 	}
 	else
 	{
-		// AssertFatal( false, "Error, could not find ClientMissionCleanup group" );
+		AssertFatal( false, "Error, could not find ClientMissionCleanup group" );
 		return false;
 	}
 
@@ -632,6 +693,15 @@ bool ParticleEmitter::onNewDataBlock( GameBaseData *dptr, bool reload )
 	mDataBlock = dynamic_cast<ParticleEmitterData*>( dptr );
 	if ( !mDataBlock || !Parent::onNewDataBlock( dptr, reload ) )
 		return false;
+
+	standAloneEmitter = mDataBlock->standAloneEmitter;
+
+	sa_ejectionPeriodMS = mDataBlock->ejectionPeriodMS;
+	sa_periodVarianceMS = mDataBlock->periodVarianceMS;
+
+	sa_ejectionVelocity = mDataBlock->ejectionVelocity;
+	sa_velocityVariance = mDataBlock->velocityVariance;
+	sa_ejectionOffset = mDataBlock->ejectionOffset;
 
 	mLifetimeMS = mDataBlock->lifetimeMS;
 	if( mDataBlock->lifetimeVarianceMS )
@@ -816,10 +886,10 @@ void ParticleEmitter::deleteWhenEmpty()
 // emitParticles
 //-----------------------------------------------------------------------------
 void ParticleEmitter::emitParticles(const Point3F& point,
-	const bool     useLastPosition,
-	const Point3F& axis,
-	const Point3F& velocity,
-	const U32      numMilliseconds)
+									const bool     useLastPosition,
+									const Point3F& axis,
+									const Point3F& velocity,
+									const U32      numMilliseconds)
 {
 	if( mDead ) return;
 
@@ -845,10 +915,10 @@ void ParticleEmitter::emitParticles(const Point3F& point,
 // emitParticles
 //-----------------------------------------------------------------------------
 void ParticleEmitter::emitParticles(const Point3F& start,
-	const Point3F& end,
-	const Point3F& axis,
-	const Point3F& velocity,
-	const U32      numMilliseconds)
+									const Point3F& end,
+									const Point3F& axis,
+									const Point3F& velocity,
+									const U32      numMilliseconds)
 {
 	if( mDead ) return;
 
@@ -896,7 +966,7 @@ void ParticleEmitter::emitParticles(const Point3F& start,
 			// Create particle at the correct position
 			Point3F pos;
 			pos.interpolate(start, end, F32(currTime) / F32(numMilliseconds));
-			addParticle(pos, axis, velocity, axisx);
+			addParticle(pos, axis, velocity, axisx, getWorldTransform());
 			particlesAdded = true;
 			mNextParticleTime = 0;
 		}
@@ -926,7 +996,7 @@ void ParticleEmitter::emitParticles(const Point3F& start,
 		// Create particle at the correct position
 		Point3F pos;
 		pos.interpolate(start, end, F32(currTime) / F32(numMilliseconds));
-		addParticle(pos, axis, velocity, axisx);
+		addParticle(pos, axis, velocity, axisx, getTransform());
 		particlesAdded = true;
 
 		//   This override-advance code is restored in order to correctly adjust
@@ -997,7 +1067,7 @@ void ParticleEmitter::emitParticles( const U32 numMilliseconds, ParticleEmitterN
 	{
 		return;
 	}
-	
+
 	Point3F start, end, axis, velocity;
 	Point3F emitPoint, emitVelocity;
 	Point3F emitAxis(0, 0, 1);
@@ -1053,13 +1123,13 @@ void ParticleEmitter::emitParticles( const U32 numMilliseconds, ParticleEmitterN
 	while( currTime < numMilliseconds )
 	{
 		S32 nextTime;
-		if(node->standAloneEmitter)
+		if(standAloneEmitter)
 		{
-			nextTime = node->sa_ejectionPeriodMS;
-			if( node->sa_periodVarianceMS != 0 )
+			nextTime = sa_ejectionPeriodMS;
+			if( sa_periodVarianceMS != 0 )
 			{
-				nextTime += S32(gRandGen.randI() % (2 * node->sa_periodVarianceMS + 1)) -
-					S32(node->sa_periodVarianceMS);
+				nextTime += S32(gRandGen.randI() % (2 * sa_periodVarianceMS + 1)) -
+					S32(sa_periodVarianceMS);
 			}
 		}
 		else
@@ -1148,10 +1218,10 @@ void ParticleEmitter::emitParticles( const U32 numMilliseconds, ParticleEmitterN
 // emitParticles
 //-----------------------------------------------------------------------------
 void ParticleEmitter::emitParticles(const Point3F& rCenter,
-	const Point3F& rNormal,
-	const F32      radius,
-	const Point3F& velocity,
-	S32 count)
+									const Point3F& rNormal,
+									const F32      radius,
+									const Point3F& velocity,
+									S32 count)
 {
 	if( mDead ) return;
 
@@ -1195,7 +1265,7 @@ void ParticleEmitter::emitParticles(const Point3F& rCenter,
 		axis.normalize();
 		pos += rCenter;
 
-		addParticle(pos, axis, velocity, axisz);
+		addParticle(pos, axis, velocity, axisz, getTransform());
 	}
 
 	// Set world bounding box
@@ -1366,46 +1436,17 @@ void ParticleEmitter::update( U32 ms )
 	{
 		F32 t = F32(ms) / 1000.0;
 		part->acc.zero();
-		for(int i = 0; i < attrobjectCount; i++)
+		SimDataBlock** BHVs = standAloneEmitter == true ? ParticleBHVs : getDataBlock()->ParticleBHVs;
+		//WHAT SO MANY SORTS PER SECOND? WTF DO A DIRTY FLAG!
+		std::sort(BHVs, BHVs + ParticleBehaviourCount);
+
+		for(int i = 0; i < ParticleBehaviourCount; i++)
 		{
-			if(AttractionMode[i] > 0)
-			{
-				GameBase* GB = dynamic_cast<GameBase*>(Sim::findObject(attractedObjectID[i]));
-				if(!GB)
-					GB = dynamic_cast<GameBase*>(Sim::findObject(atoi(attractedObjectID[i])));
-				if(GB){
-					Point3F target = GB->getPosition();
-					char attrBuf[255];
-					strcpy(attrBuf,Attraction_offset[i]);
-
-					MatrixF trans = GB->getTransform();
-
-					char* xBuf = strtok(attrBuf, " ");
-					F32 x = atof(xBuf);
-					char* yBuf = strtok(NULL, " ");
-					F32 y = atof(yBuf);
-					char* zBuf = strtok(NULL, " ");
-					F32 z = atof(zBuf);
-					Point3F po;
-					trans.mulV(Point3F(x,y,z), &po);
-					target += po;
-
-					Point3F diff = (target - part->pos);
-					Point3F* attR = new Point3F(attractionrange);
-					if(diff.len() < 1)
-						diff.normalize();
-					Point3F ndiff = diff;
-					ndiff.normalize();
-					F32 fdiff = attractionrange/(diff.len())-1;
-					if(fdiff < 0)
-						fdiff = 0;
-					if(AttractionMode[i] == 1)
-						part->acc += (ndiff * fdiff)*Amount[i];
-					if(AttractionMode[i] == 2)
-						part->acc -= (ndiff * fdiff)*Amount[i];
-					delete(attR);
-				}
-			}
+			IParticleBehaviour* bhv = (IParticleBehaviour*)BHVs[i];
+			if(!bhv)
+				continue;
+			if(bhv->getType() == IParticleBehaviour::Acceleration)
+				bhv->updateParticle(this, part, t);
 		}
 
 		Point3F a = part->acc;
@@ -1414,20 +1455,24 @@ void ParticleEmitter::update( U32 ms )
 		a += Point3F(0.0f, 0.0f, -9.81f) * part->dataBlock->gravityCoefficient;
 		part->vel += a * t;
 
-		if(ParticleCollision)
+		for(int i = 0; i < ParticleBehaviourCount; i++)
 		{
-			RayInfo rInfo;
-			if(gClientContainer.castRay(part->pos, part->pos + part->vel * t, TerrainObjectType | InteriorObjectType | VehicleObjectType | PlayerObjectType | StaticShapeObjectType, &rInfo))
-			{
-				Point3F proj = mDot(part->vel,rInfo.normal)/(rInfo.normal.len()*rInfo.normal.len())*rInfo.normal;
-				Point3F between = (part->vel - proj);
-				part->vel = -(part->vel-(between*2)*0.8);
-			}
+			IParticleBehaviour* bhv = (IParticleBehaviour*)BHVs[i];
+			if(!bhv)
+				continue;
+			if(bhv->getType() == IParticleBehaviour::Velocity)
+				bhv->updateParticle(this, part, t);
 		}
 
 		part->pos += part->vel * t;
-		//if(sticky)
-			//part->pos = parentNodePos + part->relPos;
+		for(int i = 0; i < ParticleBehaviourCount; i++)
+		{
+			IParticleBehaviour* bhv = (IParticleBehaviour*)BHVs[i];
+			if(!bhv)
+				continue;
+			if(bhv->getType() == IParticleBehaviour::Position)
+				bhv->updateParticle(this, part, t);
+		}
 
 		updateKeyData( part );
 	}
@@ -1659,10 +1704,10 @@ void ParticleEmitter::copyToVB( const Point3F &camPos, const ColorF &ambientColo
 // Set up particle for billboard style render
 //-----------------------------------------------------------------------------
 void ParticleEmitter::setupBillboard( Particle *part,
-	Point3F *basePts,
-	const MatrixF &camView,
-	const ColorF &ambientColor,
-	ParticleVertexType *lVerts )
+									 Point3F *basePts,
+									 const MatrixF &camView,
+									 const ColorF &ambientColor,
+									 ParticleVertexType *lVerts )
 {
 	F32 width     = part->size * 0.5f;
 	F32 spinAngle = part->spinSpeed * part->currentAge * AgedSpinToRadians;
@@ -1744,9 +1789,9 @@ void ParticleEmitter::setupBillboard( Particle *part,
 // Set up oriented particle
 //-----------------------------------------------------------------------------
 void ParticleEmitter::setupOriented( Particle *part,
-	const Point3F &camPos,
-	const ColorF &ambientColor,
-	ParticleVertexType *lVerts )
+									const Point3F &camPos,
+									const ColorF &ambientColor,
+									ParticleVertexType *lVerts )
 {
 	Point3F dir;
 
@@ -1835,8 +1880,8 @@ void ParticleEmitter::setupOriented( Particle *part,
 }
 
 void ParticleEmitter::setupAligned( const Particle *part, 
-	const ColorF &ambientColor,
-	ParticleVertexType *lVerts )
+								   const ColorF &ambientColor,
+								   ParticleVertexType *lVerts )
 {
 	// The aligned direction will always be normalized.
 	Point3F dir = mDataBlock->alignDirection;
@@ -1994,16 +2039,69 @@ bool ParticleEmitterData::reload()
 	return true;
 }
 
+void ParticleEmitter::onStaticModified(const char* slotName, const char*newValue)
+{
+	if(strcmp(slotName, "sa_ejectionOffset") == 0 ||
+		strcmp(slotName, "sa_ejectionPeriodMS") == 0 ||
+		strcmp(slotName, "sa_periodVarianceMS") == 0 ||
+		strcmp(slotName, "sa_ejectionOffset") == 0 ||
+		strcmp(slotName, "sa_ejectionVelocity") == 0 ||
+		strcmp(slotName, "sa_velocityVariance") == 0 ||
+		strcmp(slotName, "standAloneEmitter") == 0)
+		setMaskBits(sa_Mask);
+
+	Parent::onStaticModified(slotName, newValue);
+}
+
+//-----------------------------------------------------------------------------
+// packUpdate
+//-----------------------------------------------------------------------------
+U32 ParticleEmitter::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
+{
+	U32 retMask = Parent::packUpdate(con, mask, stream);
+
+	if( stream->writeFlag( mask & sa_Mask ) )
+	{
+		stream->writeFlag( standAloneEmitter );
+		stream->writeInt(sa_ejectionPeriodMS, 10);
+		stream->writeInt(sa_periodVarianceMS, 10);
+
+		stream->writeInt((S32)(sa_ejectionVelocity * 100), 16);
+		stream->writeInt((S32)(sa_velocityVariance * 100), 14);
+		stream->writeInt((S32)(sa_ejectionOffset * 100), 16);
+	}
+
+	return retMask;
+}
+
+//-----------------------------------------------------------------------------
+// unpackUpdate
+//-----------------------------------------------------------------------------
+void ParticleEmitter::unpackUpdate(NetConnection* con, BitStream* stream)
+{
+	Parent::unpackUpdate(con, stream);
+
+	if(stream->readFlag())
+	{
+		sa_ejectionPeriodMS = stream->readInt(10);
+		sa_periodVarianceMS = stream->readInt(10);
+
+		sa_ejectionVelocity = stream->readInt(16) / 100.0f;
+		sa_velocityVariance = stream->readInt(14) / 100.0f;
+		sa_ejectionOffset = stream->readInt(16) / 100.0f;
+	}
+}
+
 DefineEngineMethod(ParticleEmitterData, reload, void,(),,
-	"Reloads the ParticleData datablocks and other fields used by this emitter.\n"
-	"@tsexample\n"
-	"// Get the editor's current particle emitter\n"
-	"%emitter = PE_EmitterEditor.currEmitter\n\n"
-	"// Change a field value\n"
-	"%emitter.setFieldValue( %propertyField, %value );\n\n"
-	"// Reload this emitter\n"
-	"%emitter.reload();\n"
-	"@endtsexample\n")
+				   "Reloads the ParticleData datablocks and other fields used by this emitter.\n"
+				   "@tsexample\n"
+				   "// Get the editor's current particle emitter\n"
+				   "%emitter = PE_EmitterEditor.currEmitter\n\n"
+				   "// Change a field value\n"
+				   "%emitter.setFieldValue( %propertyField, %value );\n\n"
+				   "// Reload this emitter\n"
+				   "%emitter.reload();\n"
+				   "@endtsexample\n")
 {
 	object->reload();
 }

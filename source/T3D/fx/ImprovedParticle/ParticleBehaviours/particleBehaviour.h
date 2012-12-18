@@ -20,60 +20,40 @@
 //  - if you have further questions regarding license
 // http://fuzzyvoidstudio.com
 //-----------------------------------------------------------------------------
-#ifndef _PIXELMASK_H_
-#define _PIXELMASK_H_
 
-#ifndef __RESOURCE_H__
-#include "core/resource.h"
-#endif
-#include "math\mPoint2.h"
+#ifndef PARTICLE_BEHAVIOUR_H
+#define PARTICLE_BEHAVIOUR_H
 
-#ifndef _SIMOBJECT_H_
-#include "console/simObject.h"
-#endif
+#include "../../particle.h"
+#include "console\consoleTypes.h"
+#include "console\simDatablock.h"
 
-#ifndef _GAMEBASE_H_
-#include "T3D/gameBase/gameBase.h"
-#endif
+class ParticleEmitter;
 
-//--------------------------------------------------------------------------
-class PixelMask : public GameBaseData
+class IParticleBehaviour : public SimDataBlock
 {
-	typedef GameBaseData Parent;
-
+	typedef SimDataBlock Parent;
 public:
-	struct Cache{
-		U8 Treshold_max;
-		U8 Treshold_min;
-		U32 Size;
-		Vector<int> Sizes;
-		bool firstRun;
+	enum behaviourType{
+		Acceleration,
+		Position,
+		Velocity,
+		Error
 	};
-private:
+	virtual U8 getPriority() { return 0; };
+	virtual void updateParticle(ParticleEmitter* emitter, Particle* part, F32 time);
+	virtual behaviourType getType() { return behaviourType::Error; };
+	bool operator<(IParticleBehaviour IPB) { return getPriority() < IPB.getPriority(); };
 
-	U32 Height;
-	U32 Width;
-	Vector<Point2I> pixels[256];
-	FileName thePath;
-public:
-	void compile(const Torque::Path &path);
-	void loadFromImage(const Torque::Path &path);
-	void loadFromCompiledFile(const Torque::Path &path);
-	Point2F getRandomUnitPixel(U8 treshold_min, U8 treshold_max, Cache &cache);
-
-	// SimObject
+	//--------------------------------------------
+	// SimDataBlock
+	//--------------------------------------------
 	virtual bool onAdd();
-	virtual void onRemove();
-
-	// ConsoleObject
+	virtual void packData(BitStream* stream);
+	virtual void unpackData(BitStream* stream);
+	virtual bool preload(bool server, String &errorStr);
 	static void initPersistFields();
-
-	PixelMask();
-	~PixelMask();
-
-
-	DECLARE_CONOBJECT(PixelMask);
+	DECLARE_CONOBJECT(IParticleBehaviour);
 };
 
-#endif // _PIXELMASK_H_
-
+#endif // PARTICLE_BEHAVIOUR_H

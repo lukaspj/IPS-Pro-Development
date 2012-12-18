@@ -26,16 +26,15 @@
 
 #include "T3D\fx\particleEmitter.h"
 
-#include "math/muParser/muParser.h"
-
 #include "PixelMask.h"
 
 #ifndef _NETCONNECTION_H_
 #include "sim/netConnection.h"
 #endif
 
-using namespace mu;
-
+//-----------------------------------------------------------
+// MaskEmitterData
+//-----------------------------------------------------------
 class MaskEmitterData : public ParticleEmitterData
 {
 	typedef ParticleEmitterData Parent;
@@ -52,10 +51,15 @@ public:
 
 	//------- Variables -------
 public:
+	U8			Treshold_min;
+	U8			Treshold_max;
 	F32			radius;
 	PixelMask*	pMask;
 };
 
+//-----------------------------------------------------------
+// MaskEmitter
+//-----------------------------------------------------------
 class MaskEmitter : public ParticleEmitter
 {
 	typedef ParticleEmitter Parent;
@@ -82,12 +86,16 @@ public:
 	bool GetTerrainHeightAndNormal(const F32 x, const F32 y, F32 &height, Point3F &normal);
 
 protected:
-	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx);
+	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, const MatrixF &trans);
 	virtual bool addParticle(const Point3F &pos, const Point3F &axis, const Point3F &vel, const Point3F &axisx, ParticleEmitterNode* node);
 
 	//------- Variables -------
 public:
-
+	U8					sa_Treshold_min;
+	U8					sa_Treshold_max;
+	U8					sa_Radius;
+	bool				sa_Grounded;
+	PixelMask::Cache	maskCache;
 private:
 	virtual MaskEmitterData* getDataBlock() { return static_cast<MaskEmitterData*>(Parent::getDataBlock()); }
 };

@@ -88,6 +88,8 @@ ConsoleDocClass( MaskEmitterData,
 //-----------------------------------------------------------------------------
 MaskEmitterData::MaskEmitterData()
 {
+	Treshold_min = 0;
+	Treshold_max = 255;
 	radius = 1;
 	pMask = NULL;
 }
@@ -100,6 +102,12 @@ void MaskEmitterData::initPersistFields()
 	addGroup( "MaskEmitter" );
 
 	addField( "radius", TYPEID< F32 >(), Offset(radius, MaskEmitterData),
+		"Distance along ejection Z axis from which to eject particles." );
+	
+	addField( "Treshold_min", TypeS8, Offset(Treshold_min, MaskEmitterData),
+		"Distance along ejection Z axis from which to eject particles." );
+	
+	addField( "Treshold_max", TypeS8, Offset(Treshold_max, MaskEmitterData),
 		"Distance along ejection Z axis from which to eject particles." );
 
 	addField( "PixelMask", TYPEID<PixelMask>(), Offset(pMask, MaskEmitterData), "");
@@ -118,6 +126,10 @@ void MaskEmitterData::packData(BitStream* stream)
 	if( stream->writeFlag( radius != 1 ) )
 		stream->writeInt((S32)(radius * 100), 16);
 
+	stream->writeInt(Treshold_min, 10);
+
+	stream->writeInt(Treshold_max, 10);
+
 	if( stream->writeFlag(pMask != NULL) )
 	{
 		stream->writeInt(pMask->getId(), 32);
@@ -132,6 +144,10 @@ void MaskEmitterData::unpackData(BitStream* stream)
 	Parent::unpackData(stream);
 	if(stream->readFlag())
 		radius = stream->readInt(16) / 100;
+	
+	Treshold_min = stream->readInt(10);
+	Treshold_max = stream->readInt(10);
+
 	if(stream->readFlag())
 		pMask = dynamic_cast<PixelMask*>(Sim::findObject(stream->readInt(32)));
 }
@@ -151,8 +167,16 @@ bool MaskEmitterData::onAdd()
 // SphereEmitter
 //-----------------------------------------------------------------------------
 MaskEmitter::MaskEmitter()
-{
-	
+{	
+	sa_Treshold_min = 0;
+	sa_Treshold_max = 255;
+	sa_Grounded = false;
+	sa_Radius = 1;
+
+	maskCache.firstRun = true;
+	maskCache.Size = 0;
+	maskCache.Treshold_min = 0;
+	maskCache.Treshold_max = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -160,7 +184,18 @@ MaskEmitter::MaskEmitter()
 //-----------------------------------------------------------------------------
 void MaskEmitter::initPersistFields()
 {
+	addField( "Treshold_min", TypeS8, Offset(sa_Treshold_min, MaskEmitter),
+		"Distance along ejection Z axis from which to eject particles." );
 	
+	addField( "Treshold_max", TypeS8, Offset(sa_Treshold_max, MaskEmitter),
+		"Distance along ejection Z axis from which to eject particles." );
+	
+	addField( "sa_Grounded", TypeS8, Offset(sa_Grounded, MaskEmitter),
+		"Distance along ejection Z axis from which to eject particles." );
+	
+	addField( "sa_Radius", TypeS8, Offset(sa_Radius, MaskEmitter),
+		"Distance along ejection Z axis from which to eject particles." );
+
 	Parent::initPersistFields();
 }
 
@@ -171,6 +206,12 @@ U32 MaskEmitter::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
 {
 	U32 retMask = Parent::packUpdate(con, mask, stream);
 
+	if(stream->writeFlag( mask & sa_Mask ) )
+	{
+		stream->writeInt(sa_Treshold_min, 10);
+		stream->writeInt(sa_Treshold_max, 10);
+	}
+
 	return retMask;
 }
 
@@ -180,7 +221,11 @@ U32 MaskEmitter::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
 void MaskEmitter::unpackUpdate(NetConnection* con, BitStream* stream)
 {
 	Parent::unpackUpdate(con, stream);
-
+	if( stream->readFlag() )
+	{
+		sa_Treshold_min = stream->readInt(10);
+		sa_Treshold_max = stream->readInt(10);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -193,6 +238,9 @@ bool MaskEmitter::onNewDataBlock( GameBaseData *dptr, bool reload )
 	if ( !DataBlock || !Parent::onNewDataBlock( dptr, reload ) )
 		return false;
 
+	sa_Treshold_max = DataBlock->Treshold_max;
+	sa_Treshold_min = DataBlock->Treshold_min;
+
 	// Todo: Uncomment if this is a "leaf" class
 	//scriptOnNewDataBlock();
 	return true;
@@ -204,11 +252,59 @@ bool MaskEmitter::onNewDataBlock( GameBaseData *dptr, bool reload )
 bool MaskEmitter::addParticle(const Point3F& pos,
 	const Point3F& axis,
 	const Point3F& vel,
-	const Point3F& axisx)
+	const Point3F& axisx, 
+	const MatrixF &trans)
 {
+	PROFILE_SCOPE(MaskEmitAddPart);
+	IPSBenchmarkBegin;
 	MaskEmitterData* DataBlock = getDataBlock();
+	U32 dt = mInternalClock - oldTime;
+	oldTime = mInternalClock;
+
+	parentNodePos =  pos;
+	U32 rand = gRandGen.randI();
+	Point2F pxPt = DataBlock->pMask->getRandomUnitPixel(sa_Treshold_min, sa_Treshold_max, maskCache);
+	if(pxPt == Point2F::Max)
+		return false;
+	F32 relx, rely;
+	/*if(standAloneEmitter){
+		relx = pxPt.x * nodeDat->sa_radius;
+		rely = pxPt.y * nodeDat->sa_radius;
+	}
+	else{*/
+		relx = pxPt.x * DataBlock->radius;
+		rely = pxPt.y * DataBlock->radius;
+	//}
+	F32 x = relx;
+	F32 y = rely;
+	F32 z = 0;
+	Point3F p;
+	//Point3F axis = vel;  
+	//axis.normalize();  
+  
+	Point3F axisZ(axis.x,axis.y,0.0f);  
+	if(axisZ.isZero())  
+		axisZ.set(1.0,0.0,0.0);  
+	else  
+		axisZ.normalize();  
+  
+	//Point3F axisX;  
+	//mCross(axis,axisZ,&axisX);  
+	mCross(axis,axisx,&axisZ);  
+  
+	MatrixF rotMat;
+	rotMat.setColumn(0,axisx);  
+	rotMat.setColumn(1,axis);  
+	rotMat.setColumn(2,axisZ);
+
+	rotMat.mulV(Point3F(x,y,z), &p);
+	p = pos+p;
+	StringTableEntry mat;
+	Point3F normal;
+	//if(nodeDat->grounded)
+		//GetTerrainHeightAndNormal(p.x,p.y,p.z,normal);
 	n_parts++;
-	if (n_parts > n_part_capacity || n_parts > DataBlock->partListInitSize)
+	if (n_parts > n_part_capacity || n_parts > mDataBlock->partListInitSize)
 	{
 		// In an emergency we allocate additional particles in blocks of 16.
 		// This should happen rarely.
@@ -220,28 +316,60 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 			store_block[i].next = part_freelist;
 			part_freelist = &store_block[i];
 		}
-		DataBlock->allocPrimBuffer(n_part_capacity); // allocate larger primitive buffer or will crash 
+		mDataBlock->allocPrimBuffer(n_part_capacity); // allocate larger primitive buffer or will crash 
 	}
 	Particle* pNew = part_freelist;
 	part_freelist = pNew->next;
 	pNew->next = part_list_head.next;
 	part_list_head.next = pNew;
 
-	Point3F ejectionAxis = axis;
+	F32 initialVel;
+	// If it is a standAloneEmitter, then we want it to use the sa values from the node
+	/*if(nodeDat->standAloneEmitter)
+	{
+		initialVel = nodeDat->sa_ejectionVelocity;
+		initialVel    += (nodeDat->sa_velocityVariance * 2.0f * gRandGen.randF()) - nodeDat->sa_velocityVariance;
 
-	F32 initialVel = DataBlock->ejectionVelocity;
-	initialVel    += (DataBlock->velocityVariance * 2.0f * gRandGen.randF()) - DataBlock->velocityVariance;
+		if(nodeDat->grounded){
+			pNew->pos = p + normal*nodeDat->sa_ejectionOffset;
+			// Set the relative position for later use.
+			pNew->relPos = Point3F(relx, rely, 0+nodeDat->sa_ejectionOffset);
+		}
+		else{
+			pNew->pos = p;
+			// Set the relative position for later use.
+			pNew->relPos = Point3F(relx, rely, 0);
+		}
+	}
+	else
+	{*/
+		initialVel = mDataBlock->ejectionVelocity;
+		initialVel    += (mDataBlock->velocityVariance * 2.0f * gRandGen.randF()) - mDataBlock->velocityVariance;
 
-	pNew->pos = pos + (ejectionAxis * DataBlock->ejectionOffset);
-	pNew->vel = ejectionAxis * initialVel;
-	pNew->orientDir = ejectionAxis;
+		/*if(nodeDat->grounded){
+			pNew->pos = p + normal * mDataBlock->ejectionOffset;
+			// Set the relative position for later use.
+			pNew->relPos = Point3F(relx, rely, 0 + mDataBlock->ejectionOffset);
+		}
+		else{*/
+			pNew->pos = p;
+			// Set the relative position for later use.
+			pNew->relPos = Point3F(relx, rely, 0);
+		//}
+	//}
+	// Velocity is based on the normal of the vertex
+	pNew->vel = Point3F(0,0,1) * initialVel;
+	pNew->orientDir = Point3F(0,0,1);
+
 	pNew->acc.set(0, 0, 0);
 	pNew->currentAge = 0;
 
 	// Choose a new particle datablack randomly from the list
-	U32 dBlockIndex = gRandGen.randI() % DataBlock->particleDataBlocks.size();
-	DataBlock->particleDataBlocks[dBlockIndex]->initializeParticle(pNew, vel);
+	U32 dBlockIndex = gRandGen.randI() % mDataBlock->particleDataBlocks.size();
+	mDataBlock->particleDataBlocks[dBlockIndex]->initializeParticle(pNew, vel);
 	updateKeyData( pNew );
+	return true;
+	IPSBenchmarkEnd("----Graph---- addPart");
 	return true;
 }
 
@@ -263,13 +391,17 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 
 	parentNodePos = nodeDat->getPosition();
 	U32 rand = gRandGen.randI();
-	Point2F pxPt = DataBlock->pMask->getRandomUnitPixel();
+	Point2F pxPt;
+	if(standAloneEmitter)
+		pxPt = DataBlock->pMask->getRandomUnitPixel(sa_Treshold_min, sa_Treshold_max, maskCache);
+	else
+		pxPt = DataBlock->pMask->getRandomUnitPixel(DataBlock->Treshold_min, DataBlock->Treshold_max, maskCache);
 	if(pxPt == Point2F::Max)
 		return false;
 	F32 relx, rely;
-	if(nodeDat->standAloneEmitter){
-		relx = pxPt.x * nodeDat->sa_radius;
-		rely = pxPt.y * nodeDat->sa_radius;
+	if(standAloneEmitter){
+		relx = pxPt.x * sa_Radius;
+		rely = pxPt.y * sa_Radius;
 	}
 	else{
 		relx = pxPt.x * DataBlock->radius;
@@ -283,7 +415,7 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 	nodeTrans.mulP(Point3F(x,y,z), &p);
 	StringTableEntry mat;
 	Point3F normal;
-	if(nodeDat->grounded)
+	if(sa_Grounded)
 		GetTerrainHeightAndNormal(p.x,p.y,p.z,normal);
 	n_parts++;
 	if (n_parts > n_part_capacity || n_parts > mDataBlock->partListInitSize)
@@ -307,15 +439,15 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 
 	F32 initialVel;
 	// If it is a standAloneEmitter, then we want it to use the sa values from the node
-	if(nodeDat->standAloneEmitter)
+	if(standAloneEmitter)
 	{
-		initialVel = nodeDat->sa_ejectionVelocity;
-		initialVel    += (nodeDat->sa_velocityVariance * 2.0f * gRandGen.randF()) - nodeDat->sa_velocityVariance;
+		initialVel = sa_ejectionVelocity;
+		initialVel    += (sa_velocityVariance * 2.0f * gRandGen.randF()) - sa_velocityVariance;
 
-		if(nodeDat->grounded){
-			pNew->pos = p + normal*nodeDat->sa_ejectionOffset;
+		if(sa_Grounded){
+			pNew->pos = p + normal*sa_ejectionOffset;
 			// Set the relative position for later use.
-			pNew->relPos = Point3F(relx, rely, 0+nodeDat->sa_ejectionOffset);
+			pNew->relPos = Point3F(relx, rely, 0+sa_ejectionOffset);
 		}
 		else{
 			pNew->pos = p;
@@ -328,7 +460,7 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 		initialVel = mDataBlock->ejectionVelocity;
 		initialVel    += (mDataBlock->velocityVariance * 2.0f * gRandGen.randF()) - mDataBlock->velocityVariance;
 
-		if(nodeDat->grounded){
+		if(sa_Grounded){
 			pNew->pos = p + normal * mDataBlock->ejectionOffset;
 			// Set the relative position for later use.
 			pNew->relPos = Point3F(relx, rely, 0 + mDataBlock->ejectionOffset);
@@ -348,7 +480,7 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 
 	// Choose a new particle datablack randomly from the list
 	U32 dBlockIndex = gRandGen.randI() % mDataBlock->particleDataBlocks.size();
-	mDataBlock->particleDataBlocks[dBlockIndex]->initializeParticle(pNew, Point3F(0,0,nodeDat->sa_ejectionVelocity));
+	mDataBlock->particleDataBlocks[dBlockIndex]->initializeParticle(pNew, Point3F(0,0,sa_ejectionVelocity));
 	updateKeyData( pNew );
 	return true;
 	IPSBenchmarkEnd("----Graph---- addPart");
@@ -357,8 +489,9 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 
 void MaskEmitter::onStaticModified(const char* slotName, const char*newValue)
 {
-	/*if(strcmp(slotName, "radius"))
-		setMaskBits();*/
+	if(strcmp(slotName, "sa_Treshold_min") == 0 ||
+		strcmp(slotName, "sa_Treshold_max") == 0)
+		setMaskBits( sa_Mask );
 	Parent::onStaticModified(slotName, newValue);
 }
 

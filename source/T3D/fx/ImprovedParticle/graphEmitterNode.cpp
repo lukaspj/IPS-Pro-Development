@@ -216,25 +216,6 @@ GraphEmitterNode::GraphEmitterNode()
 
 	timeScale = 0.1f;
 
-	for(int i=0;i<100;i++)
-	{
-		xVariables[i].token = NULL;
-		yVariables[i].token = NULL;
-		zVariables[i].token = NULL;
-		xVariables[i].value = NULL;
-		yVariables[i].value = NULL;
-		zVariables[i].value = NULL;
-	}
-
-	xfuncParser.DefineVar("t", &particleProg);
-	xfuncParser.SetExpr(xFunc);
-
-	yfuncParser.DefineVar("t", &particleProg);
-	yfuncParser.SetExpr(yFunc);
-
-	zfuncParser.DefineVar("t", &particleProg);
-	zfuncParser.SetExpr(zFunc);
-
 	cb_Max = false;
 
 	xMxDist = 0;
@@ -250,6 +231,9 @@ GraphEmitterNode::GraphEmitterNode()
 //-----------------------------------------------------------------------------
 void GraphEmitterNode::initPersistFields()
 {
+	addField( "emitter",  TYPEID< GraphEmitterData >(), Offset(mEmitterDatablock, GraphEmitterNode),
+		"Datablock to use when emitting particles." );
+
 	addGroup( "Expression");
 
 	addField( "Grounded", TYPEID< bool >(), Offset(Grounded, GraphEmitterNode),
@@ -340,9 +324,7 @@ bool GraphEmitterNode::onNewDataBlock( GameBaseData *dptr, bool reload )
 			Grounded = atoi(const_cast<char*>(initialValues[i+1].c_str()));
 	}
 
-	xfuncParser.SetExpr(xFunc);
-	yfuncParser.SetExpr(yFunc);
-	zfuncParser.SetExpr(zFunc);
+	UpdateEmitterValues();
 
 	// Todo: Uncomment if this is a "leaf" class
 	//scriptOnNewDataBlock();
@@ -368,56 +350,6 @@ U32 GraphEmitterNode::packUpdate(NetConnection* con, U32 mask, BitStream* stream
 		stream->writeFlag(Reverse);
 		stream->writeFlag(Loop);
 		stream->writeFlag(Grounded);
-	}
-	if( stream->writeFlag(mask & dynamicMod) )
-	{
-		int xmodCount = 0;
-		for(int i=0;i<100;i++)
-		{
-			if(xVariables[i].token != NULL)
-				xmodCount++;
-		}
-
-		int ymodCount = 0;
-		for(int i=0;i<100;i++)
-		{
-			if(yVariables[i].token != NULL)
-				ymodCount++;
-		}
-
-		int zmodCount = 0;
-		for(int i=0;i<100;i++)
-		{
-			if(zVariables[i].token != NULL)
-				zmodCount++;
-		}
-		stream->writeInt(xmodCount,7);
-		stream->writeInt(ymodCount,7);
-		stream->writeInt(zmodCount,7);
-		for(int i=0;i<100;i++)
-		{
-			if(xVariables[i].token != NULL)
-			{
-				stream->writeString(&xVariables[i].token,3);
-				stream->write(xVariables[i].value);
-			}
-		}
-		for(int i=0;i<100;i++)
-		{
-			if(yVariables[i].token != NULL)
-			{
-				stream->writeString(&yVariables[i].token,3);
-				stream->write(yVariables[i].value);
-			}
-		}
-		for(int i=0;i<100;i++)
-		{
-			if(zVariables[i].token != NULL)
-			{
-				stream->writeString(&zVariables[i].token,3);
-				stream->write(zVariables[i].value);
-			}
-		}
 	}
 
 	return retMask;
@@ -446,12 +378,6 @@ void GraphEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 		zFunc = IPSCore::UpToLow(dStrdup(buf));
 		//zFunc = dStrdup(buf);
 
-		xfuncParser.SetExpr(xFunc);
-
-		yfuncParser.SetExpr(yFunc);
-
-		zfuncParser.SetExpr(zFunc);
-
 		funcMax = stream->readInt(32);
 		funcMin = stream->readInt(32);
 
@@ -461,255 +387,59 @@ void GraphEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
 		Loop = stream->readFlag();
 		Grounded = stream->readFlag();
 	}
-	if( stream->readFlag() )
-	{
-		dMemset(xVariables,0,sizeof(xVariables));
-		dMemset(yVariables,0,sizeof(yVariables));
-		dMemset(zVariables,0,sizeof(zVariables));
-		int xi = stream->readInt(7);
-		int yi = stream->readInt(7);
-		int zi = stream->readInt(7);
-
-		char buf[3];
-
-		for(int i=0;i<xi;i++)
-		{
-			stream->readString(buf);
-			xVariables[i].token = *dStrdup(buf);
-			stream->read((F32 *)&xVariables[i].value);
-
-			varmap_type xVars = xfuncParser.GetVar();
-			varmap_type::const_iterator item = xVars.begin();
-			// We don't want to call the DefineVar unless it is absolutely necessary ( for optimization )
-			bool found = false;
-			for(; item!= xVars.end(); ++item)
-			{
-				if(IPSCore::UpToLow(const_cast<char*>(item->first.c_str())) == IPSCore::UpToLow(&xVariables[i].token))
-					found = true;
-			}
-			if(!found)
-			{
-				xfuncParser.DefineVar(IPSCore::UpToLow(&xVariables[i].token), &xVariables[i].value);
-			}
-		}
-		for(int i=0;i<yi;i++)
-		{
-			stream->readString(buf);
-			yVariables[i].token = *dStrdup(buf);
-			stream->read((F32 *)&yVariables[i].value);
-
-			varmap_type yvars = yfuncParser.GetVar();
-			varmap_type::const_iterator item = yvars.begin();
-			bool found = false;
-			for(; item!= yvars.end(); ++item)
-			{
-				if(IPSCore::UpToLow(const_cast<char*>(item->first.c_str())) == IPSCore::UpToLow(&yVariables[i].token))
-					found = true;
-			}
-			if(!found)
-				yfuncParser.DefineVar(IPSCore::UpToLow(&yVariables[i].token), &yVariables[i].value);
-		}
-		for(int i=0;i<zi;i++)
-		{
-			stream->readString(buf);
-			zVariables[i].token = *dStrdup(buf);
-			stream->read((F32 *)&zVariables[i].value);
-
-			varmap_type zVars = zfuncParser.GetVar();
-			varmap_type::const_iterator item = zVars.begin();
-			bool found = false;
-			for(; item!= zVars.end(); ++item)
-			{
-				if(IPSCore::UpToLow(const_cast<char*>(item->first.c_str())) == IPSCore::UpToLow(&zVariables[i].token))
-					found = true;
-			}
-			if(!found)
-				zfuncParser.DefineVar(IPSCore::UpToLow(&zVariables[i].token), &zVariables[i].value);
-		}
-	}
+	UpdateEmitterValues();
 }
 
 void GraphEmitterNode::onStaticModified(const char* slotName, const char*newValue)
 {
-	// Was it an expression related value? Then set the exprEdited bit.
-	if(strcmp(slotName, "xFunc") == 0 ||
-		strcmp(slotName, "yFunc") == 0 ||
-		strcmp(slotName, "zFunc") == 0 ||
-		strcmp(slotName, "funcMax") == 0 ||
-		strcmp(slotName, "funcMin") == 0 ||
-		strcmp(slotName, "ProgressMode") == 0 ||
-		strcmp(slotName, "Reverse") == 0 ||
-		strcmp(slotName, "Loop") == 0 ||
-		strcmp(slotName, "Grounded") == 0 ||
-		strcmp(slotName, "timeScale") == 0)
-	{
+	if( strcmp(slotName, "xFunc") == 0 ){
+		saUpdateBits |= saXFunc;
 		setMaskBits(exprEdited);
-		updateMaxMinDistances();
 	}
-
-	// If it was a function, update the parsers 
-	// ( we don't want it to be case sensitive hence the IPSCore::UpToLow )
-	if(strcmp(slotName, "xFunc") == 0)
-		xfuncParser.SetExpr(IPSCore::UpToLow(xFunc));
-	if(strcmp(slotName, "yFunc") == 0)
-		yfuncParser.SetExpr(IPSCore::UpToLow(yFunc));
-	if(strcmp(slotName, "zFunc") == 0)
-		zfuncParser.SetExpr(IPSCore::UpToLow(zFunc));
+	else if( strcmp(slotName, "yFunc") == 0 ){
+		saUpdateBits |= saYFunc;
+		setMaskBits(exprEdited);
+	}
+	else if( strcmp(slotName, "zFunc") == 0 ){
+		saUpdateBits |= saZFunc;
+		setMaskBits(exprEdited);
+	}
+	else if( strcmp(slotName, "funcMax") == 0 ){
+		saUpdateBits |= safuncMax;
+		setMaskBits(exprEdited);
+	}
+	else if( strcmp(slotName, "funcMin") == 0 ){
+		saUpdateBits |= safuncMin;
+		setMaskBits(exprEdited);
+	}
+	else if( strcmp(slotName, "ProgressMode") == 0 ){
+		saUpdateBits |= saProgMode;
+		setMaskBits(exprEdited);
+	}
+	else if( strcmp(slotName, "Reverse") == 0 ){
+		saUpdateBits |= saReverse;
+		setMaskBits(exprEdited);
+	}
+	else if( strcmp(slotName, "Loop") == 0 ){
+		saUpdateBits |= saLoop;
+		setMaskBits(exprEdited);
+	}
+	else if( strcmp(slotName, "Grounded") == 0 ){
+		saUpdateBits |= saGrounded;
+		setMaskBits(exprEdited);
+	}
+	else if( strcmp(slotName, "timeScale") == 0 ){
+		saUpdateBits |= saTimeScale;
+		setMaskBits(exprEdited);
+	}
 
 	Parent::onStaticModified(slotName, newValue);
 }
 
 void GraphEmitterNode::onDynamicModified(const char* slotName, const char*newValue)
 {
-	/**Syntax check the dynamic field to see if it follows the pattern:
-	CoorVarIndexToken e.g. xVar1c**/
-	if(slotName[0] == 'x' || slotName[0] == 'X' ||
-		slotName[0] == 'y' || slotName[0] == 'Y' ||
-		slotName[0] == 'z' || slotName[0] == 'Z')
-	{
-		if(slotName[1] == 'v' || slotName[1] == 'V')
-		{
-			if(slotName[2] == 'a' || slotName[2] == 'A')
-			{
-				if(slotName[3] == 'r' || slotName[3] == 'R')
-				{
-					//Is the 5th bit a digit? If it is not the syntax is wrong
-					if(isdigit(slotName[4]))
-					{
-						U8 index = atoi(&slotName[4]);
-						char name;
-
-						int ccnt = 0;
-						//If the 6th bit is a digit as well, append the bit to the index as the
-						// - least significant bit
-						if(isdigit(slotName[5]))
-						{
-							//U8 second = atoi(&slotName[4]); I don't know why this isn't needed but it isn't
-							char combined[3];
-							strcpy(combined, &slotName[4]);
-							index = atoi(combined);
-						}
-						else if(!isalpha(slotName[5]))
-						{
-							// If slotName bit 5 isn't a digit and it isn't an alphabetical character something must be wrong.
-							Con::warnf("Dynamic variable specified on graphEmitter %s but no token set", getIdString());
-							return;
-						}
-						else{
-							//Else add slotName bit 5 to bit 0 of name.
-							//name[ccnt] = slotName[5];
-							name = slotName[5];
-							ccnt++;
-						}
-						/*if(isalpha(slotName[6])){
-						name[ccnt] = slotName[6];
-						ccnt++;
-						if(isalpha(slotName[7])){
-						name[ccnt] = slotName[7];
-						ccnt++;
-						}
-						}*/
-						//If name has been set to something
-						if(name != NULL)
-						{
-							F32 value = atof(newValue);
-							if(isdigit(*newValue))
-							{
-								if(slotName[0] == 'x' || slotName[0] == 'X')
-								{
-									// If we already have a variable with that name and it is not equal to the current token
-									//  - then we want to remove it before we define it again.
-									if(xVariables[index].token != NULL && xVariables[index].token != name)
-									{
-										xfuncParser.RemoveVar(IPSCore::UpToLow(&xVariables[index].token));
-									}
-									// Add the new variable to the xVariables list
-									xVariables[index].value = value;
-									xVariables[index].token = name;
-									std::string s;
-									std::stringstream ss;
-									ss << xVariables[index].token;
-									ss >> s;
-									try{
-										xfuncParser.DefineVar(s,&xVariables[index].value);
-									}
-									catch(mu::Parser::exception_type &e)
-									{
-										std::string expr = e.GetExpr();
-										std::string tok = e.GetToken();
-										size_t pos = e.GetPos();
-										std::string msg = e.GetMsg();
-										Con::errorf("Parsing error! Failed to parse: \n %s\nAt token: %s\nAt position: %u\nMessage: %s",expr.c_str(),tok.c_str(),pos,msg.c_str());
-									}
-									// If we are running this on the server, be sure to update the client aswell.
-									if(isServerObject())
-										setMaskBits(dynamicMod);
-								}
-								if(slotName[0] == 'y' || slotName[0] == 'Y')
-								{
-									if(yVariables[index].token != NULL && yVariables[index].token != name)
-									{
-										yfuncParser.RemoveVar(IPSCore::UpToLow(&yVariables[index].token));
-									}
-									yVariables[index].value = value;
-									yVariables[index].token = name;
-									std::string s;
-									std::stringstream ss;
-									ss << xVariables[index].token;
-									ss >> s;
-									try{
-										yfuncParser.DefineVar(s,&yVariables[index].value);
-									}
-									catch(mu::Parser::exception_type &e)
-									{
-										std::string expr = e.GetExpr();
-										std::string tok = e.GetToken();
-										size_t pos = e.GetPos();
-										std::string msg = e.GetMsg();
-										Con::errorf("Parsing error! Failed to parse: \n %s\nAt token: %s\nAt position: %u\nMessage: %s",expr.c_str(),tok.c_str(),pos,msg.c_str());
-									}
-
-									if(isServerObject())
-										setMaskBits(dynamicMod);
-								}
-								if(slotName[0] == 'z' || slotName[0] == 'Z')
-								{
-									if(zVariables[index].token != NULL && zVariables[index].token != name)
-									{
-										zfuncParser.RemoveVar(IPSCore::UpToLow(&zVariables[index].token));
-									}
-									zVariables[index].value = value;
-									zVariables[index].token = name;
-									std::string s;
-									std::stringstream ss;
-									ss << xVariables[index].token;
-									ss >> s;
-									try{
-										zfuncParser.DefineVar(s,&zVariables[index].value);
-									}
-									catch(mu::Parser::exception_type &e)
-									{
-										std::string expr = e.GetExpr();
-										std::string tok = e.GetToken();
-										size_t pos = e.GetPos();
-										std::string msg = e.GetMsg();
-										Con::errorf("Parsing error! Failed to parse: \n %s\nAt token: %s\nAt position: %u\nMessage: %s",expr.c_str(),tok.c_str(),pos,msg.c_str());
-									}
-
-									if(isServerObject())
-										setMaskBits(dynamicMod);
-								}
-							}
-						}
-					}
-					else
-					{
-						Con::warnf("Dynamic variable specified on graphEmitter %s but no index set", getIdString());
-					}
-				}
-			}
-		}
-	}
+	
+	mEmitter->onDynamicModified(slotName, newValue);
 }
 
 void GraphEmitterNode::advanceTime(F32 dt)
@@ -724,6 +454,8 @@ void GraphEmitterNode::advanceTime(F32 dt)
 
 void GraphEmitterNode::updateMaxMinDistances()
 {
+	if(!mEmitter)
+		return;
 	F32 tmpPartProg = particleProg;
 	xMxDist = 0;
 	xMnDist = 0;
@@ -739,9 +471,9 @@ void GraphEmitterNode::updateMaxMinDistances()
 		F32 zRes;
 		particleProg = i;
 		try{
-			xRes = xfuncParser.Eval() * sa_ejectionOffset;
-			yRes = yfuncParser.Eval() * sa_ejectionOffset;
-			zRes = zfuncParser.Eval() * sa_ejectionOffset;
+			xRes = ((GraphEmitter*)mEmitter)->xfuncParser.Eval() * sa_ejectionOffset;
+			yRes = ((GraphEmitter*)mEmitter)->yfuncParser.Eval() * sa_ejectionOffset;
+			zRes = ((GraphEmitter*)mEmitter)->zfuncParser.Eval() * sa_ejectionOffset;
 		}
 		catch(mu::Parser::exception_type &e)
 		{
@@ -790,6 +522,41 @@ void GraphEmitterNode::updateMaxMinDistances()
 void GraphEmitterNode::setEmitterDataBlock(ParticleEmitterData* data)
 {
 	Parent::setEmitterDataBlock(data);
+	UpdateEmitterValues();
+}
+
+void GraphEmitterNode::UpdateEmitterValues()
+{
+	if(!mEmitter)
+		return;
+	GraphEmitter* emitter = (GraphEmitter*)mEmitter;
+	if(saGrounded & saUpdateBits)
+		emitter->Grounded = Grounded;
+	if(saReverse & saUpdateBits)
+		emitter->Reverse = Reverse;
+	if(saLoop & saUpdateBits)
+		emitter->Loop = Loop;
+	if(saTimeScale & saUpdateBits)
+		emitter->timeScale = timeScale;
+	if(safuncMax & saUpdateBits)
+		emitter->funcMax = funcMax;
+	if(safuncMin & saUpdateBits)
+		emitter->funcMin = funcMin;
+	if(saProgMode & saUpdateBits)
+		emitter->ProgressMode = ProgressMode;
+	if(saXFunc & saUpdateBits){
+		emitter->xFunc = xFunc;
+		((GraphEmitter*)mEmitter)->xfuncParser.SetExpr(IPSCore::UpToLow(xFunc));
+	}
+	if(saYFunc & saUpdateBits){
+		emitter->yFunc = yFunc;
+		((GraphEmitter*)mEmitter)->yfuncParser.SetExpr(IPSCore::UpToLow(yFunc));
+	}
+	if(saZFunc & saUpdateBits){
+		emitter->zFunc = zFunc;
+		((GraphEmitter*)mEmitter)->zfuncParser.SetExpr(IPSCore::UpToLow(zFunc));
+	}
+	Parent::UpdateEmitterValues();
 }
 
 //-----Netevent---

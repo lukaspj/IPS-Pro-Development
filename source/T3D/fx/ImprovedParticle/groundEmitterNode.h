@@ -60,6 +60,12 @@ class GroundEmitterNode : public ParticleEmitterNode
 		NextFreeMask	= Parent::NextFreeMask << 1,
 	};
 
+	enum EmitterUpdateBits
+	{
+		saRadius		= Parent::saNextFreeMask << 0,
+		saNextFreeMask	= Parent::saNextFreeMask << 1
+	};
+
 	//------- Functions -------
 public:
 	GroundEmitterNode();
@@ -68,6 +74,8 @@ public:
 	void unpackUpdate(NetConnection *conn,           BitStream* stream);
 	static void initPersistFields();
 	void advanceTime(F32 dt);
+	void setEmitterDataBlock(ParticleEmitterData* data);
+	virtual void UpdateEmitterValues();
 
 
 protected:
