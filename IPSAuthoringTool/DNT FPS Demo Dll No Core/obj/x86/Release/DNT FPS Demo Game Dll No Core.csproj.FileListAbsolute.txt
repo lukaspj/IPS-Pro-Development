@@ -1,7 +1,0 @@
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Release\DNT FPS Demo Game Dll No Core.csprojResolveAssemblyReference.cache
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo Game Dll.dll
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo Game Dll.pdb
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo Game Dll.dll.CodeAnalysisLog.xml
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DNT FPS Demo Game Dll.dll.lastcodeanalysissucceeded
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Release\DNT FPS Demo Game Dll.dll
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Release\DNT FPS Demo Game Dll.pdb
