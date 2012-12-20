@@ -1,12 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ParticleEffect>
   <Emitters>
-    <Emitter Type="StockEmitter" x="-5" y="0" z="-5" datablock="pEffecTest" emitter="DefaultEmitter" Start="0" End="1">
-      <Value Ease="True" Name="xPosition" DeltaValue="10" setTime="0">
-        <Point X="0" Y="0" Easing="Linear" EaseIn="True" EaseOut="True" />
-        <Point X="1" Y="1" Easing="Linear" EaseIn="True" EaseOut="True" />
-      </Value>
-      <Value Ease="True" Name="zPosition" DeltaValue="10" setTime="0">
+    <Emitter Type="SphereEmitter" x="0" y="0" z="0" datablock="DefaultEmitterNodeData" emitter="DefaultEmitter" Start="0" End="1">
+      <Value Ease="True" Name="EjectionOffset" DeltaValue="2" setTime="0">
         <Point X="0" Y="0" Easing="Linear" EaseIn="True" EaseOut="True" />
         <Point X="0.5" Y="1" Easing="Circular" EaseIn="True" EaseOut="True" />
         <Point X="1" Y="0" Easing="Circular" EaseIn="True" EaseOut="True" />
