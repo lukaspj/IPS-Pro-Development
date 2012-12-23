@@ -1,4 +1,4 @@
-//-------------------------- 12/20/2012 -- 01:35:15 -----
+//-------------------------- 12/23/2012 -- 14:06:18 -----
 Processor Init:
    Intel Pentium III Xeon, ~3.31 Ghz
    FPU detected
@@ -38,6 +38,8 @@ Error: Unable to find specified directory: tools
 --------- Parsing Arguments ---------
 
 <input> (0): Cannot re-declare object [DefaultCursor].
+<input> (0): Cannot re-declare object [DefaultCursor].
+<input> (0): Cannot re-declare object [DefaultCursor].
 Binding server port to default IP
 UDP initialized on port 0
 Attempting to create GFX device: NVIDIA GeForce GTX 550 Ti (D3D9)
@@ -66,6 +68,16 @@ GFXCardProfiler (D3D9) - Setting capability 'fourStageDetailBlend' to 1.
       - No card profile core/profile/D3D9...cs exists
       - No card profile core/profile/D3D9....cs exists
 core/art/gui/FrameOverlayGui.gui (0): Cannot re-declare object [FrameOverlayGui].
+core/art/gui/FrameOverlayGui.gui (0): Cannot re-declare object [FrameOverlayGui].
+core/art/gui/FrameOverlayGui.gui (0): Cannot re-declare object [FrameOverlayGui].
+<input> (0): Cannot re-declare object [SamplerClampLinear].
+<input> (0): Cannot re-declare object [SamplerClampPoint].
+<input> (0): Cannot re-declare object [SamplerWrapLinear].
+<input> (0): Cannot re-declare object [SamplerWrapPoint].
+<input> (0): Cannot re-declare object [SamplerClampLinear].
+<input> (0): Cannot re-declare object [SamplerClampPoint].
+<input> (0): Cannot re-declare object [SamplerWrapLinear].
+<input> (0): Cannot re-declare object [SamplerWrapPoint].
 <input> (0): Cannot re-declare object [SamplerClampLinear].
 <input> (0): Cannot re-declare object [SamplerClampPoint].
 <input> (0): Cannot re-declare object [SamplerWrapLinear].
@@ -73,7 +85,17 @@ core/art/gui/FrameOverlayGui.gui (0): Cannot re-declare object [FrameOverlayGui]
 <input> (0): Cannot re-declare object [ReflectBump].
 <input> (0): Cannot re-declare object [reflect].
 <input> (0): Cannot re-declare object [fxFoliageReplicatorShader].
+<input> (0): Cannot re-declare object [ReflectBump].
+<input> (0): Cannot re-declare object [reflect].
+<input> (0): Cannot re-declare object [fxFoliageReplicatorShader].
+<input> (0): Cannot re-declare object [ReflectBump].
+<input> (0): Cannot re-declare object [reflect].
+<input> (0): Cannot re-declare object [fxFoliageReplicatorShader].
 <input> (0): Cannot re-declare object [WaterSampler].
+<input> (0): Cannot re-declare object [WaterSampler].
+<input> (0): Cannot re-declare object [WaterSampler].
+<input> (0): Cannot re-declare object [ScatterSkySBData].
+<input> (0): Cannot re-declare object [ScatterSkySBData].
 <input> (0): Cannot re-declare object [ScatterSkySBData].
  % - Initialized Core
 
@@ -102,15 +124,59 @@ Missing file: core/art/gui/customProfiles.cs!
 <input> (0): Cannot re-declare object [AL_DefaultShadowMaterial].
 <input> (0): Cannot re-declare object [AL_ParticlePointLightShader].
 <input> (0): Cannot re-declare object [AL_ParticlePointLightMaterial].
+<input> (0): Cannot re-declare object [AL_VectorLightState].
+<input> (0): Cannot re-declare object [AL_VectorLightShader].
+<input> (0): Cannot re-declare object [AL_VectorLightMaterial].
+<input> (0): Cannot re-declare object [AL_ConvexLightState].
+<input> (0): Cannot re-declare object [AL_PointLightShader].
+<input> (0): Cannot re-declare object [AL_PointLightMaterial].
+<input> (0): Cannot re-declare object [AL_SpotLightShader].
+<input> (0): Cannot re-declare object [AL_SpotLightMaterial].
+<input> (0): Cannot re-declare object [AL_DefaultPrePassMaterial].
+<input> (0): Cannot re-declare object [AL_DefaultShadowMaterial].
+<input> (0): Cannot re-declare object [AL_ParticlePointLightShader].
+<input> (0): Cannot re-declare object [AL_ParticlePointLightMaterial].
+<input> (0): Cannot re-declare object [AL_VectorLightState].
+<input> (0): Cannot re-declare object [AL_VectorLightShader].
+<input> (0): Cannot re-declare object [AL_VectorLightMaterial].
+<input> (0): Cannot re-declare object [AL_ConvexLightState].
+<input> (0): Cannot re-declare object [AL_PointLightShader].
+<input> (0): Cannot re-declare object [AL_PointLightMaterial].
+<input> (0): Cannot re-declare object [AL_SpotLightShader].
+<input> (0): Cannot re-declare object [AL_SpotLightMaterial].
+<input> (0): Cannot re-declare object [AL_DefaultPrePassMaterial].
+<input> (0): Cannot re-declare object [AL_DefaultShadowMaterial].
+<input> (0): Cannot re-declare object [AL_ParticlePointLightShader].
+<input> (0): Cannot re-declare object [AL_ParticlePointLightMaterial].
+<input> (0): Cannot re-declare object [AL_DepthVisualizeState].
+<input> (0): Cannot re-declare object [AL_DefaultVisualizeState].
+<input> (0): Cannot re-declare object [AL_DepthVisualizeShader].
+<input> (0): Cannot re-declare object [AL_DepthVisualizeState].
+<input> (0): Cannot re-declare object [AL_DefaultVisualizeState].
+<input> (0): Cannot re-declare object [AL_DepthVisualizeShader].
 <input> (0): Cannot re-declare object [AL_DepthVisualizeState].
 <input> (0): Cannot re-declare object [AL_DefaultVisualizeState].
 <input> (0): Cannot re-declare object [AL_DepthVisualizeShader].
 <input> (0): Cannot re-declare object [AL_NormalsVisualizeShader].
+<input> (0): Cannot re-declare object [AL_NormalsVisualizeShader].
+<input> (0): Cannot re-declare object [AL_NormalsVisualizeShader].
 <input> (0): Cannot re-declare object [AL_LightColorVisualizeShader].
+<input> (0): Cannot re-declare object [AL_LightColorVisualizeShader].
+<input> (0): Cannot re-declare object [AL_LightColorVisualizeShader].
+<input> (0): Cannot re-declare object [AL_LightSpecularVisualizeShader].
+<input> (0): Cannot re-declare object [AL_LightSpecularVisualizeShader].
 <input> (0): Cannot re-declare object [AL_LightSpecularVisualizeShader].
 <input> (0): Cannot re-declare object [AL_ShadowVisualizeShader].
 <input> (0): Cannot re-declare object [AL_ShadowVisualizeMaterial].
+<input> (0): Cannot re-declare object [AL_ShadowVisualizeShader].
+<input> (0): Cannot re-declare object [AL_ShadowVisualizeMaterial].
+<input> (0): Cannot re-declare object [AL_ShadowVisualizeShader].
+<input> (0): Cannot re-declare object [AL_ShadowVisualizeMaterial].
 <input> (0): Cannot re-declare object [AL_ShadowVizOverlayCtrl].
+<input> (0): Cannot re-declare object [AL_ShadowVizOverlayCtrl].
+<input> (0): Cannot re-declare object [AL_ShadowVizOverlayCtrl].
+<input> (0): Cannot re-declare object [BlurDepthShader].
+<input> (0): Cannot re-declare object [BlurDepthShader].
 <input> (0): Cannot re-declare object [BlurDepthShader].
 Using Advanced Lighting
 
@@ -124,10 +190,12 @@ Accept Mode:
 --Refresh Rate  : 60
 --FSAA Level    : 4
 ---------------------------
-GFXPCD3D9Device::reset - depthstencil 53975e0 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 97be40 has 2 ref's
 --- Resetting D3D Device ---
-GFXPCD3D9Device::reset - depthstencil 5397360 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 97bd00 has 2 ref's
 --- Resetting D3D Device ---
+<input> (0): Cannot re-declare object [HudMessageVector].
+<input> (0): Cannot re-declare object [HudMessageVector].
 <input> (0): Cannot re-declare object [HudMessageVector].
 Missing file: scripts/gui/startupGui.cs!
 Binding server port to default IP
@@ -136,14 +204,14 @@ UDP initialized on port 0
 Exporting server prefs...
 art/datablocks/managedDatablocks.cs (0): Unable to find parent object ScatterskyFlareExample for LightFlareData.
 *** ENDING MISSION
-*** LOADING MISSION: levels/preview.mis
+*** LOADING MISSION: levels/shapepreview.mis
 *** Stage 1 load
 *** Stage 2 load CSHARP
 *** Mission loaded
 Connect request from:
-Connection established 1968
-CADD: 1969 local
-*** Sending mission load to client: levels/preview.mis
+Connection established 2280
+CADD: 2281 local
+*** Sending mission load to client: levels/shapepreview.mis
 Engine initialized...
 Window focus status changed: focus: 1
 Mapping string: ServerMessage to index: 0
@@ -157,9 +225,9 @@ Line recieved A blank room ready to be populated with Torque objects.
 Guns, anyone?
 Mapping string: MsgLoadInfoDone to index: 4
 Mapping string: MissionStartPhase1 to index: 5
-*** New Mission: levels/preview.mis
+*** New Mission: levels/shapepreview.mis
 *** Phase 1: Download Datablocks & Targets
------------->onMissionDownloadPhase1('levels/preview.mis', 'lush')
+------------>onMissionDownloadPhase1('levels/shapepreview.mis', 'lush')
 ------------>MissionStartPhase1Ack
 Mapping string: MissionStartPhase1Ack to index: 0
 Transmitting Datablocks
@@ -167,18 +235,16 @@ Mapping string: MissionStartPhase2 to index: 6
 *** Phase 2: Download Ghost Objects
 Mapping string: MissionStartPhase2Ack to index: 1
 [Material::mapMaterial] - Cannot map unnamed Material
-Window focus status changed: focus: 0
-  Using background sleep time: 200
 Ghost Always objects received.
 Mapping string: MissionStartPhase3 to index: 7
 Client Replication Startup has Happened!
 fxFoliageReplicator - replicated client foliage for 0 objects
-Failed to create resource: [levels/preview.mis.decals]
+Failed to create resource: [levels/shapepreview.mis.decals]
 *** Phase 3: Mission Lighting
 Mission lighting done
 Mapping string: MissionStartPhase3Ack to index: 2
 GameBase::setDatablockProperty - Could not find data block "DefaultPlayerData"
-ShapeBase::onAdd - no datablock on shape 1977:Player ((null))
+ShapeBase::onAdd - no datablock on shape 2290:Player ((null))
 <input> (0): Register object failed for object (null) of class Player.
 No spawnsphere
 Mapping string: MissionStart to index: 8
@@ -192,8 +258,14 @@ Mapping string: Visitor to index: 14
 *** Initial Control Object
 Activating DirectInput...
 *** Control Object Changed
+<input> (0): Unable to find object: 'theEmitter' attempting to call function 'reset'
+Window focus status changed: focus: 0
+  Using background sleep time: 200
+DirectInput deactivated.
+Value 0 = 0.000000
+Activating DirectInput...
 Window focus status changed: focus: 1
-CDROP: 1969 
+CDROP: 2281 
 Exporting server prefs...
 Exporting client prefs
 Exporting server prefs
