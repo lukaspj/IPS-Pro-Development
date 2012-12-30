@@ -28,7 +28,7 @@ function createCanvas(%windowTitle)
    // Set the window title
    if (isObject(Canvas))
       Canvas.setWindowTitle(getEngineName() @ " - " @ $appName);
-   
+   Canvas.alwaysHandleMouseButtons=1;  
    return true;
 }
 

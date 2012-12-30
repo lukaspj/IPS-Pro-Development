@@ -71,6 +71,14 @@ new SimGroup(MissionGroup) {
       canSaveDynamicFields = "1";
    };
    
+   new PointLight() {
+      position = "0.9 0.9 0.9";
+   };
+   
+   new PointLight() {
+      position = "-1.8 -0.3 0.9";
+   };
+   
    new StaticShape(shape) {
 		datablock = model;
    };
