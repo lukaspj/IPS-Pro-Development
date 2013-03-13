@@ -25,6 +25,7 @@ namespace IPSAuthoringTool.Dialogs
         {
             InitializeComponent();
             Visibility = Visibility.Hidden;
+            _grid.DataContext = this;
         }
 
         private bool _hideRequest = false;
@@ -53,11 +54,11 @@ namespace IPSAuthoringTool.Dialogs
 
         #endregion
 
-        public string ShowHandlerDialog(string message)
+        public string ShowHandlerDialog(string message, string def = "")
         {
             theMessage = message;
             Visibility = Visibility.Visible;
-            TextControl.Text = "";
+            TextControl.Text = def;
 
             _parent.IsEnabled = false;
 

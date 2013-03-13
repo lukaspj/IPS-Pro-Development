@@ -26,6 +26,7 @@ namespace IPSAuthoringTool.Dialogs
         {
             InitializeComponent();
             Visibility = Visibility.Hidden;
+            _grid.DataContext = this;
         }
 
         private bool _hideRequest = false;

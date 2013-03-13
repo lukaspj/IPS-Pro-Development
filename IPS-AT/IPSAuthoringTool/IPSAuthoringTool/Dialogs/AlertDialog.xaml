@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" x:Name="MainDialog">
-    <Grid DataContext="{Binding ElementName=root}">
+    <Grid x:Name="_grid">
         <Border Background="#90000000" Visibility="{Binding Visibility}">
             <Border BorderBrush="Black" BorderThickness="1" Background="AliceBlue" 
                 CornerRadius="10,0,10,0" VerticalAlignment="Center"
@@ -24,7 +24,7 @@
                     Text="{Binding Path=Message, ElementName=MainDialog}" 
                     TextWrapping="Wrap" Margin="5" Foreground="Black" />
                         <Button x:Name="OkButton" Click="OkButton_Click" 
-                          Content="Ok" Margin="5" Grid.Row="1"   />
+                          Content="Ok" Margin="5" Grid.Row="1" IsDefault="True"   />
                 </Grid>
             </Border>
         </Border>

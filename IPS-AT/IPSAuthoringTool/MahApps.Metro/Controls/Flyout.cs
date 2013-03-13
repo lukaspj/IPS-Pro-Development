@@ -98,5 +98,38 @@ namespace MahApps.Metro.Controls
                 root.RenderTransform = new TranslateTransform(-root.DesiredSize.Width, 0);
             }
         }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            if (!sizeInfo.WidthChanged) return;
+
+            if (!IsOpen)
+            {
+                ApplyAnimation(Position);
+                return;
+            }
+
+            var root = (Grid)GetTemplateChild("root");
+            if (root == null)
+                return;
+
+            var hideFrame = (EasingDoubleKeyFrame)GetTemplateChild("hideFrame");
+            var showFrame = (EasingDoubleKeyFrame)GetTemplateChild("showFrame");
+
+            if (hideFrame == null || showFrame == null)
+                return;
+
+            showFrame.Value = 0;
+            if (Position == Position.Right)
+            {
+                hideFrame.Value = root.DesiredSize.Width;
+            }
+            else
+            {
+                hideFrame.Value = -root.DesiredSize.Width;
+            }
+        }
     }
 }

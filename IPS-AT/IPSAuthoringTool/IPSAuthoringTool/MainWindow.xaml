@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:Dialogs="clr-namespace:IPSAuthoringTool.Dialogs"
+        xmlns:Windows="clr-namespace:IPSAuthoringTool.Windows"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="IPSAuthoringTool.MainWindow"
-        Title="MainWindow" Height="607" Width="700" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Closing="MetroWindow_Closing_1" PreviewMouseRightButtonDown="MetroWindow_PreviewMouseRightButtonDown">
+        Title="IPS Authoring Tool - Winterleaf Entertainment L.L.C." Height="560" Width="680" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Closing="MetroWindow_Closing_1" PreviewMouseRightButtonDown="MetroWindow_PreviewMouseRightButtonDown">
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,33 +19,72 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Controls:MetroWindow.Resources>
+    <!-- 0 Stripped down flyout -->
     <Controls:MetroWindow.Flyouts>
-        <Controls:Flyout x:Name="EffectFlyOut" Header="Effects" Position="Right">
+        <Controls:Flyout Header="Value" Position="Right">
             <StackPanel>
                 <Label Content="Preview Window" Foreground="White" />
                 <Separator Background="White" />
                 <Button Content="Preview" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
                 <Button Content="Reload datablocks" Click="Reload_Datablocks_Click" Style="{DynamicResource SquareButtonStyle}"/>
-                <Label Content="Manage effects" Foreground="White" />
-                <Separator Background="White" />
-                <Button Content="Create Effect" x:Name="CreateEffectButton" Click="CreateEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
-                <Button Content="Load Effect" x:Name="LoadEffectButton" Click="LoadEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
-                <Button Content="Delete Effect" x:Name="DeleteEffectButton" Click="DeleteEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Test" Click="TestEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
             </StackPanel>
         </Controls:Flyout>
-        <Controls:Flyout x:Name="EmitterFlyOut" Header="Emitters" Position="Right">
+        <!-- 1 - ParticleEffects main flyout -->
+        <Controls:Flyout x:Name="EffectFlyOut" Background="#CC119EDA" Header="Effects" Position="Right">
             <StackPanel>
                 <Label Content="Preview Window" Foreground="White" />
                 <Separator Background="White" />
-                <Button Content="Preview" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Open preview window" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
                 <Button Content="Reload datablocks" Click="Reload_Datablocks_Click" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Test effect" Click="TestEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Label Content="Manage effects" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Effect options" Click="ShowContextMenu_Click" Style="{DynamicResource SquareButtonStyle}" >
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Create new effect" Click="CreateEffectButton_Click" />
+                            <MenuItem Header="Load exisisting effect" Click="LoadEffectButton_Click" />
+                            <MenuItem Header="Reset effect" Click="ResetEffect_Click" />
+                            <MenuItem Header="Delete current effect" Click="DeleteEffectButton_Click" />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+                <Button Content="Save Effect" x:Name="SaveEffectButton" Click="SaveEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
                 <Label Content="Manage emitters" Foreground="White" />
                 <Separator Background="White" />
-                <Button Content="Create Emitter" x:Name="CreateEmitterButton" Click="CreateEmitterButton_Click" Style="{DynamicResource SquareButtonStyle}" />
-                <Button Content="Delete Emitter" x:Name="DeleteEmitterButton" Click="DeleteEmitterButton_Click" Style="{DynamicResource SquareButtonStyle}" />
-                <Button Content="Save Effect" x:Name="SaveEffectButton" Click="SaveEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Button Content="Emitter options" Click="ShowContextMenu_Click" Style="{DynamicResource SquareButtonStyle}" >
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Create new emitter" Click="CreateEmitterButton_Click" />
+                            <MenuItem Header="Delete current emitter" Click="DeleteEmitterButton_Click" />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+                <Button Content="Edit Emitter" Click="EditEmitterButton_Click" Style="{DynamicResource SquareButtonStyle}" />
+                <Label Content="Manage values" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Value options" Click="ShowContextMenu_Click" Style="{DynamicResource SquareButtonStyle}" >
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add new value" Click="AddValueButton_Click" />
+                            <MenuItem Header="Remove current value" Click="RemoveValueButton_Click" />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+            </StackPanel>
+        </Controls:Flyout>
+        <!-- 2 - Edit emitter flyout -->
+        <Controls:Flyout x:Name="EmitterFlyOut" Background="#CC119EDA" Header="Edit Emitter" Position="Right">
+            <StackPanel>
+                <Label Content="Preview Window" Foreground="White" />
+                <Separator Background="White" />
+                <Button Content="Open preview window" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Reload datablocks" Click="Reload_Datablocks_Click" Style="{DynamicResource SquareButtonStyle}"/>
+                <Button Content="Test effect" Click="TestEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
                 <Label Content="Emitter settings" Foreground="White" />
                 <Separator Background="White" />
+                <TextBox x:Name="TagTextControl" Controls:TextboxHelper.Watermark="Write the identification string here" TextChanged="TagTextControl_TextChanged" />
                 <ComboBox x:Name="EmitterDatablockComboBox" ToolTip="The emitter datablock" SelectionChanged="EmitterDatablocksChanged">
                     <ComboBox.ItemContainerStyle>
                         <Style
@@ -82,24 +122,10 @@
                     <TextBox Grid.Row="1" Margin="0,5,1,5" x:Name="zControl" Text="0" TextChanged="EmitterPointChanged" />
                 </UniformGrid>
                 <Button Content="Time range" Click="TimeRange_Click" Style="{DynamicResource SquareButtonStyle}" />
-                <Button Content="Test" Click="TestEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
             </StackPanel>
         </Controls:Flyout>
-        <Controls:Flyout Header="Values" Position="Right">
-            <StackPanel>
-                <Label Content="Preview Window" Foreground="White" />
-                <Separator Background="White" />
-                <Button Content="Preview" Click="Button_Click_1" Style="{DynamicResource SquareButtonStyle}"/>
-                <Button Content="Reload datablocks" Click="Reload_Datablocks_Click" Style="{DynamicResource SquareButtonStyle}"/>
-                <Label Content="Manage values" Foreground="White" />
-                <Separator Background="White" />
-                <Button Content="Add Value" x:Name="CreateValueButton" Click="AddValueButton_Click" Style="{DynamicResource SquareButtonStyle}" />
-                <Button Content="Delete Value" x:Name="DeleteValueButton" Click="RemoveValueButton_Click" Style="{DynamicResource SquareButtonStyle}" />
-                <Button Content="Save Emitter" x:Name="SaveEmitterButton" Click="SaveEmitterButton_Click" Style="{DynamicResource SquareButtonStyle}" />
-                <Button Content="Test" Click="TestEffectButton_Click" Style="{DynamicResource SquareButtonStyle}" />
-            </StackPanel>
-        </Controls:Flyout>
-        <Controls:Flyout Header="Value" Position="Right">
+        <!-- 3 Scene flyout -->
+        <Controls:Flyout Background="#CCcb0000" Header="Scene" Position="Right">
             <StackPanel>
                 <Label Content="Preview Window" Foreground="White" />
                 <Separator Background="White" />
@@ -109,45 +135,39 @@
             </StackPanel>
         </Controls:Flyout>
     </Controls:MetroWindow.Flyouts>
+
     <Grid x:Name="mainGrid">
         <Grid x:Name="ModalDialogParent">
-            <TabControl x:Name="MainTabControl" Height="{Binding ActualHeight, ElementName=mainGrid}" Width="{Binding ActualWidth, ElementName=mainGrid}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="MainTabControl_SelectionChanged" >
-                <TabItem Header="Effects" x:Name="EffectsTab" IsSelected="True" PreviewMouseDown="EffectsTab_MouseDown" MouseDown="EffectsTab_MouseDown">
-                    <Controls:Panorama x:Name="EffectPan" HeaderFontColor="Black"/>
-                </TabItem>
-                <TabItem Header="Emitters" x:Name="EmittersTab" IsEnabled="False" PreviewMouseDown="EmittersTab_MouseDown" MouseDown="EmittersTab_MouseDown">
-                    <Controls:Panorama  ItemBox="140" x:Name="EmitterPan" HeaderFontColor="Black" />
-                </TabItem>
-                <TabItem Header="EmitterType" x:Name="selEmitterTab" IsEnabled="False" PreviewMouseDown="selEmitterTab_MouseDown" MouseDown="selEmitterTab_MouseDown">
-                    <Controls:Panorama  ItemBox="140" x:Name="ValuesPan" HeaderFontColor="Black" />
-                </TabItem>
-                <TabItem Header="Value" x:Name="selValueTab" IsEnabled="False">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <TabControl x:Name="MainTabControl" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged" >
+                <TabItem x:Name="MainTab" Header="Main" Visibility="Collapsed">
                     <Grid>
-                        <ComboBox x:Name="ValueTypeBox" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ValueTypeBox_SelectionChanged"/>
-                        <Label Content="Value type:" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top"/>
-                        <Controls:ToggleSwitch x:Name="EaseCheckBox" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" Content="Ease: " Height="39" Checked="EaseCheckBox_CheckChange" Unchecked="EaseCheckBox_CheckChange" />
-                        <TextBox x:Name="DeltaTextBox" Controls:TextboxHelper.Watermark="Delta value" Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="10,320,0,0" RenderTransformOrigin="0.025,-2.385" TextChanged="DeltaTextBox_TextChanged"/>
-                        <ListView x:Name="PointList" HorizontalAlignment="Left" Height="428" Margin="221,41,0,0" VerticalAlignment="Top" Width="453">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                        <Label Content="Points:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="221,5,0,0" FontSize="16"/>
-                        <Button Content="Add point" HorizontalAlignment="Left" VerticalAlignment="Top" Width="83" Margin="591,10,0,0" Click="AddPointButton_Click"/>
-                        <Label Content="Raise value with:" HorizontalAlignment="Left" Margin="10,289,0,0" VerticalAlignment="Top"/>
-                        <Grid x:Name="GraphContainer" HorizontalAlignment="Left" Height="164" Margin="10,351,0,0" VerticalAlignment="Top" Width="164"/>
-                        <Slider x:Name="SetTimeSlider" HorizontalAlignment="Left" Margin="10,149,0,0" VerticalAlignment="Top" Width="120" Maximum="1" TickFrequency="0.001" ValueChanged="SetTimeSlider_ValueChanged"/>
-                        <Label x:Name="SetTimeLabel" Content="Set value at 0.0:" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
+                        <Button Click="MiLightRed" Content="Light Red" Width="70" Height="20" Margin="10,40,586,391" />
+                        <Button Click="MiLightGreen" Content="Light Green" Width="70" Height="20" Margin="10,10,586,421" />
+                        <Button Click="MiLightBlue" Content="Light Blue" Width="70" Height="20" Margin="10,70,586,361" />
+                        <Button Click="MiLightPurple" Content="Light Purple" Width="70" Height="20" Margin="10,100,586,331" />
+                        <Button Click="MiLightOrange" Content="Light Orange" Width="70" Height="20" Margin="10,130,586,301" />
                     </Grid>
                 </TabItem>
+                <TabItem x:Name="ParticleEffectsTab" IsSelected="True" Header="ParticleEffects">
+                    <Windows:ParticleEffectEditor x:Name="PEE" />
+                </TabItem>
+                <TabItem x:Name="SceneTab" Header="SceneSetup" >
+                    <Windows:SceneSetupEditor x:Name="SSE" />
+                </TabItem>
+                <TabItem Header="Emitters" IsEnabled="False" Visibility="Collapsed" />
             </TabControl>
+            <TextBlock Grid.Row="1" x:Name="HintTextBlock" Background="Silver" Padding="10 0 0 0" Text="Press the right mouse button to open up the options flyout" />
         </Grid>
         <Dialogs:ItemInputDialog x:Name="ItemInputControl" Visibility="Hidden" />
         <Dialogs:StringInputDialog x:Name="StringInputControl" Visibility="Hidden" />
         <Dialogs:VectorInputDialog x:Name="VectorInputControl" Visibility="Hidden" />
         <Dialogs:TimeInputDialog x:Name="TimeInputControl" Visibility="Hidden" />
         <Dialogs:AlertDialog x:Name="AlertControl" Visibility="Hidden" />
+        <Dialogs:FromToInputDialog x:Name="FromToControl" Visibility="Hidden" />
+        <Dialogs:FileInputDialog x:Name="FileInputControl" Visibility="Hidden" />
     </Grid>
 </Controls:MetroWindow>
