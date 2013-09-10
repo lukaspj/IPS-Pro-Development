@@ -3,8 +3,18 @@
 !.gitignore
 !/Design/*
 # Don't ignore these
+!/Engine/
+!/Engine/Source/
+!/Engine/Source/math/
+!/Engine/Source/math/muParser/
 !/Engine/Source/math/muParser/*
 !/Engine/Source/core/util/xml/*
+!/Engine/Source/T3D/
+!/Engine/Source/T3D/fx/
+!/Engine/Source/T3D/fx/ImprovedParticle
+!/Engine/Source/T3D/fx/ImprovedParticle/*
+!/Engine/Source/T3D/fx/ImprovedParticle/ParticleBehaviours/*
+!/Engine/Source/T3D/fx/ImprovedParticle/ParticleManagers/*
 !/Engine/Source/T3D/fx/particle.cpp
 !/Engine/Source/T3D/fx/particle.h
 !/Engine/Source/T3D/fx/particleEmitter.cpp
