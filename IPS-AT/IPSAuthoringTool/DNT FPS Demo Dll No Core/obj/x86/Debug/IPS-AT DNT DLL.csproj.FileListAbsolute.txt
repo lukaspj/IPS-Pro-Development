@@ -1,5 +1,0 @@
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\IPS-AT DLL.dll
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\IPS-AT DLL.pdb
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Debug\IPS-AT DNT DLL.csprojResolveAssemblyReference.cache
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Debug\IPS-AT DLL.dll
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DNT FPS Demo Dll No Core\obj\x86\Debug\IPS-AT DLL.pdb

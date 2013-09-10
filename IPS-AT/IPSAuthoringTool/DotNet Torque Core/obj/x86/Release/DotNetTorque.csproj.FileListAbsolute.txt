@@ -1,9 +1,0 @@
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DotNetTorque.dll.config
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DotNetTorque.XML
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DotNetTorque.dll
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\game\DotNetTorque.pdb
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DotNet Torque Core\obj\x86\Release\DotNetTorque.csprojResolveAssemblyReference.cache
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DotNet Torque Core\obj\x86\Release\WinterLeaf.Properties.Resources.resources
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DotNet Torque Core\obj\x86\Release\DotNetTorque.csproj.GenerateResource.Cache
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DotNet Torque Core\obj\x86\Release\DotNetTorque.dll
-C:\Torque3D Main\DotNetTorque\My Projects\DNT - No Core\DNT\DotNet Torque Core\obj\x86\Release\DotNetTorque.pdb
