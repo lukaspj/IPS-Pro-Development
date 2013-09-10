@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ParticleEffect>
+  <Emitters>
+<<<<<<< HEAD
+    <Emitter Type="SphereEmitter" x="0" y="0" z="0" datablock="DefaultEmitterNodeData" emitter="DefaultEmitter" Start="0" End="1" Tag="The Curve">
+=======
+    <Emitter Type="SphereEmitter" x="0" y="0" z="0" datablock="DefaultEmitterNodeData" emitter="DefaultEmitter" Start="0" End="1" Tag="">
+>>>>>>> e26609fd3a32b307cfa50c91af2ea709ea2aff67
+      <Value Ease="True" Name="EjectionOffset" DeltaValue="2" setTime="0">
+        <Point X="0" Y="0" Easing="Linear" EaseIn="True" EaseOut="True" />
+        <Point X="0.5" Y="1" Easing="Circular" EaseIn="True" EaseOut="True" />
+        <Point X="1" Y="0" Easing="Circular" EaseIn="True" EaseOut="True" />
+      </Value>
+    </Emitter>
+  </Emitters>
+</ParticleEffect>
