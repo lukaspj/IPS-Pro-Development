@@ -1,0 +1,16 @@
+*
+!.gitignore
+!/game/
+!/game/tools/
+!/game/tools/particleEditor/
+!/game/tools/particleEditor/*
+!/game/tools/particleEditor/images
+!/game/tools/particleEditor/images/*
+!/game/tools/worldEditor/
+!/game/tools/worldEditor/gui/
+!/game/tools/worldEditor/gui/ToolsPaletteGroups/
+!/game/tools/worldEditor/gui/ToolsPaletteGroups/init.cs
+!/game/tools/worldEditor/gui/ToolsPaletteGroups/ParticleEditorPalette.ed.gui
+!/game/tools/worldEditor/gui/ToolsPaletteGroups/
+
+!/game/tools/*
