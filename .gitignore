@@ -1,13 +1,14 @@
 # Ignore everything else
-Project/*
-
+*
+!.gitignore
+!/Design/*
 # Don't ignore these
-!Project/Engine/Source/math/muParser/*
-!Project/Engine/Source/core/util/xml/*
-!Project/Engine/Source/T3D/fx/particle.cpp
-!Project/Engine/Source/T3D/fx/particle.h
-!Project/Engine/Source/T3D/fx/particleEmitter.cpp
-!Project/Engine/Source/T3D/fx/particleEmitter.h
-!Project/Engine/Source/T3D/fx/particleEmitterNode.cpp
-!Project/Engine/Source/T3D/fx/particleEmitterNode.h
-!Project/Engine/Source/T3D/SpellSystem/*
+!/Engine/Source/math/muParser/*
+!/Engine/Source/core/util/xml/*
+!/Engine/Source/T3D/fx/particle.cpp
+!/Engine/Source/T3D/fx/particle.h
+!/Engine/Source/T3D/fx/particleEmitter.cpp
+!/Engine/Source/T3D/fx/particleEmitter.h
+!/Engine/Source/T3D/fx/particleEmitterNode.cpp
+!/Engine/Source/T3D/fx/particleEmitterNode.h
+!/Engine/Source/T3D/SpellSystem/*
