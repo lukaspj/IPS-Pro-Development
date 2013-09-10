@@ -26,6 +26,7 @@ namespace IPSAuthoringTool.Dialogs
         {
             InitializeComponent();
             Visibility = Visibility.Hidden;
+            _grid.DataContext = this;
         }
 
         private bool _hideRequest = false;
@@ -93,7 +94,11 @@ namespace IPSAuthoringTool.Dialogs
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            _result = new float[3] { float.Parse(xControl.Text, CultureInfo.InvariantCulture), float.Parse(yControl.Text, CultureInfo.InvariantCulture), float.Parse(zControl.Text, CultureInfo.InvariantCulture) };
+            float[] retFloats = new float[3];
+            float.TryParse(xControl.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out retFloats[0]);
+            float.TryParse(yControl.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out retFloats[1]);
+            float.TryParse(zControl.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out retFloats[2]);
+            _result = retFloats;
             HideHandlerDialog();
         }
 

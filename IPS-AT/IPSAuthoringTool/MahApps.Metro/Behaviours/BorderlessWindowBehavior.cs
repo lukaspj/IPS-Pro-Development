@@ -239,6 +239,10 @@ namespace MahApps.Metro.Behaviours
             IntPtr returnval = IntPtr.Zero;
             switch (message)
             {
+                case Constants.HTTOPLEFT:
+                    //Makes no sense?
+                    handled = true;
+                    break;
                 case Constants.WM_NCCALCSIZE:
                     /* Hides the border */
                     handled = true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,8 @@ using System.Windows;
 
 namespace IPSAuthoringTool.Utility
 {
-    public class Emitter
+    [Serializable] 
+    public class Emitter : INotifyPropertyChanged
     {
         public List<value> Values = new List<value>();
         public EmitterType Type = 0;
@@ -18,7 +20,28 @@ namespace IPSAuthoringTool.Utility
         public string emitter = "";
         public float Start = 0;
         public float End = 0;
+        private string tag = null;
 
+        public string Tag
+        {
+            get { return tag; }
+            set { tag = value; NotifyPropertyChanged("Tag"); }
+        }
+
+        #region INotifyPropertyChanged interface
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+        [Serializable] 
         public class value
         {
             public string valueName;
@@ -31,14 +54,20 @@ namespace IPSAuthoringTool.Utility
             {
                 points = new List<PointOnValue>();
             }
+            public override string ToString()
+            {
+                return valueName;
+            }
         }
 
+        [Serializable] 
         public struct PointF
         {
             public float X;
             public float Y;
         }
 
+        [Serializable] 
         public class PointOnValue
         {
             public PointF point;
@@ -194,10 +223,15 @@ namespace IPSAuthoringTool.Utility
 
         public override string ToString()
         {
+            return Tag == null ? Type.ToString() : Tag;
+        }
+
+        public string asString()
+        {
             switch (Type)
             {
                 case EmitterType.SphereEmitter:
-                    return "StockEmitter";
+                    return "SphereEmitter";
                 case EmitterType.GraphEmitter:
                     return "GraphEmitter";
                 case EmitterType.GroundEmitter:
@@ -208,5 +242,28 @@ namespace IPSAuthoringTool.Utility
                     return "Unidentified Emitter";
             }
         }
+
+        public static List<object> getEmitterLabels()
+        {
+            return new List<object>() { "SphereEmitter", "GraphEmitter", "GroundEmitter", "MaskEmitter" };
+        }
+
+        /*
+    public Emitter Clone()
+    {
+        List<value> clonedList = new List<value>();
+        foreach (value v in Values)
+            clonedList.Add(v.Clone());
+        return new Emitter() {
+            datablock = (string)datablock.Clone(),
+            emitter = (string)emitter.Clone(),
+            End = End,
+            Start = Start,
+            tag = (string)tag.Clone(),
+            Type = Type,
+            Values = clonedList,
+            x = x, y = y, z = z
+        };
+    }*/
     }
 }

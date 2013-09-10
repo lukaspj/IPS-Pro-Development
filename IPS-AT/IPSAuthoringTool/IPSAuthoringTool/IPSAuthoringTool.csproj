@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IPSAuthoringTool</RootNamespace>
-    <AssemblyName>IPSAuthoringTool</AssemblyName>
+    <AssemblyName>IPSAuthoringTool_ui2</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -56,9 +56,11 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chart\BezierSpline.cs" />
@@ -68,6 +70,12 @@
     <Compile Include="Chart\Utilities.cs" />
     <Compile Include="Dialogs\AlertDialog.xaml.cs">
       <DependentUpon>AlertDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\FileInputDialog.xaml.cs">
+      <DependentUpon>FileInputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\FromToInputDialog.xaml.cs">
+      <DependentUpon>FromToInputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\TimeInputDialog.xaml.cs">
       <DependentUpon>TimeInputDialog.xaml</DependentUpon>
@@ -82,10 +90,23 @@
       <DependentUpon>ItemInputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility\Emitter.cs" />
+    <Compile Include="Utility\Extensions.cs" />
     <Compile Include="Utility\IOHandler.cs" />
+    <Compile Include="Utility\Model.cs" />
     <Compile Include="Utility\ParticleEffect.cs" />
+    <Compile Include="Utility\Sequence.cs" />
     <Compile Include="Utility\TorqueController.cs" />
     <Compile Include="Utility\Tweener.cs" />
+    <Compile Include="VisualControls\GradientArrow.xaml.cs">
+      <DependentUpon>GradientArrow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VisualControls\NullToVisibilityConverter.cs" />
+    <Compile Include="Windows\ParticleEffectEditor.xaml.cs">
+      <DependentUpon>ParticleEffectEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SceneSetupEditor.xaml.cs">
+      <DependentUpon>SceneSetupEditor.xaml</DependentUpon>
+    </Compile>
     <Page Include="Chart\UCChartCurveGraph.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -93,6 +114,14 @@
     <Page Include="Dialogs\AlertDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\FileInputDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\FromToInputDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\TimeInputDialog.xaml">
       <SubType>Designer</SubType>
@@ -121,6 +150,18 @@
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VisualControls\GradientArrow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ParticleEffectEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SceneSetupEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -177,9 +218,6 @@
     <Resource Include="Icons\RadiusMeshEmitter.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Icons\StockEmitter.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotNet Torque Core\DotNetTorque.csproj">
@@ -190,6 +228,11 @@
       <Project>{5B1710D2-5DC8-4754-91B2-19165DE49B3D}</Project>
       <Name>MahApps.Metro</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\SphereEmitter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

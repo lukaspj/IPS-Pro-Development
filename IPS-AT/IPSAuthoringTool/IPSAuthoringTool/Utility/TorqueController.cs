@@ -36,7 +36,7 @@ namespace IPSAuthoringTool.Utility
             dnt = c;
             }
 
-        public void Open()
+        public void Open(string level)
         {
             if (dnt == null)
                 return;
@@ -49,7 +49,7 @@ namespace IPSAuthoringTool.Utility
             //Initialize Torque, pass a handle to this form into T3D so it knows where to rendor the screen to.
             //If you don't do this, you can't pass the mouse and key strokes, w/out the mouse and keystrokes
             //being redirected the application will hang intermittently.
-            dnt.InitializeTorque(new[] { "" },
+            dnt.InitializeTorque(new[] { "-level", "levels/" + level + ".mis" },
                                         "DNT_FPS_Demo_Game_Dll.Scripts.Server.Main",
                                         "DNT_FPS_Demo_Game_Dll.Scripts.Client.Main",
                                         "DNT_FPS_Demo_Game_Dll.Scripts.Main", "", "", "",
@@ -99,7 +99,7 @@ namespace IPSAuthoringTool.Utility
         string currentEmitter;
         public void RemoveEmitter()
         {
-            if(currentEmitter != "" && currentEmitter != null && currentEmitter != null)
+            if(currentEmitter != "" && currentEmitter != null)
                 console.Call(currentEmitter, "delete");
             currentEmitter = null;
         }
@@ -115,6 +115,24 @@ namespace IPSAuthoringTool.Utility
                 TCH.Props.Add("datablock", datablock);
                 TCH.PropsAddString("position", "0 0 0");
                 currentEmitter = TCH.Create(dnt).AsString();
+            }
+        }
+
+        public void WriteShapeGlobals(int max)
+        {
+            console.SetVar("$currentSequence", -1);
+            console.SetVar("$maxSequence", max);
+        }
+
+        public void UpdateShape()
+        {
+            if (Util._isObject("shape"))
+            {
+                console.Call("shape", "delete");
+                Torque_Class_Helper TCH = new Torque_Class_Helper("StaticShape", "shape");
+                TCH.Props.Add("datablock", "model");
+                TCH.PropsAddString("position", "0 0 0");
+                TCH.Create(dnt);
             }
         }
 

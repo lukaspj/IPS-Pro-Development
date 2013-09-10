@@ -224,6 +224,93 @@ namespace IPSAuthoringTool.Utility
         }
         //http://gizma.com/easing/#l
 
+        public static double EaseInElastic(double Time, double Start, double Delta, double Duration)
+        {
+            if (Time == 0) return Start;
+            if ((Time /= Duration) == 1) return Start + Delta;
+            double s;
+            double p = Duration * 0.3;
+            double a = 0.0;
+            if(a < Math.Abs(Delta)) { a = Delta; s = p/4; }
+            else s = p/(2*Math.PI) * Math.Asin(Delta / a);
+            return -(a * Math.Pow(2, 10 * (Time -= 1)) * Math.Sin((Time * Duration - s) * (2 * Math.PI) / p)) + Start;
+        }
+
+        public static double EaseOutElastic(double Time, double Start, double Delta, double Duration)
+        {
+            if (Time == 0) return Start;
+            if ((Time /= Duration) == 1) return Start + Delta;
+            double s;
+            double p = Duration * 0.3;
+            double a = 0.0;
+            if (a < Math.Abs(Delta)) { a = Delta; s = p / 4; }
+            else s = p / (2 * Math.PI) * Math.Asin(Delta / a);
+            return a * Math.Pow(2, -10 * Time) * Math.Sin((Time * Duration - s) * (2 * Math.PI) / p) + Delta + Start;
+        }
+
+        public static double EaseInOutElastic(double Time, double Start, double Delta, double Duration)
+        {
+            if (Time == 0) return Start;
+            if ((Time /= Duration / 2) == 2) return Start + Delta;
+            double s;
+            double p = Duration * 0.3 * 1.5;
+            double a = 0.0;
+            if (a < Math.Abs(Delta)) { a = Delta; s = p / 4; }
+            else s = p / (2 * Math.PI) * Math.Asin(Delta / a);
+            if (Time < 1) return -.5 * (a * Math.Pow(2, 10 * (Time -= 1)) * Math.Sin((Time * Duration - s) * (2 * Math.PI) / p)) + Start;
+            return a * Math.Pow(2, -10 * (Time -= 1)) * Math.Sin((Time * Duration - s) * (2 * Math.PI) / p) * .5 + Delta + Start;
+        }
+
+        public static double EaseInBack(double Time, double Start, double Delta, double Duration)
+        {
+            double s = 1.70158;
+            return Delta * (Time /= Duration) * Time * ((s + 1) * Time - s) + Start;
+        }
+
+        public static double EaseOutBack(double Time, double Start, double Delta, double Duration)
+        {
+            double s = 1.70158;
+            return Delta * ((Time = Time / Duration - 1) * Time * ((s + 1) * Time + s) + 1) + Start;
+        }
+
+        public static double EaseInOutBack(double Time, double Start, double Delta, double Duration)
+        {
+            double s = 1.70158;
+            if ((Time /= Duration / 2) < 1) return Delta / 2 * (Time * Time * (((s *= 1.525) + 1) * Time - s)) + Start;
+            return Delta / 2 * ((Time -= 2) * Time * (((s *= 1.525) + 1) * Time + s) + 2) + Start;
+        }
+
+        public static double EaseInBounce(double Time, double Start, double Delta, double Duration)
+        {
+            return Delta - EaseOutBounce(Duration - Time, 0, Delta, Duration) + Start;
+        }
+
+        public static double EaseOutBounce(double Time, double Start, double Delta, double Duration)
+        {
+            if ((Time /= Duration) < (1 / 2.75))
+            {
+                return Delta * (7.5625 * Time * Time) + Start;
+            }
+            else if (Time < (2 / 2.75))
+            {
+                return Delta * (7.5625 * (Time -= (1.5 / 2.75)) * Time + 0.75) + Start;
+            }
+            else if (Time < (2.5 / 2.75))
+            {
+                return Delta * (7.5625 * (Time -= (2.25 / 2.75)) * Time + .9375) + Start;
+            }
+            else
+            {
+                return Delta * (7.5625 * (Time -= (2.625 / 2.75)) * Time + .984375) + Start;
+            }
+        }
+
+        public static double EaseInOutBounce(double Time, double Start, double Delta, double Duration)
+        {
+            if (Time < Duration / 2) return EaseInBounce(Time * 2, 0, Delta, Duration) * .5 + Start;
+            return EaseOutBounce(Time * 2 - Duration, 0, Delta, Duration) * .5 + Delta * .5 + Start;
+        }
+
         public static double EaseFromString(double Time, double Start, double Delta, double Duration, string Method, bool In, bool Out)
         {
             switch (Method)
@@ -286,6 +373,30 @@ namespace IPSAuthoringTool.Utility
                     else if(Out)
                         return EaseOutCirc(Time, Start, Delta, Duration);
                     else return LinearTween(Time, Start, Delta, Duration);
+                case "Elastic":
+                    if (In && Out)
+                        return EaseInOutElastic(Time, Start, Delta, Duration);
+                    else if (In)
+                        return EaseInElastic(Time, Start, Delta, Duration);
+                    else if (Out)
+                        return EaseOutElastic(Time, Start, Delta, Duration);
+                    else return LinearTween(Time, Start, Delta, Duration);
+                case "Back":
+                    if (In && Out)
+                        return EaseInOutBack(Time, Start, Delta, Duration);
+                    else if (In)
+                        return EaseInBack(Time, Start, Delta, Duration);
+                    else if (Out)
+                        return EaseOutBack(Time, Start, Delta, Duration);
+                    else return LinearTween(Time, Start, Delta, Duration);
+                case "Bounce":
+                    if (In && Out)
+                        return EaseInOutBounce(Time, Start, Delta, Duration);
+                    else if (In)
+                        return EaseInBounce(Time, Start, Delta, Duration);
+                    else if (Out)
+                        return EaseOutBounce(Time, Start, Delta, Duration);
+                    else return LinearTween(Time, Start, Delta, Duration);
                 default:
                     return LinearTween(Time, Start, Delta, Duration);
             }
@@ -294,8 +405,17 @@ namespace IPSAuthoringTool.Utility
         public static List<string> GetEasingMethodNames()
         {
             List<string> retList = new List<string>();
-            retList.AddRange(new string[] { "Linear", "Quadratic", "Cubic", "Quartic", "Quintic", "Sinusoidal", "Exponential", "Circular" });
+            retList.AddRange(new string[] { "Linear", "Quadratic", "Cubic", "Quartic", "Quintic", "Sinusoidal", "Exponential", "Circular", "Elastic", "Back", "Bounce" });
             return retList;
+        }
+
+        public static List<object> getEaseMethods()
+        {
+            List<object> ret = new List<object>();
+            List<string> strs = Tweener.GetEasingMethodNames();
+            foreach (string s in strs)
+                ret.Add((object)s);
+            return ret;
         }
     }
 }

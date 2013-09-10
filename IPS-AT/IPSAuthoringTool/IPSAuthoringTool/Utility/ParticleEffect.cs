@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,18 +11,37 @@ using System.Globalization;
 
 namespace IPSAuthoringTool.Utility
 {
+    [Serializable]
     public class ParticleEffect
     {
-        public List<Emitter> Emitters = new List<Emitter>();
-        public string path;
-        public string name = "NoName";
+        private List<Emitter> emitters = new List<Emitter>();
+
+        public List<Emitter> Emitters
+        {
+            get { return emitters; }
+            set { emitters = value; }
+        }
+        private string _path;
+
+        public string path
+        {
+            get { return _path; }
+            set { _path = value; }
+        }
+        private string _name = "NoName";
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
         #region Compiler
 
         public void WriteToFile(string destination, Dialogs.AlertDialog alertDialog)
         {
             path = destination;
-            name = Path.GetFileNameWithoutExtension(destination);
+            Name = Path.GetFileNameWithoutExtension(destination);
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = "  ";
@@ -44,6 +64,7 @@ namespace IPSAuthoringTool.Utility
                     writer.WriteAttributeString("emitter", emi.emitter);
                     writer.WriteAttributeString("Start", emi.Start.ToString());
                     writer.WriteAttributeString("End", emi.End.ToString());
+                    writer.WriteAttributeString("Tag", emi.Tag);
                     foreach (Emitter.value val in emi.Values)
                     {
                         writer.WriteStartElement("Value");
@@ -69,12 +90,12 @@ namespace IPSAuthoringTool.Utility
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
                 if (alertDialog != null)
-                    alertDialog.ShowHandlerDialog("Successfully saved: " + name);
+                    alertDialog.ShowHandlerDialog("Successfully saved: " + Name);
             }
             catch
             {
                 if (alertDialog != null)
-                    alertDialog.ShowHandlerDialog("Error saving: " + name);
+                    alertDialog.ShowHandlerDialog("Error saving: " + Name);
             }
             writer.Close();
         }
@@ -94,7 +115,7 @@ namespace IPSAuthoringTool.Utility
                     while (reader.ReadToFollowing("Emitter"))
                         Emitters.Add(readEmitter(reader));
                     reader.Close();
-                    name = Path.GetFileNameWithoutExtension(file);
+                    Name = Path.GetFileNameWithoutExtension(file);
                     alertDialog.ShowHandlerDialog("Succesfully loaded effect.");
                 }
             }
@@ -119,7 +140,7 @@ namespace IPSAuthoringTool.Utility
                     while (reader.ReadToFollowing("Emitter"))
                         Emitters.Add(readEmitter(reader));
                     reader.Close();
-                    name = Path.GetFileNameWithoutExtension(file);
+                    Name = Path.GetFileNameWithoutExtension(file);
                 }
             }
             catch
@@ -134,19 +155,21 @@ namespace IPSAuthoringTool.Utility
             reader.MoveToAttribute("Type");
             returnEmit.Type = Emitter.stringToEnum(reader.Value);
             reader.MoveToAttribute("x");
-            returnEmit.x = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+            float.TryParse(reader.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out returnEmit.x);
             reader.MoveToAttribute("y");
-            returnEmit.y = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+            float.TryParse(reader.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out returnEmit.y);
             reader.MoveToAttribute("z");
-            returnEmit.z = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+            float.TryParse(reader.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out returnEmit.z);
             reader.MoveToAttribute("datablock");
             returnEmit.datablock = reader.Value;
             reader.MoveToAttribute("emitter");
             returnEmit.emitter = reader.Value;
             reader.MoveToAttribute("Start");
-            returnEmit.Start = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+            float.TryParse(reader.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out returnEmit.Start);
             reader.MoveToAttribute("End");
-            returnEmit.End = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+            float.TryParse(reader.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out returnEmit.End);
+            if (reader.MoveToAttribute("Tag"))
+                returnEmit.Tag = reader.Value != "" ? reader.Value : null;
             reader.MoveToElement();
             string innerXML = reader.ReadInnerXml();
             XmlReader subReader = XmlReader.Create(new StringReader("<root>"+innerXML+"</root>"));
@@ -157,9 +180,9 @@ namespace IPSAuthoringTool.Utility
                 subReader.MoveToAttribute("Name");
                 val.valueName = subReader.Value;
                 subReader.MoveToAttribute("DeltaValue");
-                val.deltaValue = float.Parse(subReader.Value, CultureInfo.InvariantCulture);
+                float.TryParse(subReader.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out val.deltaValue);
                 subReader.MoveToAttribute("setTime");
-                val.setTime = float.Parse(subReader.Value, CultureInfo.InvariantCulture);
+                float.TryParse(subReader.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out val.setTime);
                 subReader.MoveToAttribute("Ease");
                 val.Ease = bool.Parse(subReader.Value);
                 subReader.MoveToAttribute("DeltaValue");
@@ -169,10 +192,10 @@ namespace IPSAuthoringTool.Utility
                 while (subReader2.ReadToFollowing("Point"))
                 {
                     Emitter.PointOnValue pt = new Emitter.PointOnValue();
-                    subReader2.MoveToAttribute("X");
-                    pt.point.X = float.Parse(subReader2.Value, CultureInfo.InvariantCulture);
-                    subReader2.MoveToAttribute("Y");
-                    pt.point.Y = float.Parse(subReader2.Value, CultureInfo.InvariantCulture);
+                    if(subReader2.MoveToAttribute("X"))
+                        float.TryParse(subReader2.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out pt.point.X);
+                    if(subReader2.MoveToAttribute("Y"))
+                        float.TryParse(subReader2.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out pt.point.Y);
                     subReader2.MoveToAttribute("Easing");
                     pt.Easing = subReader2.Value;
                     subReader2.MoveToAttribute("EaseIn");
@@ -192,9 +215,9 @@ namespace IPSAuthoringTool.Utility
 
         #region Latest
 
-        public static List<ParticleEffect> loadLatestFile()
+        public static Collection<ParticleEffect> loadLatestFile()
         {
-            List<ParticleEffect> effects = new List<ParticleEffect>();
+            Collection<ParticleEffect> effects = new Collection<ParticleEffect>();
             if (File.Exists("LatestEmitters.dat"))
             {
                 StreamReader SR = new StreamReader("LatestEmitters.dat");
@@ -210,7 +233,7 @@ namespace IPSAuthoringTool.Utility
             return effects;
         }
 
-        public static void writeLatestFile(List<ParticleEffect> theEffects)
+        public static void writeLatestFile(Collection<ParticleEffect> theEffects)
         {
             StreamWriter SW = new StreamWriter("LatestEmitters.dat");
             foreach (ParticleEffect eff in theEffects)
@@ -221,5 +244,10 @@ namespace IPSAuthoringTool.Utility
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -11,7 +11,8 @@ namespace MahApps.Metro.Controls
     [TemplatePart(Name = "PART_ScrollViewer", Type = typeof(ScrollViewer))]
     public class Panorama : ItemsControl
     {
-        public static readonly DependencyProperty ItemBoxProperty = DependencyProperty.Register("ItemHeight", typeof(double), typeof(Panorama), new FrameworkPropertyMetadata(120.0));
+        public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register("ItemHeight", typeof(double), typeof(Panorama), new FrameworkPropertyMetadata(120.0));
+        public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register("ItemWidth", typeof(double), typeof(Panorama), new FrameworkPropertyMetadata(120.0));
         public static readonly DependencyProperty GroupHeightProperty = DependencyProperty.Register("GroupHeight", typeof(double), typeof(Panorama), new FrameworkPropertyMetadata(640.0));
         public static readonly DependencyProperty HeaderFontSizeProperty = DependencyProperty.Register("HeaderFontSize", typeof(double), typeof(Panorama), new FrameworkPropertyMetadata(40.0));
         public static readonly DependencyProperty HeaderFontColorProperty = DependencyProperty.Register("HeaderFontColor", typeof(Brush), typeof(Panorama), new FrameworkPropertyMetadata(Brushes.White));
@@ -24,10 +25,16 @@ namespace MahApps.Metro.Controls
             set { friction = Math.Min(Math.Max(1.0 - value, 0), 1.0); }
         }
 
-        public double ItemBox
+        public double ItemHeight
         {
-            get { return (double)GetValue(ItemBoxProperty); }
-            set { SetValue(ItemBoxProperty, value); }
+            get { return (double)GetValue(ItemHeightProperty); }
+            set { SetValue(ItemHeightProperty, value); }
+        }
+
+        public double ItemWidth
+        {
+            get { return (double)GetValue(ItemWidthProperty); }
+            set { SetValue(ItemWidthProperty, value); }
         }
 
         public double GroupHeight
@@ -225,6 +232,5 @@ namespace MahApps.Metro.Controls
 
             base.OnPreviewMouseUp(e);
         }
-
     }
 }

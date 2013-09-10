@@ -1,4 +1,4 @@
-//-------------------------- 12/11/2012 -- 22:24:42 -----
+//-------------------------- 3/13/2013 -- 09:58:15 -----
 Processor Init:
    Intel Pentium III Xeon, ~3.31 Ghz
    FPU detected
@@ -91,9 +91,9 @@ Accepted Mode:
 --Refresh Rate : 60
 --FSAA Level : 4
 --------------
-GFXPCD3D9Device::reset - depthstencil 32f0940 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 33a8a60 has 2 ref's
 --- Resetting D3D Device ---
-GFXPCD3D9Device::reset - depthstencil 414e5e0 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 33a8880 has 2 ref's
 --- Resetting D3D Device ---
 Binding server port to default IP
 UDP initialized on port 0
@@ -119,9 +119,6 @@ No physics plugin exists.
 Engine initialized...
 AntiAliasing has been disabled; it is not compatible with AdvancedLighting.
 Window focus status changed: focus: 1
-Window focus status changed: focus: 0
-  Using background sleep time: 200
-Window focus status changed: focus: 1
 Exporting server prefs...
 ParticleEmitterData(g_burnerEmitter) unable to find particle datablock: backburnerParticles
 ParticleEmitterData(g_burnerEmitter) unable to find any particle datablocks
@@ -136,7 +133,7 @@ scripts/server/spells/roguePack.cs (0): Unable to find parent object DemoPlayer 
 [MaterialList::mapMaterials] Unable to find material for texture: OrganicA1
 [MaterialList::mapMaterials] Unable to find material for texture: StoneA1
 *** Mission loaded
-Connect request from: 
+Connect request from: IP:0.0.0.0:0
 Connection established 4042
 CADD: 4043 local
 *** Sending mission load to client: levels/Empty Room.mis
@@ -162,8 +159,6 @@ Mapping string: MissionStartPhase1 to index: 8
 % - PostFX Manager - PostFX enabled
 Mapping string: MissionStartPhase1Ack to index: 0
 [MaterialList::mapMaterials] Unable to find material for texture: crossbow
-Window focus status changed: focus: 0
-  Using background sleep time: 200
 Mapping string: MissionStartPhase2 to index: 9
 *** Phase 2: Download Ghost Objects
 Mapping string: MissionStartPhase2Ack to index: 1
@@ -181,23 +176,7 @@ Mapping string: MissionStart to index: 11
 *** Initial Control Object
 Activating DirectInput...
 *** Control Object Changed
-Window focus status changed: focus: 1
 Missing file: art/forest/brushes.cs!
 Win32Window::WindowProc - resetting device due to window size change.
-GFXPCD3D9Device::reset - depthstencil 414e720 has 2 ref's
+GFXPCD3D9Device::reset - depthstencil 33a7c00 has 2 ref's
 --- Resetting D3D Device ---
-Time spent in toggleEditor() : 2.082 s
-Mapping string: EditorOrbitCameraSelectChange to index: 3
-Window focus status changed: focus: 0
-  Using background sleep time: 200
-DirectInput deactivated.
-Activating DirectInput...
-Win32Window::WindowProc - resetting device due to window size change.
-GFXPCD3D9Device::reset - depthstencil 7a3b7c0 has 2 ref's
---- Resetting D3D Device ---
-*** ENDING MISSION
-CDROP: 4043 
-Exporting server prefs...
-Exporting client prefs
-Exporting server prefs
-Cur. D3DDevice ref count=1
