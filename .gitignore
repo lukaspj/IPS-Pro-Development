@@ -4,18 +4,8 @@
 # Don't ignore these
 
 !/Design/*
-!/Project/
-# !/Project/game/
-# !/Project/game/tools/*
-# !/Project/game/tools/*/
-# !/Project/game/tools/*/*
-# !/Project/game/tools/*/*/
-# !/Project/game/tools/*/*/*
-# !/Project/game/tools/*/*/*/
-# !/Project/game/tools/*/*/*/*
-# !/Project/game/tools/*/*/*/*/
-# !/Project/game/tools/*/*/*/*/*
-# !/Project/game/tools/*/*/*/*/*/
+!/ProjectWrapper/
+!/ProjectWrapper/Project/
 
 # IPS Source
 !/Engine/
