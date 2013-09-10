@@ -163,6 +163,29 @@ int compareNodeVertex (const void * a, const void * b)
    return ( (*(NodeMeshEmitter::NodeVertex*)a).VertIndex - (*(NodeMeshEmitter::NodeVertex*)b).VertIndex );
 }
 
+inline bool containsNodeVertex(Vector<NodeMeshEmitter::NodeVertex> &src, U32 &idx, S32 &size)
+{
+   S32 first = 0;
+   S32 last = size - 1;
+   S32 middle = (first+last) / 2;
+   S32 search = idx;
+   // Binary search for vert1
+   while( first <= last )
+   {
+      if ( src[middle].VertIndex < search )
+         first = middle + 1;    
+      else if (src[middle].VertIndex == search ) 
+      {
+         return true;
+      }
+      else
+         last = middle - 1;
+ 
+      middle = (first + last)/2;
+   }
+   return false;
+}
+
 void NodeMeshEmitter::loadFaces(SimObject *SB, ShapeBase *SS, TSStatic* TS)
 {
 	PROFILE_SCOPE(NodeMeshEmitLoadFaces);
@@ -282,63 +305,10 @@ void NodeMeshEmitter::loadFaces(SimObject *SB, ShapeBase *SS, TSStatic* TS)
 					{
 						U32 triStart = start + triIndex;
                   bool vert1 = false, vert2 = false, vert3 = false;
-                  S32 first = 0;
-                  S32 last = NVSize - 1;
-                  S32 middle = (first+last) / 2;
-                  S32 search = Mesh->indices[triStart];
-                  // Binary search for vert1
-                  while( first <= last )
-                  {
-                     if ( NodeVertices[middle].VertIndex < search )
-                        first = middle + 1;    
-                     else if (NodeVertices[middle].VertIndex == search ) 
-                     {
-                        vert1 = true;
-                        break;
-                     }
-                     else
-                        last = middle - 1;
- 
-                     middle = (first + last)/2;
-                  }
-                  first = 0;
-                  last = NVSize - 1;
-                  middle = (first+last) / 2;
-                  search = Mesh->indices[triStart+1];
-                  // Binary search for vert2
-                  while( first <= last )
-                  {
-                     if ( NodeVertices[middle].VertIndex < search )
-                        first = middle + 1;    
-                     else if (NodeVertices[middle].VertIndex == search ) 
-                     {
-                        vert2 = true;
-                        break;
-                     }
-                     else
-                        last = middle - 1;
- 
-                     middle = (first + last)/2;
-                  }
-                  first = 0;
-                  last = NVSize - 1;
-                  middle = (first+last) / 2;
-                  search = Mesh->indices[triStart+2];
-                  // Binary search for vert3
-                  while( first <= last )
-                  {
-                     if ( NodeVertices[middle].VertIndex < search )
-                        first = middle + 1;    
-                     else if (NodeVertices[middle].VertIndex == search ) 
-                     {
-                        vert3 = true;
-                        break;
-                     }
-                     else
-                        last = middle - 1;
- 
-                     middle = (first + last)/2;
-                  }
+                  vert1 = containsNodeVertex(NodeVertices, Mesh->indices[triStart], NVSize);
+                  vert2 = containsNodeVertex(NodeVertices, Mesh->indices[triStart+1], NVSize);
+                  vert3 = containsNodeVertex(NodeVertices, Mesh->indices[triStart+2], NVSize);
+
                   if(!(vert1 && vert2 && vert3))
                      continue;
 						v1 = Mesh->mVertexData[Mesh->indices[triStart]];
