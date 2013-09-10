@@ -396,9 +396,6 @@ namespace mu
         (a_sName.find_first_not_of(a_szCharSet)!=string_type::npos) ||
         (a_sName[0]>='0' && a_sName[0]<='9'))
     {
-		 bool one = a_sName.length();
-		bool two = (a_sName.find_first_not_of(a_szCharSet)==string_type::npos);
-	  bool three = (a_sName[0]>='0' && a_sName[0]<='9');
       Error(ecINVALID_NAME);
     }
   }

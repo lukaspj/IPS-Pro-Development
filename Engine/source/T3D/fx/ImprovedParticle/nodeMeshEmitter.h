@@ -56,9 +56,9 @@ class NodeMeshEmitter : public MeshEmitter
 {
 	typedef MeshEmitter Parent;
 
+public:
 	struct NodeVertex
 	{
-		//S32 MeshIndex;
 		S32 VertIndex;
       S32 ObjIndex;
 	};
