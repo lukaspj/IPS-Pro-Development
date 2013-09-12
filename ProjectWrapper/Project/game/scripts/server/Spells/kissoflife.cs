@@ -12,8 +12,8 @@ datablock SpellData(KissOfLife : DefaultTargetSpell)
 
 function KissOfLife::onInitializeCast(%this, %spell)
 {
-   if(%spell.getTarget().isEnabled())
-      %spell.interrupt();
+   //if(%spell.getTarget().isEnabled())
+   //   %spell.interrupt();
 }
 
 function KissOfLife::onPreCast(%this, %spell)
@@ -24,6 +24,7 @@ function KissOfLife::onPreCast(%this, %spell)
 function KissOfLife::onCast(%this, %spell)
 {
    %spell.getTarget().applyHeal(%this.InitialHealth);
+   %spell.getTarget().setDamageState("Enabled");
 }
 
 function KissOfLife::onPostCast(%this, %spell)
