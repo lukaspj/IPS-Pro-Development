@@ -56,81 +56,51 @@ function PE_ParticleEditor::guiSync( %this )
    
    %popup.sort();
    %popup.setSelected( %data );
-         
-   %bitmap = MaterialEditorGui.searchForTexture( %data.getName(), %data.textureName );
-   if( %bitmap !$= "" )
+   
+   for(%c = PE_ParticleEditor_Container.getCount() - 1; %c >= 0; %c--)
+      if(PE_ParticleEditor_Container.getObject(%c) !$= PEP_ParticleClassSelector_Control)
+         PE_ParticleEditor_Container.remove(PE_ParticleEditor_Container.getObject(%c));
+   if(!%data)
    {
-      PE_ParticleEditor-->PEP_previewImage.setBitmap( %bitmap );
-      PE_ParticleEditor-->PEP_previewImageName.setText( %bitmap );
-      PE_ParticleEditor-->PEP_previewImageName.tooltip = %bitmap;
+      PE_ParticleEditor_Container.add(PE_EmptyEditor);
+      setWord(PE_ParticleEditor_Container.extent, 1, getWord(PE_EmptyEditor.extent, 1) - 25);
+      PE_ParticleEditor_Container.computeSizes();
+   }
+   else if(%data.isMemberOfClass( "BillboardParticleData" ) )
+   {
+      PE_ParticleEditor_Container.add(PEP_BillboardParticleEditor);
+      PEP_BillboardParticleEditor.guiSync();
+   }
+   else if(%data.isMemberOfClass( "TSShapeParticleData" ) )
+   {
+      PE_ParticleEditor_Container.add(PEP_TSShapeParticleEditor);
+      PEP_TSShapeParticleEditor.guiSync();
+   }
+   else if(%data.isMemberOfClass( "EmitterParticleData" ) )
+   {
+      PE_ParticleEditor_Container.add(PEP_EmitterParticleEditor);
+      PEP_EmitterParticleEditor.guiSync();
+   }
+   else if(%data.isMemberOfClass( "PointLightParticleData" ) )
+   {
+      PE_ParticleEditor_Container.add(PEP_PointLightParticleEditor);
+      PEP_PointLightParticleEditor.guiSync();
+   }
+   else if(%data.isMemberOfClass( "EffectParticleData" ) )
+   {
+      PE_ParticleEditor_Container.add(PEP_EffectParticleEditor);
+      PEP_EffectParticleEditor.guiSync();
+   }
+   else if(%data.isMemberOfClass( "BillboardRibbonParticleData" ) )
+   {
+      PE_ParticleEditor_Container.add(PEP_BillboardRibbonParticleEditor);
+      PEP_BillboardRibbonParticleEditor.guiSync();
    }
    else
    {
-      PE_ParticleEditor-->PEP_previewImage.setBitmap( "" );
-      PE_ParticleEditor-->PEP_previewImageName.setText( "None" );
-      PE_ParticleEditor-->PEP_previewImageName.tooltip = "None";
    }
-   
-   PE_ParticleEditor-->PEP_inverseAlpha.setValue( %data.useInvAlpha );
-   
-   PE_ParticleEditor-->PEP_lifetimeMS_slider.setValue( %data.lifetimeMS );
-   PE_ParticleEditor-->PEP_lifetimeMS_textEdit.setText( %data.lifetimeMS );
-   
-   PE_ParticleEditor-->PEP_lifetimeVarianceMS_slider.setValue( %data.lifetimeVarianceMS );
-   PE_ParticleEditor-->PEP_lifetimeVarianceMS_textEdit.setText( %data.lifetimeVarianceMS );
-   
-   PE_ParticleEditor-->PEP_inheritedVelFactor_slider.setValue( %data.inheritedVelFactor );
-   PE_ParticleEditor-->PEP_inheritedVelFactor_textEdit.setText( %data.inheritedVelFactor );
-   
-   PE_ParticleEditor-->PEP_constantAcceleration_slider.setValue( %data.constantAcceleration );
-   PE_ParticleEditor-->PEP_constantAcceleration_textEdit.setText( %data.constantAcceleration );
-   
-   PE_ParticleEditor-->PEP_gravityCoefficient_slider.setValue( %data.gravityCoefficient );
-   PE_ParticleEditor-->PEP_gravityCoefficient_textEdit.setText( %data.gravityCoefficient );
-   
-   PE_ParticleEditor-->PEP_dragCoefficient_slider.setValue( %data.dragCoefficient );
-   PE_ParticleEditor-->PEP_dragCoefficient_textEdit.setText( %data.dragCoefficient );
-   
-   PE_ParticleEditor-->PEP_spinRandomMin_slider.setValue( %data.spinRandomMin );
-   PE_ParticleEditor-->PEP_spinRandomMin_textEdit.setText( %data.spinRandomMin );
-   
-   PE_ParticleEditor-->PEP_spinRandomMax_slider.setValue( %data.spinRandomMax );
-   PE_ParticleEditor-->PEP_spinRandomMax_textEdit.setText( %data.spinRandomMax  );
-   
-   PE_ParticleEditor-->PEP_spinRandomMax_slider.setValue( %data.spinRandomMax );
-   PE_ParticleEditor-->PEP_spinRandomMax_textEdit.setText( %data.spinRandomMax  );
-   
-   PE_ParticleEditor-->PEP_spinSpeed_slider.setValue( %data.spinSpeed );
-   PE_ParticleEditor-->PEP_spinSpeed_textEdit.setText( %data.spinSpeed );
-   
-   PE_ColorTintSwatch0.color = %data.colors[ 0 ];
-   PE_ColorTintSwatch1.color = %data.colors[ 1 ];
-   PE_ColorTintSwatch2.color = %data.colors[ 2 ];
-   PE_ColorTintSwatch3.color = %data.colors[ 3 ];
-   
-   PE_ParticleEditor-->PEP_pointSize_slider0.setValue( %data.sizes[ 0 ] );
-   PE_ParticleEditor-->PEP_pointSize_textEdit0.setText( %data.sizes[ 0 ] );
-   
-   PE_ParticleEditor-->PEP_pointSize_slider1.setValue( %data.sizes[ 1 ] );
-   PE_ParticleEditor-->PEP_pointSize_textEdit1.setText( %data.sizes[ 1 ] );
-   
-   PE_ParticleEditor-->PEP_pointSize_slider2.setValue( %data.sizes[ 2 ] );
-   PE_ParticleEditor-->PEP_pointSize_textEdit2.setText( %data.sizes[ 2 ] );
-   
-   PE_ParticleEditor-->PEP_pointSize_slider3.setValue( %data.sizes[ 3 ] );
-   PE_ParticleEditor-->PEP_pointSize_textEdit3.setText( %data.sizes[ 3 ] );
-   
-   PE_ParticleEditor-->PEP_pointTime_slider0.setValue( %data.times[ 0 ] );
-   PE_ParticleEditor-->PEP_pointTime_textEdit0.setText( %data.times[ 0 ] );
-   
-   PE_ParticleEditor-->PEP_pointTime_slider1.setValue( %data.times[ 1 ] );
-   PE_ParticleEditor-->PEP_pointTime_textEdit1.setText( %data.times[ 1 ] );
-   
-   PE_ParticleEditor-->PEP_pointTime_slider2.setValue( %data.times[ 2 ] );
-   PE_ParticleEditor-->PEP_pointTime_textEdit2.setText( %data.times[ 2 ] );
-   
-   PE_ParticleEditor-->PEP_pointTime_slider3.setValue( %data.times[ 3 ] );
-   PE_ParticleEditor-->PEP_pointTime_textEdit3.setText( %data.times[ 3 ] );
+   PE_EmitterEditor_Container.setExtent(setWord(PE_EmitterEditor_Container.extent, 1, getWord(PE_Window.extent, 1) - 76));
+   return;
 }
 
 //---------------------------------------------------------------------------------------------
@@ -423,10 +393,44 @@ function PE_ParticleEditor::createParticle( %this, %replaceSlot )
    // Create the particle datablock and add to the emitter.
    
    %newParticle = getUniqueName( "newParticle" );
-   
-   datablock BillboardParticleData( %newParticle : DefaultParticle )
+   switch$(PEP_ParticleClassSelector.getSelected())
    {
-   };
+      case "0":
+         datablock BillboardParticleData( %newParticle : DefaultParticle )
+         {
+         };
+      break;
+      case "1":
+         datablock TSShapeParticleData( %newParticle : DefaultParticle )
+         {
+         };
+      break;
+      case "2":
+         datablock EmitterParticleData( %newParticle : DefaultParticle )
+         {
+         };
+      break;
+      case "3":
+         datablock PointLightParticleData( %newParticle : DefaultParticle )
+         {
+         };
+      break;
+      case "4":
+         datablock EffectParticleData( %newParticle : DefaultParticle )
+         {
+         };
+      break;
+      case "5":
+         datablock BillboardRibbonParticleData( %newParticle : DefaultParticle )
+         {
+         };
+      break;
+      default:
+         datablock BillboardParticleData( %newParticle : DefaultParticle )
+         {
+         };
+      break;
+   }
          
    // Submit undo.
    

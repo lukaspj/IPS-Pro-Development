@@ -123,7 +123,12 @@ function PE_MaskEmitterEditor::createParticleList( %this )
    
    foreach( %obj in DatablockGroup )
    {
-      if( %obj.isMemberOfClass( "BillboardParticleData" ) )
+      if( %obj.isMemberOfClass( "BillboardParticleData" ) ||
+          %obj.isMemberOfClass( "BillboardRibbonParticleData" ) ||
+          %obj.isMemberOfClass( "EmitterParticleData" ) ||
+          %obj.isMemberOfClass( "EffectParticleData" ) ||
+          %obj.isMemberOfClass( "TSShapeParticleData" ) ||
+          %obj.isMemberOfClass( "PointLightParticleData" ) )
       {
          %unlistedFound = false;
          foreach( %unlisted in PE_UnlistedParticles )

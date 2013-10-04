@@ -39,6 +39,18 @@ function initializeParticleEditor()
    exec( "./GroundEmitterEditor.ed.cs" );
    exec( "./MaskEmitterEditor.ed.gui" );
    exec( "./MaskEmitterEditor.ed.cs" );
+   exec( "./BillboardParticleEditor.ed.cs" );
+   exec( "./BillboardParticleEditor.ed.gui" );
+   exec( "./BillboardRibbonParticleEditor.ed.cs" );
+   exec( "./BillboardRibbonParticleEditor.ed.gui" );
+   exec( "./EffectParticleEditor.ed.cs" );
+   exec( "./EffectParticleEditor.ed.gui" );
+   exec( "./EmitterParticleEditor.ed.cs" );
+   exec( "./EmitterParticleEditor.ed.gui" );
+   exec( "./TSShapeParticleEditor.ed.cs" );
+   exec( "./TSShapeParticleEditor.ed.gui" );
+   exec( "./PointLightParticleEditor.ed.cs" );
+   exec( "./PointLightParticleEditor.ed.gui" );
    exec( "./particleEditor.ed.cs" );
    exec( "./particleEditorUndo.ed.cs" );   
    exec( "./particleEmitterEditor.ed.cs" );

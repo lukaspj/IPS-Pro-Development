@@ -67,6 +67,13 @@ function ParticleEditor::initEditor( %this )
    PE_GroundEmitterEditor.initEditor();
    PE_MaskEmitterEditor.initEditor();
    
+   PEP_ParticleClassSelector.add("BillboardParticles", 0);
+   PEP_ParticleClassSelector.add("TSShapeParticles", 1);
+   PEP_ParticleClassSelector.add("EmitterParticles", 2);
+   PEP_ParticleClassSelector.add("PointlightParticles", 3);
+   PEP_ParticleClassSelector.add("EffectParticles", 4);
+   PEP_ParticleClassSelector.add("BillboardRibbonParticles", 5);
+   
    PEE_EmitterSelector.setFirstSelected();
 
    PE_Window-->EditorTabBook.selectPage( 0 );
