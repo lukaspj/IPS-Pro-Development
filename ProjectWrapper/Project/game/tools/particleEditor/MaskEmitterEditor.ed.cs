@@ -79,6 +79,15 @@ function PE_MaskEmitterEditor::guiSync( %this, %new )
          %popup.setSelected( 0, false ); // Select "None".
    }
    
+   foreach( %obj in DatablockGroup )
+   {
+      if( %obj.isMemberOfClass( "PixelMask" ) )
+      {
+         %name = %obj.getName();
+         %id = %obj.getId();
+         MaskEE_PixelMaskSelector.add( %name, %id );
+      }
+   }
    if(%new)
       PE_MaskEmitterEditor-->PEE_infiniteLoop.setStateOn( PE_EmitterEditor.currEmitter.lifetimeMS == 0 );   
    
@@ -151,16 +160,16 @@ function PE_MaskEmitterEditor::createParticleList( %this )
                   
          %particleCount ++;
       }
-      if( %obj.isMemberOfClass( "PixelMask" ) )
-      {
-         %name = %obj.getName();
-         %id = %obj.getId();
-         MaskEE_PixelMaskSelector.add( %name, %id );
-      }
    }
    
    MaskEE_EmitterParticleSelector1.sort();   
    MaskEE_EmitterParticleSelector2.sort();
    MaskEE_EmitterParticleSelector3.sort();
    MaskEE_EmitterParticleSelector4.sort();   
+}
+
+function MaskEE_PixelMask::SelectionChanged(%this)
+{
+   %this.getParent().updateFromChild(%this); 
+   PE_EmitterEditor.updateEmitter( "PixelMask", %this.getValue(), true, false );
 }

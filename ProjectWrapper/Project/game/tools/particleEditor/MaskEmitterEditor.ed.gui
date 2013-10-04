@@ -752,7 +752,7 @@ new GuiStackControl(PE_MaskEmitterEditor) {
             };             
          };
          
-         new GuiControl(MaskEE_PixelMask){ // emmiter particle 1
+         new GuiControl(MaskEE_PixelMask){ // PixelMask
             isContainer = "1";
             HorizSizing = "width";
             VertSizing = "bottom";
@@ -775,9 +775,10 @@ new GuiStackControl(PE_MaskEmitterEditor) {
                position = $PE_guielement_pos_textedit;
                Extent = $PE_guielement_ext_textedit;
                text = "";
-               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_EmitterEditor.updateEmitter( \"PixelMask\", $ThisControl.getValue(), true, false );";
+               altCommand = "$ThisControl.SelectionChanged();";
             };  
-         };      
+         };
+             
       }; // end stack
    }; // end "spread" rollout
    new GuiRolloutCtrl() {
