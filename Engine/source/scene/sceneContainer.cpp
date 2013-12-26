@@ -667,7 +667,7 @@ void SceneContainer::polyhedronFindObjects(const Polyhedron& polyhedron, U32 mas
 }
 
 //-----------------------------------------------------------------------------
-#include "T3D\decal\decalManager.h"
+
 void SceneContainer::findObjectList( const Box3F& searchBox, U32 mask, Vector<SceneObject*> *outFound )
 {
    PROFILE_SCOPE( Container_FindObjectList_Box );
@@ -753,7 +753,7 @@ void SceneContainer::findObjectList( const Frustum &frustum, U32 mask, Vector<Sc
    for ( U32 i=0; i < outFound->size(); )
    {
       const Box3F &worldBox = (*outFound)[i]->getWorldBox();
-      if ( frustum.isCulled( worldBox ) && !(*outFound)[i]->isGlobalBounds() )
+      if ( frustum.isCulled( worldBox ) )
          outFound->erase_fast( i );
       else
          i++;
@@ -1306,7 +1306,6 @@ void SceneContainer::initTypeSearch(const U32      searchMask)
 
 //-----------------------------------------------------------------------------
 // IPS SpellSystem ------
-#include "gfx/sim/debugDraw.h"
 void SceneContainer::initConeSearch(
    const Point3F Start, 
    const Point3F End, 
@@ -1349,7 +1348,6 @@ void SceneContainer::initConeSearch(
    ConePoly.pointList.setSize(9);
    ConePoly.pointList[0] = Start;
    ConePoly.planeList.setSize(8);
-   //ConePoly.edgeList.setSize(40);
    U8 resolution = 8;
    for(int ix = 0; ix < resolution; ix++)
    {
