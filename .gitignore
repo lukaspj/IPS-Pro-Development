@@ -6,6 +6,15 @@
 !/Design/*
 !/ProjectWrapper/
 !/ProjectWrapper/Project/
+!/ProjectWrapper/Project/game/
+!/ProjectWrapper/Project/game/tools/
+!/ProjectWrapper/Project/game/tools/worldEditor/
+!/ProjectWrapper/Project/game/tools/worldEditor/gui/
+!/ProjectWrapper/Project/game/tools/worldEditor/gui/objectBuilderGui.ed.gui
+!/ProjectWrapper/Project/game/tools/worldEditor/scripts/
+!/ProjectWrapper/Project/game/tools/worldEditor/scripts/editors
+!/ProjectWrapper/Project/game/tools/worldEditor/scripts/editors/creator.ed.cs
+
 
 # IPS Source
 !/Engine/

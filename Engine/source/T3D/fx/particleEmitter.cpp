@@ -42,6 +42,8 @@ Iterator find(Iterator first, Iterator last, Value value)
 #  include "gfx/D3D9/360/gfx360MemVertexBuffer.h"
 #endif
 
+IMPLEMENT_CO_DATABLOCK_V1(ParticleEmitterData);
+
 Point3F ParticleEmitter::mWindVelocity( 0.0, 0.0, 0.0 );
 const F32 ParticleEmitter::AgedSpinToRadians = (1.0f/1000.0f) * (1.0f/360.0f) * M_PI_F * 2.0f;
 

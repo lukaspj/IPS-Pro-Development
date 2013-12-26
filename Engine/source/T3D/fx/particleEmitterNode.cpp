@@ -10,9 +10,10 @@
 #include "ts\tsShapeInstance.h"
 
 #include "ImprovedParticle\ParticleBehaviours\attractionBehaviour.h"
+#include "ImprovedParticle\Emitters\particleEmitterImpl.h"
 
 IMPLEMENT_CO_DATABLOCK_V1(ParticleEmitterNodeData);
-IMPLEMENT_CONOBJECT(ParticleEmitterNode);
+IMPLEMENT_CO_NETOBJECT_V1(ParticleEmitterNode);
 
 //-----------------------------------------------------------------------------
 // ParticleEmitterNodeData
@@ -103,8 +104,33 @@ void ParticleEmitterNode::initPersistFields()
    addField( "velocity", TYPEID< F32 >(), Offset(mVelocity, ParticleEmitterNode),
       "Velocity to use when emitting particles (in the direction of the "
       "ParticleEmitterNode object's up (Z) axis)." );
+   
+   addProtectedField( "emitter",  TYPEID< ParticleEmitterData >(), Offset(mEmitterDatablock, ParticleEmitterNode), 
+         &setEmitterProperty, &defaultProtectedGetFn, 
+		"Datablock to use when emitting particles." );
 
    Parent::initPersistFields();
+}
+
+
+
+bool ParticleEmitterNode::setEmitterProperty( void *obj, const char *index, const char *db)
+{
+   if( db == NULL || !db || !db[ 0 ] )
+   {
+      Con::errorf( "GameBase::setDataBlockProperty - Can't unset datablock on GameBase objects" );
+      return false;
+   }
+   
+   ParticleEmitterNode* object = static_cast< ParticleEmitterNode* >( obj );
+   ParticleEmitterData* data;
+   if( Sim::findObject( db, data ) ) {
+      object->setEmitterDataBlock( data );
+      return true;
+   }
+   
+   Con::errorf( "ParticleEmitterNode::setEmitterProperty - Could not find data block \"%s\"", db );
+   return false;
 }
 
 bool ParticleEmitterNode::onAdd()

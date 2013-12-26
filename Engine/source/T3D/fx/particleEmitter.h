@@ -57,14 +57,14 @@ public:
 	// ParticleEmitterData
 	//--------------------------------------------
 	ParticleEmitterData();
-	//DECLARE_CONOBJECT(ParticleEmitterData);
+	DECLARE_CONOBJECT(ParticleEmitterData);
 	static void initPersistFields();
 	void packData(BitStream* stream);
 	void unpackData(BitStream* stream);
 	bool preload(bool server, String &errorStr);
 	bool onAdd();
 	void allocPrimBuffer( S32 overrideSize = -1 );
-	virtual ParticleEmitter* createEmitter() = 0;
+   virtual ParticleEmitter* createEmitter() { throw 30; };
 	bool reload();
 
    

@@ -74,6 +74,8 @@ public:
 	F32 mVelocity;
 
 	void onStaticModified(const char* slotName, const char*newValue);
+   
+   static bool setEmitterProperty( void *object, const char *index, const char *data );
 
 public:
 	//------------------------- Stand alone variables
