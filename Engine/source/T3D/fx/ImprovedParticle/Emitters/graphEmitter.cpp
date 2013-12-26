@@ -34,7 +34,6 @@
 // Please visit http://www.winterleafentertainment.com for more information about the project and latest updates.
 
 #include "graphEmitter.h"
-#include "graphEmitterNode.h"
 #include "../IPSCore.h"
 
 #include "console/consoleTypes.h"
@@ -736,7 +735,6 @@ bool GraphEmitter::addParticle(const Point3F& pos,
       return false;
 	PROFILE_SCOPE(GraphEmitAddPartNode);
 	IPSBenchmarkBegin;
-	GraphEmitterNode* nodeDat = static_cast<GraphEmitterNode*>(pnodeDat);
 	GraphEmitterData* DataBlock = getDataBlock();
    Particle* pNew = mParticleManager->AddParticle();
 
@@ -753,7 +751,7 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 		initialVel    += (DataBlock->velocityVariance * 2.0f * gRandGen.randF()) - DataBlock->velocityVariance;
 	}
 
-	if(nodeDat)
+	if(pnodeDat)
 	{
 		// Set the time since this code was last run
 		U32 dt = mInternalClock - oldTime;
@@ -764,14 +762,14 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 		{
 			if(Loop)
 				particleProg = funcMin;
-			onBoundaryLimit(true, nodeDat);
+			onBoundaryLimit(true, pnodeDat);
 		}
 		// Did we hit the lower limit?
 		if(particleProg < funcMin)
 		{
 			if(Loop)
 				particleProg = funcMax;
-			onBoundaryLimit(false, nodeDat);
+			onBoundaryLimit(false, pnodeDat);
 		}
 		// We don't want to risk dividing by zero.
 		//  - We don't care too much about accuracy, so whatever is close to zero is fine.
@@ -835,7 +833,7 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 			Point3F funcPos = Point3F(resultx, resulty, resultz);
 
 			// Get the transform of the node to get the rotation matrix
-			MatrixF trans = nodeDat->getTransform();
+			MatrixF trans = pnodeDat->getTransform();
 			// Rotate our point by the rotation matrix
 			Point3F p;
 			trans.mulV(funcPos, &p);
@@ -1104,9 +1102,9 @@ void CallbackEvent::unpack(NetConnection *conn, BitStream *bstream)
 void CallbackEvent::process(NetConnection *conn)
 {
 	try{
-		GraphEmitterNode* m_Node = dynamic_cast< GraphEmitterNode* >(conn->resolveObjectFromGhostIndex(mNode));
+      ParticleEmitterNode* m_Node = dynamic_cast< ParticleEmitterNode* >(conn->resolveObjectFromGhostIndex(mNode));
 		if(m_Node)
-			m_Node->getEmitter()->onBoundaryLimit(Max, m_Node);
+         ((GraphEmitter*)m_Node->getEmitter())->onBoundaryLimit(Max, m_Node);
 	}
 	catch(...){
 		Con::printf("Callback error");

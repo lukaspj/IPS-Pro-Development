@@ -35,7 +35,6 @@
 // Please visit http://www.winterleafentertainment.com for more information about the project and latest updates.
 
 #include "groundEmitter.h"
-#include "groundEmitterNode.h"
 #include "../IPSCore.h"
 
 #include "console/consoleTypes.h"
@@ -329,9 +328,8 @@ bool GroundEmitter::addParticle(const Point3F& pos,
 {
 	PROFILE_SCOPE(GroundEmitAddPart);
 	IPSBenchmarkBegin;
-	GroundEmitterNode* nodeDat = static_cast<GroundEmitterNode*>(pnodeDat);
 	GroundEmitterData* DataBlock = getDataBlock();
-	parentNodePos = nodeDat->getPosition();
+	parentNodePos = pnodeDat->getPosition();
    StringTableEntry* _layers = standAloneEmitter ? sa_layers : DataBlock->layers;
 	// Get a random point inside a radius of the Emitter Node using a uniform point distribution algorithm.
    F32 r = (standAloneEmitter ? sa_radius : DataBlock->radius) * sqrt(gRandGen.randF());

@@ -36,17 +36,12 @@
 #include "ParticleEffect.h"
 #include "../particleEmitterNode.h"
 #include "../particleEmitter.h"
-#include "Emitters/sphereEmitterNode.h"
 #include "MeshEmitters/meshEmitter.h"
 #include "MeshEmitters/radiusMeshEmitter.h"
-#include "Emitters/groundEmitterNode.h"
 #include "Emitters/groundEmitter.h"
-#include "Emitters/maskEmitterNode.h"
 #include "Emitters/maskEmitter.h"
-#include "Emitters/graphEmitterNode.h"
 #include "Emitters/graphEmitter.h"
 #include "IPSCore.h"
-#include "localNodes.h"
 #include "console/consoleTypes.h"
 #include "core/stream/bitStream.h"
 #include "math/mathIO.h"
@@ -228,15 +223,16 @@ bool ParticleEffect::onAdd()
 		eN.state = emitterNode::notActivated;
 		if(!isServerObject())
 		{
+         eN.node = new ParticleEmitterNode();
+         eN.node->setGhost();
 			switch(emitter.type)
 			{
 			case pEffectReader::emitterType::stockEmitter:
 				{
-					eN.node = new loc_SphereEmitterNode();
 					ParticleEmitterNodeData *nodeDat = dynamic_cast<ParticleEmitterNodeData*>(Sim::findObject(emitter.datablock.c_str()));
 					ParticleEmitterData *emitDat = dynamic_cast<ParticleEmitterData*>(Sim::findObject(emitter.emitterblock.c_str()));
 					eN.node->onNewDataBlock(nodeDat, true);
-					((loc_SphereEmitterNode*)eN.node)->setEmitterDataBlock(emitDat);
+               eN.node->setEmitterDataBlock(emitDat);
 					// If spawn failed, clean up the node
 					if(!eN.node->registerObject())
 					{
@@ -245,23 +241,22 @@ bool ParticleEffect::onAdd()
 					}
 					eN.node->addToScene();
 					eN.node->setPosition(getPosition());
-					((ParticleEmitterNode*)eN.node)->setActive(false);
+					eN.node->setActive(false);
 					// Get the initial values
 					for(int idx = 0; idx < eN.emitterData.values.size(); idx++)
 					{
 						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].type);
 					}
 					// We want to change the variables of the emitter and not the whole datablock, so we need it to be a SA emitter
-					((loc_SphereEmitterNode*)eN.node)->getEmitter()->standAloneEmitter = true;
+					eN.node->getEmitter()->standAloneEmitter = true;
 					break;
 				}
 			case pEffectReader::emitterType::GraphEmitter:
 				{
-					eN.node = new loc_GraphEmitterNode();
-					GraphEmitterNodeData *nodeDat = dynamic_cast<GraphEmitterNodeData*>(Sim::findObject(emitter.datablock.c_str()));
+					ParticleEmitterNodeData *nodeDat = dynamic_cast<ParticleEmitterNodeData*>(Sim::findObject(emitter.datablock.c_str()));
 					GraphEmitterData *emitDat = dynamic_cast<GraphEmitterData*>(Sim::findObject(emitter.emitterblock.c_str()));
 					eN.node->onNewDataBlock(nodeDat, true);
-					((loc_GraphEmitterNode*)eN.node)->setEmitterDataBlock(emitDat);
+					eN.node->setEmitterDataBlock(emitDat);
 					// If spawn failed, clean up the node
 					if(!eN.node->registerObject())
 					{
@@ -270,14 +265,14 @@ bool ParticleEffect::onAdd()
 					}
 					eN.node->addToScene();
 					eN.node->setPosition(getPosition());
-					((loc_GraphEmitterNode*)eN.node)->setActive(false);
+					eN.node->setActive(false);
 					// Get the initial values
 					for(int idx = 0; idx < eN.emitterData.values.size(); idx++)
 					{
 						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].type);
 					}
 					// We want to change the variables of the emitter and not the whole datablock, so we need it to be a SA emitter
-					((loc_GraphEmitterNode*)eN.node)->getEmitter()->standAloneEmitter = true;
+					eN.node->getEmitter()->standAloneEmitter = true;
 					break;
 				}
 			case pEffectReader::emitterType::MeshEmitter:
@@ -292,11 +287,10 @@ bool ParticleEffect::onAdd()
 				}
 			case pEffectReader::emitterType::GroundEmitter:
 				{
-					eN.node = new loc_GroundEmitterNode();
-					GroundEmitterNodeData *nodeDat = dynamic_cast<GroundEmitterNodeData*>(Sim::findObject(emitter.datablock.c_str()));
+					ParticleEmitterNodeData *nodeDat = dynamic_cast<ParticleEmitterNodeData*>(Sim::findObject(emitter.datablock.c_str()));
 					GroundEmitterData *emitDat = dynamic_cast<GroundEmitterData*>(Sim::findObject(emitter.emitterblock.c_str()));
 					eN.node->onNewDataBlock(nodeDat, true);
-					((loc_GroundEmitterNode*)eN.node)->setEmitterDataBlock(emitDat);
+					eN.node->setEmitterDataBlock(emitDat);
 					// If spawn failed, clean up the node
 					if(!eN.node->registerObject())
 					{
@@ -305,23 +299,22 @@ bool ParticleEffect::onAdd()
 					}
 					eN.node->addToScene();
 					eN.node->setPosition(getPosition());
-					((GroundEmitterNode*)eN.node)->setActive(false);
+					eN.node->setActive(false);
 					// Get the initial values
 					for(int idx = 0; idx < eN.emitterData.values.size(); idx++)
 					{
 						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].type);
 					}
 					// We want to change the variables of the emitter and not the whole datablock, so we need it to be a SA emitter
-					((GroundEmitterNode*)eN.node)->getEmitter()->standAloneEmitter = true;
+					eN.node->getEmitter()->standAloneEmitter = true;
 					break;
 				}
 			case pEffectReader::emitterType::MaskEmitter:
 				{
-					eN.node = new loc_MaskEmitterNode();
-					MaskEmitterNodeData *nodeDat = dynamic_cast<MaskEmitterNodeData*>(Sim::findObject(emitter.datablock.c_str()));
+					ParticleEmitterNodeData *nodeDat = dynamic_cast<ParticleEmitterNodeData*>(Sim::findObject(emitter.datablock.c_str()));
 					MaskEmitterData *emitDat = dynamic_cast<MaskEmitterData*>(Sim::findObject(emitter.emitterblock.c_str()));
 					eN.node->onNewDataBlock(nodeDat, true);
-					((loc_MaskEmitterNode*)eN.node)->setEmitterDataBlock(emitDat);
+					eN.node->setEmitterDataBlock(emitDat);
 					if(!eN.node->registerObject())
 					{
 						delete eN.node;
@@ -329,14 +322,14 @@ bool ParticleEffect::onAdd()
 					}
 					eN.node->addToScene();
 					eN.node->setPosition(getPosition());
-					((MaskEmitterNode*)eN.node)->setActive(false);
+					eN.node->setActive(false);
 					// Get the initial values
 					for(int idx = 0; idx < eN.emitterData.values.size(); idx++)
 					{
 						eN.emitterData.values[idx].initialValue = getValue(eN, eN.emitterData.values[idx].type);
 					}
 					// We want to change the variables of the emitter and not the whole datablock, so we need it to be a SA emitter
-					((MaskEmitterNode*)eN.node)->getEmitter()->standAloneEmitter = true;
+					eN.node->getEmitter()->standAloneEmitter = true;
 					break;
 				}
 			case pEffectReader::emitterType::PathEmitter:
@@ -459,7 +452,7 @@ void ParticleEffect::unpackUpdate(NetConnection* con, BitStream* stream)
 		while(stream->readFlag())
 		{
 			if(stream->readFlag())
-				mEmitterNodes[i].node = dynamic_cast<GameBase*>(con->resolveGhost(stream->readRangedU32(0, NetConnection::MaxGhostCount)));
+				mEmitterNodes[i].node = dynamic_cast<ParticleEmitterNode*>(con->resolveGhost(stream->readRangedU32(0, NetConnection::MaxGhostCount)));
 			i++;
 		}
 		hasSynced = true;
@@ -477,7 +470,7 @@ void ParticleEffect::unpackUpdate(NetConnection* con, BitStream* stream)
 				setValue(eN,eN->emitterData.values[ivx].type, eN->emitterData.values[ivx].initialValue);
 			}
 			if(eN->emitterData.type == pEffectReader::emitterType::GraphEmitter){
-            GraphEmitter* graphEmitter = ((GraphEmitterNode*)eN->node)->getEmitter();
+            GraphEmitter* graphEmitter = (GraphEmitter*)eN->node->getEmitter();
 				if(graphEmitter->Reverse)
 					graphEmitter->particleProg = graphEmitter->funcMax;
 				else
@@ -641,13 +634,13 @@ void ParticleEffect::setValue(emitterNode *node, pEffectReader::valueType value,
 			node->emitterData.z = newValue;
 			return;
 		case pEffectReader::Active:
-         ((ParticleEmitterNode*)node->node)->setActive(newValue);
+         node->node->setActive(newValue);
 			return;
 		case pEffectReader::EjectionPeriod:
-			((ParticleEmitterNode*)node->node)->getEmitter()->sa_ejectionPeriodMS = newValue >= 1 ? newValue : 1;
+			node->node->getEmitter()->sa_ejectionPeriodMS = newValue >= 1 ? newValue : 1;
 			return;
 		case pEffectReader::EjectionOffset:
-			((ParticleEmitterNode*)node->node)->getEmitter()->sa_ejectionOffset = newValue;
+			node->node->getEmitter()->sa_ejectionOffset = newValue;
 			return;
 	}
 
@@ -664,13 +657,13 @@ void ParticleEffect::setValue(emitterNode *node, pEffectReader::valueType value,
 		switch(value)
 		{
 		case pEffectReader::UpperBoundary:
-			((GraphEmitterNode*)node->node)->getEmitter()->funcMax = newValue;
+			((GraphEmitter*)node->node->getEmitter())->funcMax = newValue;
 			return;
 		case pEffectReader::LowerBoundary:
-			((GraphEmitterNode*)node->node)->getEmitter()->funcMin = newValue;
+			((GraphEmitter*)node->node->getEmitter())->funcMin = newValue;
 			return;
 		case pEffectReader::TimeScale:
-			((GraphEmitterNode*)node->node)->getEmitter()->timeScale = newValue;
+			((GraphEmitter*)node->node->getEmitter())->timeScale = newValue;
 			return;
 		}
 		break;
@@ -682,7 +675,7 @@ void ParticleEffect::setValue(emitterNode *node, pEffectReader::valueType value,
 		switch(value)
 		{
 		case pEffectReader::Radius:
-         ((GroundEmitterNode*)node->node)->getEmitter()->sa_radius = newValue;
+         ((GroundEmitter*)node->node->getEmitter())->sa_radius = newValue;
 			return;
 		}
 		break;
@@ -690,13 +683,13 @@ void ParticleEffect::setValue(emitterNode *node, pEffectReader::valueType value,
 		switch(value)
 		{
 		case pEffectReader::Scale:
-			((MaskEmitterNode*)node->node)->getEmitter()->sa_Radius = newValue;
+			((MaskEmitter*)node->node->getEmitter())->sa_Radius = newValue;
 			return;
 		case pEffectReader::Treshold_max:
-			((MaskEmitterNode*)node->node)->getEmitter()->sa_Treshold_max = newValue;
+			((MaskEmitter*)node->node->getEmitter())->sa_Treshold_max = newValue;
 			return;
 		case pEffectReader::Treshold_min:
-			((MaskEmitterNode*)node->node)->getEmitter()->sa_Treshold_min = newValue;
+			((MaskEmitter*)node->node->getEmitter())->sa_Treshold_min = newValue;
 			return;
 		}
 		break;
@@ -723,11 +716,11 @@ F32 ParticleEffect::getValue(emitterNode node, pEffectReader::valueType value)
 	case pEffectReader::zPosition:
 		return node.emitterData.z;
 	case pEffectReader::Active:
-		return ((ParticleEmitterNode*)node.node)->getActive();
+		return node.node->getActive();
 	case pEffectReader::EjectionPeriod:
-		return ((ParticleEmitterNode*)node.node)->getEmitter()->sa_ejectionPeriodMS;
+		return node.node->getEmitter()->sa_ejectionPeriodMS;
 	case pEffectReader::EjectionOffset:
-		return ((ParticleEmitterNode*)node.node)->getEmitter()->sa_ejectionOffset;
+		return node.node->getEmitter()->sa_ejectionOffset;
 	}
 	switch(node.emitterData.type)
 	{
@@ -740,11 +733,11 @@ F32 ParticleEffect::getValue(emitterNode node, pEffectReader::valueType value)
 		switch(value)
 		{
 		case pEffectReader::UpperBoundary:
-			return ((GraphEmitterNode*)node.node)->getEmitter()->funcMax;
+			return ((GraphEmitter*)node.node->getEmitter())->funcMax;
 		case pEffectReader::LowerBoundary:
-			return ((GraphEmitterNode*)node.node)->getEmitter()->funcMin;
+			return ((GraphEmitter*)node.node->getEmitter())->funcMin;
 		case pEffectReader::TimeScale:
-			return ((GraphEmitterNode*)node.node)->getEmitter()->timeScale;
+			return ((GraphEmitter*)node.node->getEmitter())->timeScale;
 		}
 		break;
 	case pEffectReader::emitterType::MeshEmitter:
@@ -757,18 +750,18 @@ F32 ParticleEffect::getValue(emitterNode node, pEffectReader::valueType value)
 		switch(value)
 		{
 		case pEffectReader::Radius:
-         return ((GroundEmitterNode*)node.node)->getEmitter()->sa_radius;
+         return ((GroundEmitter*)node.node->getEmitter())->sa_radius;
 		}
 		break;
 	case pEffectReader::emitterType::MaskEmitter:
 		switch(value)
 		{
 		case pEffectReader::Scale:
-			return ((MaskEmitterNode*)node.node)->getEmitter()->sa_Radius;
+			return ((MaskEmitter*)node.node->getEmitter())->sa_Radius;
 		case pEffectReader::Treshold_max:
-			return ((MaskEmitterNode*)node.node)->getEmitter()->sa_Treshold_max;
+			return ((MaskEmitter*)node.node->getEmitter())->sa_Treshold_max;
 		case pEffectReader::Treshold_min:
-			return ((MaskEmitterNode*)node.node)->getEmitter()->sa_Treshold_min;
+			return ((MaskEmitter*)node.node->getEmitter())->sa_Treshold_min;
 		}
 		break;
 	case pEffectReader::emitterType::PathEmitter:

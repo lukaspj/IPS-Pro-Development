@@ -19,6 +19,7 @@ Iterator find(Iterator first, Iterator last, Value value)
 #include "platform/platform.h"
 #include "T3D/fx/particleEmitter.h"
 #include "particle.h"
+#include "ImprovedParticle\ParticleBehaviours\attractionBehaviour.h"
 
 #include "scene/sceneManager.h"
 #include "scene/sceneRenderState.h"
@@ -1546,14 +1547,24 @@ U32 ParticleEmitter::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
       stream->writeInt((S32)(sa_velocityVariance * 100), 14);
       stream->writeInt((S32)(sa_ejectionOffset * 100), 16);
    }
-
+   
    for(int i = 0; i < ParticleBehaviourCount; i++)
    {
       if(stream->writeFlag(!ParticleBHVs[i].isNull()))
       {
-         stream->writeRangedU32( ParticleBHVs[i]->getId(),
-            DataBlockObjectIdFirst,
-            DataBlockObjectIdLast );
+         if(stream->writeFlag(ParticleBHVs[i]->isClientOnly()))
+         {
+            if(stream->writeFlag(ParticleBHVs[i]->getBehaviourType() != behaviourClass::Error))
+            {
+               stream->writeInt(((IParticleBehaviour*)ParticleBHVs[i])->getBehaviourType(), 3);
+               ParticleBHVs[i]->packData(stream);
+            }
+         }
+         else
+         {
+            stream->writeRangedU32(ParticleBHVs[i]->getId(), DataBlockObjectIdFirst,
+               DataBlockObjectIdLast);
+         }
       }
    }
 
@@ -1576,15 +1587,35 @@ void ParticleEmitter::unpackUpdate(NetConnection* con, BitStream* stream)
       sa_velocityVariance = stream->readInt(14) / 100.0f;
       sa_ejectionOffset = stream->readInt(16) / 100.0f;
    }
-   
+
    for(int i = 0; i < ParticleBehaviourCount; i++)
    {
       if ( stream->readFlag() )
       {
-         SimDataBlock *dptr = 0;
-         SimObjectId id = stream->readRangedU32(DataBlockObjectIdFirst, DataBlockObjectIdLast);
-         if(	Sim::findObject( id, dptr )	)
-            ParticleBHVs[i] = (IParticleBehaviour*)dptr;
+         if(stream->readFlag())
+         {
+            if(stream->readFlag())
+            {
+               U8 type = stream->readInt(3);
+               switch (type)
+               {
+               case behaviourClass::AttractionBehaviour:
+                  ParticleBHVs[i] = new AttractionBehaviour();
+                  break;
+               default:
+                  break;
+               }
+               if(ParticleBHVs[i])
+                  ParticleBHVs[i]->unpackData(stream);
+            }
+         }
+         else
+         {
+            SimDataBlock *dptr = 0;
+            SimObjectId id = stream->readRangedU32(DataBlockObjectIdFirst, DataBlockObjectIdLast);
+            if(	Sim::findObject( id, dptr )	)
+               ParticleBHVs[i] = (IParticleBehaviour*)dptr;
+         }
       }
    }
 }

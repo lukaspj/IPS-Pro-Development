@@ -43,6 +43,9 @@
 #include "core\util\xml\pEffectReader.h"
 #endif
 #include "core\util\tVector.h"
+
+#include "../particleEmitterNode.h"
+
 class ParticleEffectData;
 class ParticleEffect;
 class EmitterTemplate;
@@ -105,8 +108,8 @@ public:
 	~ParticleEffect();
 
 	struct emitterNode{
-		GameBase* node;
-		GameBaseData* emitter;
+      ParticleEmitterNode* node;
+		ParticleEmitterNodeData* emitter;
 		pEffectReader::emitter emitterData;
 		enum states{ notActivated = 1, Activated = 2, hasActivated = 3 };
 		states state;

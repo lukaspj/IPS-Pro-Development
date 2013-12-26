@@ -39,7 +39,7 @@ public:
 	void unpackData(BitStream*);
 	bool preload(bool server, String &errorStr);
 
-	//DECLARE_CONOBJECT(ParticleEmitterNodeData);
+	DECLARE_CONOBJECT(ParticleEmitterNodeData);
 	static void initPersistFields();
 };
 
@@ -55,11 +55,6 @@ private:
 	ParticleEmitterNodeData* mDataBlock;
 
 protected:
-	bool onAdd();
-	void onRemove();
-	virtual bool onNewDataBlock( GameBaseData *dptr, bool reload );
-	void inspectPostApply();
-
 	ParticleEmitterData* mEmitterDatablock;
 	S32                  mEmitterDatablockId;
 
@@ -67,10 +62,14 @@ protected:
 
 	ParticleEmitter* mEmitter;
 public:
+	bool onAdd();
+	void onRemove();
+	virtual bool onNewDataBlock( GameBaseData *dptr, bool reload );
+	void inspectPostApply();
+
 	virtual ParticleEmitter* getEmitter() { return mEmitter; }
 	virtual ParticleEmitterNodeData* getDataBlock() { return mDataBlock; }
 	void setmDataBlock(ParticleEmitterNodeData* dat) { mDataBlock = dat; }
-	virtual ParticleEmitter* createEmitter() = 0;
 
 	F32 mVelocity;
 
@@ -89,7 +88,7 @@ public:
 	void processTick(const Move* move);
 	virtual void advanceTime(F32 dt);
 
-	//DECLARE_CONOBJECT(ParticleEmitterNode);
+	DECLARE_CONOBJECT(ParticleEmitterNode);
 
 	static void initPersistFields();
 

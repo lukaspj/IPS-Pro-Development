@@ -34,12 +34,13 @@
 // Please visit http://www.winterleafentertainment.com for more information about the project and latest updates.
 
 #include "sphereEmitter.h"
-#include "sphereEmitterNode.h"
 
 #include "console\engineAPI.h"
 
 #include "console/consoleTypes.h"
 #include "core/stream/bitStream.h"
+
+#include "console/typeValidators.h"
 
 IMPLEMENT_CO_DATABLOCK_V1(SphereEmitterData);
 IMPLEMENT_CONOBJECT(SphereEmitter);
@@ -114,6 +115,8 @@ SphereEmitterData::SphereEmitterData()
    ejectionOffsetVariance = 0.0f;
 }
 
+FRangeValidator ejectionVarFValidator(0.f, 655.35f);
+
 //-----------------------------------------------------------------------------
 // initPersistFields
 //-----------------------------------------------------------------------------
@@ -121,7 +124,7 @@ void SphereEmitterData::initPersistFields()
 {
 	addGroup( "SphereEmitterData" );
 
-   addFieldV( "ejectionOffsetVariance", TYPEID< F32 >(), Offset(ejectionOffsetVariance, SphereEmitterData), &ejectionFValidator,
+   addFieldV( "ejectionOffsetVariance", TYPEID< F32 >(), Offset(ejectionOffsetVariance, SphereEmitterData), &ejectionVarFValidator,
       "Distance Padding along ejection Z axis from which to eject particles." );
 
 	addField( "thetaMin", TYPEID< F32 >(), Offset(thetaMin, SphereEmitterData),
@@ -255,7 +258,7 @@ bool SphereEmitter::addParticle(const Point3F& pos,
 	F32 initialVel = DataBlock->ejectionVelocity;
 	initialVel    += (DataBlock->velocityVariance * 2.0f * gRandGen.randF()) - DataBlock->velocityVariance;
 
-	pNew->pos = pos + (ejectionAxis * DataBlock->ejectionOffset + mDataBlock->ejectionOffsetVariance* gRandGen.randF());
+	pNew->pos = pos + (ejectionAxis * (DataBlock->ejectionOffset + DataBlock->ejectionOffsetVariance* gRandGen.randF()));
 	pNew->relPos = pNew->pos - pos;
 	pNew->vel = ejectionAxis * initialVel;
 	pNew->orientDir = ejectionAxis;
@@ -325,7 +328,7 @@ bool SphereEmitter::addParticle(const Point3F& pos,
 	if(standAloneEmitter)
 		pNew->pos = pos + (ejectionAxis * sa_ejectionOffset);
 	else
-		pNew->pos = pos + (ejectionAxis * DataBlock->ejectionOffset + mDataBlock->ejectionOffsetVariance* gRandGen.randF());
+		pNew->pos = pos + (ejectionAxis * (DataBlock->ejectionOffset + DataBlock->ejectionOffsetVariance* gRandGen.randF()));
 	pNew->relPos = pNew->pos - pos;
 	pNew->vel = ejectionAxis * initialVel;
 	pNew->orientDir = ejectionAxis;

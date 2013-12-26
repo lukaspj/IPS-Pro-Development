@@ -11,8 +11,8 @@
 
 #include "ImprovedParticle\ParticleBehaviours\attractionBehaviour.h"
 
-//IMPLEMENT_CO_DATABLOCK_V1(ParticleEmitterNodeData);
-//IMPLEMENT_CONOBJECT(ParticleEmitterNode);
+IMPLEMENT_CO_DATABLOCK_V1(ParticleEmitterNodeData);
+IMPLEMENT_CONOBJECT(ParticleEmitterNode);
 
 //-----------------------------------------------------------------------------
 // ParticleEmitterNodeData
@@ -221,7 +221,7 @@ void ParticleEmitterNode::advanceTime(F32 dt)
    if(!mActive || !mEmitter || !mEmitter->isProperlyAdded() || !mDataBlock)
       return;
 
-   //mEmitter->emitParticles( (U32)(dt * mDataBlock->timeMultiple * 1000.0f), this );
+   mEmitter->emitParticles( (U32)(dt * mDataBlock->timeMultiple * 1000.0f), this );
 }
 
 U32 ParticleEmitterNode::packUpdate(NetConnection* conn, U32 mask, BitStream* stream)
@@ -353,4 +353,28 @@ DefineEngineMethod(ParticleEmitterNode, setActive, void, (bool active),,
                    "@param active New emitter state\n" )
 {
    object->setActive( active );
+}
+
+
+DefineEngineMethod(ParticleEmitterNode, setEmitterDataBlock, void, (ParticleEmitterData* emitterDatablock), (0),
+   "Assigns the datablock for this emitter node.\n"
+   "@param emitterDatablock ParticleEmitterData datablock to assign\n"
+   "@tsexample\n"
+   "// Assign a new emitter datablock\n"
+   "%emitter.setEmitterDatablock( %emitterDatablock );\n"
+   "@endtsexample\n" )
+{
+   if ( !emitterDatablock )
+   {
+      Con::errorf("ParticleEmitterData datablock could not be found when calling setEmitterDataBlock in particleEmitterNode.");
+      return;
+   }
+
+   object->setEmitterDataBlock(emitterDatablock);
+}
+
+DefineEngineMethod(ParticleEmitterNode, getEmitter, SimObject*,(),,
+                   "")
+{
+   return object->getEmitter();
 }

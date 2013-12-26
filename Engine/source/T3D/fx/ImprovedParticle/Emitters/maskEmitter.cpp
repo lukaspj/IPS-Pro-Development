@@ -34,7 +34,6 @@
 // Please visit http://www.winterleafentertainment.com for more information about the project and latest updates.
 
 #include "MaskEmitter.h"
-#include "MaskEmitterNode.h"
 #include "../IPSCore.h"
 
 #include "console/consoleTypes.h"
@@ -362,11 +361,10 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 {
 	PROFILE_SCOPE(MaskEmitAddPart);
 	IPSBenchmarkBegin;
-	MaskEmitterNode* nodeDat = static_cast<MaskEmitterNode*>(pnodeDat);
 	MaskEmitterData* DataBlock = getDataBlock();
 	oldTime = mInternalClock;
 
-	parentNodePos = nodeDat->getPosition();
+	parentNodePos = pnodeDat->getPosition();
 	Point2F pxPt;
 	if(standAloneEmitter)
 		pxPt = DataBlock->pMask->getRandomUnitPixel(sa_Treshold_min, sa_Treshold_max, maskCache);
@@ -387,7 +385,7 @@ bool MaskEmitter::addParticle(const Point3F& pos,
 	F32 y = rely;
 	F32 z = 0;
 	Point3F p;
-	MatrixF nodeTrans = nodeDat->getTransform();
+	MatrixF nodeTrans = pnodeDat->getTransform();
 	nodeTrans.mulP(Point3F(x,y,z), &p);
 	Point3F normal;
 	if(sa_Grounded)
