@@ -121,7 +121,7 @@ void SphereEmitterData::initPersistFields()
 {
 	addGroup( "SphereEmitterData" );
 
-   addFieldV( "ejectionOffsetVariance", TYPEID< F32 >(), Offset(ejectionOffsetVariance, ParticleEmitterData), &ejectionFValidator,
+   addFieldV( "ejectionOffsetVariance", TYPEID< F32 >(), Offset(ejectionOffsetVariance, SphereEmitterData), &ejectionFValidator,
       "Distance Padding along ejection Z axis from which to eject particles." );
 
 	addField( "thetaMin", TYPEID< F32 >(), Offset(thetaMin, SphereEmitterData),
