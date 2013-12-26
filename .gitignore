@@ -14,6 +14,7 @@
 !/Engine/Source/math/muParser/
 !/Engine/Source/math/muParser/*
 !/Engine/Source/core/util/xml/*
+!/Engine/Source/core/iTickable.cpp
 !/Engine/Source/scene/
 !/Engine/Source/scene/sceneContainer.cpp
 !/Engine/Source/scene/sceneContainer.h
