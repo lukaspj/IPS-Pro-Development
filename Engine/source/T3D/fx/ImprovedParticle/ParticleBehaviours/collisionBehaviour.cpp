@@ -60,7 +60,7 @@ void CollisionBehaviour::updateParticle(Particle* part, F32 time)
 	RayInfo rInfo;
 	bool accepted = false;
 	int bounces = 0;
-   Point3F curPos = part->pos;
+	Point3F curPos = part->pos;
 	// Keep bouncing untill the particles doesn't hit anything
 	// or untill they have bounced too many times.
 	while(!accepted)

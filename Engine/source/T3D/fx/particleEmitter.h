@@ -51,7 +51,7 @@ protected:
 	static bool _setAlignDirection( void *object, const char *index, const char *data );
 
 public:
-   
+
 	//------- Functions -------
 	//--------------------------------------------
 	// ParticleEmitterData
@@ -163,7 +163,7 @@ public:
 
 	bool				grounded;
 	bool				mActive;
-   SimObjectPtr<IParticleBehaviour> ParticleBHVs[ParticleBehaviourCount];
+	SimObjectPtr<IParticleBehaviour> ParticleBHVs[ParticleBehaviourCount];
 
 	U32					oldTime;
 	Point3F				parentNodePos;
@@ -291,7 +291,7 @@ public:
 
 	F32       sizes[ ParticleData::PDC_NUM_KEYS ];
 	ColorF    colors[ ParticleData::PDC_NUM_KEYS ];
-   
+
 };
 
 class ParticleEmitterWrapper : public IParticleEmitter

@@ -285,7 +285,7 @@ void ParticleEmitterNode::unpackUpdate(NetConnection* con, BitStream* stream)
       mActive = stream->readFlag();
       stream->read( &mVelocity );
    }
-   
+
    mNodeMounted = stream->readFlag();
 }
 

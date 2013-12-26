@@ -61,7 +61,7 @@ ConsoleDocClass( ParticleData,
                 "@see ParticleEmitter\n"
                 "@see ParticleEmitterData\n"
                 "@see ParticleEmitterNode\n"
-                );
+);
 
 static const float sgDefaultWindCoefficient = 0.0f;
 static const float sgDefaultConstantAcceleration = 0.f;
@@ -121,7 +121,7 @@ void ParticleData::initPersistFields()
       "Time in milliseconds before this particle is destroyed." );
    addField( "lifetimeVarianceMS", TYPEID< S32 >(), Offset(lifetimeVarianceMS, ParticleData),
       "Variance in lifetime of particle, from 0 - lifetimeMS." );
-   
+
    addProtectedField( "sizes", TYPEID< F32 >(), Offset(sizes, ParticleData), &protectedSetSizes, 
       &defaultProtectedGetFn, PDC_NUM_KEYS,
       "@brief Particle size keyframe values.\n\n"

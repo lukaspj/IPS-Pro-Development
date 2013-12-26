@@ -35,7 +35,7 @@
 
 #include "stickyBehaviour.h"
 #include "../../particleEmitter.h"
-#include "../meshEmitter.h"
+#include "../MeshEmitters/meshEmitter.h"
 #include "console/consoleTypes.h"
 #include "core/stream/bitStream.h"
 
@@ -57,7 +57,7 @@ StickyBehaviour::StickyBehaviour()
 void StickyBehaviour::updateParticle(ParticleEmitter* emitter, Particle* part, F32 time)
 {
 	// Set the particle position to be the relative position
-   part->pos = emitter->parentNodePos + part->relPos;
+	part->pos = emitter->parentNodePos + part->relPos;
 }
 
 //---------------------------------------------------------------
@@ -67,7 +67,7 @@ void StickyBehaviour::updateParticle(ParticleEmitter* emitter, Particle* part, F
 void StickyBehaviour::updateParticle(MeshEmitter* emitter, Particle* part, F32 time)
 {
 	// Set the particle position to be the relative position
-   part->pos = emitter->parentNodePos + part->relPos;
+	part->pos = emitter->parentNodePos + part->relPos;
 }
 
 //----------------------- SimDataBlock -------------------------

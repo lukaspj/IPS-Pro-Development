@@ -58,7 +58,7 @@
 #include "materials/baseMatInstance.h"
 
 #ifdef TORQUE_EXTENDED_MOVE
-#include "T3D/gameBase/extended/extendedMove.h"
+   #include "T3D/gameBase/extended/extendedMove.h"
 #endif
 
 // Amount of time if takes to transition to a new action sequence.
@@ -107,19 +107,19 @@ const F32 sAnchorMaxDistance = 32.0f;
 
 //
 static U32 sCollisionMoveMask =  TerrainObjectType       |
-   WaterObjectType         | 
-   PlayerObjectType        |
-   StaticShapeObjectType   | 
-   VehicleObjectType       |
-   PhysicalZoneObjectType;
+                                 WaterObjectType         | 
+                                 PlayerObjectType        |
+                                 StaticShapeObjectType   | 
+                                 VehicleObjectType       |
+                                 PhysicalZoneObjectType;
 
 static U32 sServerCollisionContactMask = sCollisionMoveMask |
-   ItemObjectType     |
-   TriggerObjectType  |
-   CorpseObjectType;
+                                         ItemObjectType     |
+                                         TriggerObjectType  |
+                                         CorpseObjectType;
 
 static U32 sClientCollisionContactMask = sCollisionMoveMask |
-   TriggerObjectType;
+                                         TriggerObjectType;
 
 enum PlayerConstants {
    JumpSkipContactsMax = 8
@@ -190,65 +190,65 @@ PlayerData::ActionAnimationDef PlayerData::ActionAnimationList[NumTableActionAni
 IMPLEMENT_CO_DATABLOCK_V1(PlayerData);
 
 ConsoleDocClass( PlayerData,
-                "@brief Defines properties for a Player object.\n\n"
-                "@see Player\n"
-                "@ingroup gameObjects\n"
-                );
+   "@brief Defines properties for a Player object.\n\n"
+   "@see Player\n"
+   "@ingroup gameObjects\n"
+);
 
 IMPLEMENT_CALLBACK( PlayerData, onPoseChange, void, ( Player* obj, const char* oldPose, const char* newPose ), ( obj, oldPose, newPose ),
-                   "@brief Called when the player changes poses.\n\n"
-                   "@param obj The Player object\n"
-                   "@param oldPose The pose the player is switching from.\n"
-                   "@param newPose The pose the player is switching to.\n");
+   "@brief Called when the player changes poses.\n\n"
+   "@param obj The Player object\n"
+   "@param oldPose The pose the player is switching from.\n"
+   "@param newPose The pose the player is switching to.\n");
 
 IMPLEMENT_CALLBACK( PlayerData, onStartSwim, void, ( Player* obj ), ( obj ),
-                   "@brief Called when the player starts swimming.\n\n"
-                   "@param obj The Player object\n" );
+   "@brief Called when the player starts swimming.\n\n"
+   "@param obj The Player object\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, onStopSwim, void, ( Player* obj ), ( obj ),
-                   "@brief Called when the player stops swimming.\n\n"
-                   "@param obj The Player object\n" );
+   "@brief Called when the player stops swimming.\n\n"
+   "@param obj The Player object\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, onStartSprintMotion, void, ( Player* obj ), ( obj ),
-                   "@brief Called when the player starts moving while in a Sprint pose.\n\n"
-                   "@param obj The Player object\n" );
+   "@brief Called when the player starts moving while in a Sprint pose.\n\n"
+   "@param obj The Player object\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, onStopSprintMotion, void, ( Player* obj ), ( obj ),
-                   "@brief Called when the player stops moving while in a Sprint pose.\n\n"
-                   "@param obj The Player object\n" );
+   "@brief Called when the player stops moving while in a Sprint pose.\n\n"
+   "@param obj The Player object\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, doDismount, void, ( Player* obj ), ( obj ),
-                   "@brief Called when attempting to dismount the player from a vehicle.\n\n"
-                   "It is up to the doDismount() method to actually perform the dismount.  Often "
-                   "there are some conditions that prevent this, such as the vehicle moving too fast.\n"
-                   "@param obj The Player object\n" );
+   "@brief Called when attempting to dismount the player from a vehicle.\n\n"
+   "It is up to the doDismount() method to actually perform the dismount.  Often "
+   "there are some conditions that prevent this, such as the vehicle moving too fast.\n"
+   "@param obj The Player object\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, onEnterLiquid, void, ( Player* obj, F32 coverage, const char* type ), ( obj, coverage, type ),
-                   "@brief Called when the player enters a liquid.\n\n"
-                   "@param obj The Player object\n"
-                   "@param coverage Percentage of the player's bounding box covered by the liquid\n"
-                   "@param type The type of liquid the player has entered\n" );
+   "@brief Called when the player enters a liquid.\n\n"
+   "@param obj The Player object\n"
+   "@param coverage Percentage of the player's bounding box covered by the liquid\n"
+   "@param type The type of liquid the player has entered\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, onLeaveLiquid, void, ( Player* obj, const char* type ), ( obj, type ),
-                   "@brief Called when the player leaves a liquid.\n\n"
-                   "@param obj The Player object\n"
-                   "@param type The type of liquid the player has left\n" );
+   "@brief Called when the player leaves a liquid.\n\n"
+   "@param obj The Player object\n"
+   "@param type The type of liquid the player has left\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, animationDone, void, ( Player* obj ), ( obj ),
-                   "@brief Called on the server when a scripted animation completes.\n\n"
-                   "@param obj The Player object\n"
-                   "@see Player::setActionThread() for setting a scripted animation and its 'hold' parameter to "
-                   "determine if this callback is used.\n" );
+   "@brief Called on the server when a scripted animation completes.\n\n"
+   "@param obj The Player object\n"
+   "@see Player::setActionThread() for setting a scripted animation and its 'hold' parameter to "
+   "determine if this callback is used.\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, onEnterMissionArea, void, ( Player* obj ), ( obj ),
-                   "@brief Called when the player enters the mission area.\n\n"
-                   "@param obj The Player object\n"
-                   "@see MissionArea\n" );
+   "@brief Called when the player enters the mission area.\n\n"
+   "@param obj The Player object\n"
+   "@see MissionArea\n" );
 
 IMPLEMENT_CALLBACK( PlayerData, onLeaveMissionArea, void, ( Player* obj ), ( obj ),
-                   "@brief Called when the player leaves the mission area.\n"
-                   "@param obj The Player object\n"
-                   "@see MissionArea\n" );
+   "@brief Called when the player leaves the mission area.\n"
+   "@param obj The Player object\n"
+   "@see MissionArea\n" );
 
 PlayerData::PlayerData()
 {
@@ -682,502 +682,502 @@ void PlayerData::initPersistFields()
 
    addGroup( "Camera" );
 
-   addField( "renderFirstPerson", TypeBool, Offset(renderFirstPerson, PlayerData),
-      "@brief Flag controlling whether to render the player shape in first person view.\n\n" );
+      addField( "renderFirstPerson", TypeBool, Offset(renderFirstPerson, PlayerData),
+         "@brief Flag controlling whether to render the player shape in first person view.\n\n" );
 
-   addField( "firstPersonShadows", TypeBool, Offset(firstPersonShadows, PlayerData),
-      "@brief Forces shadows to be rendered in first person when renderFirstPerson is disabled.  Defaults to false.\n\n" );
+      addField( "firstPersonShadows", TypeBool, Offset(firstPersonShadows, PlayerData),
+         "@brief Forces shadows to be rendered in first person when renderFirstPerson is disabled.  Defaults to false.\n\n" );
 
-   addField( "minLookAngle", TypeF32, Offset(minLookAngle, PlayerData),
-      "@brief Lowest angle (in radians) the player can look.\n\n"
-      "@note An angle of zero is straight ahead, with positive up and negative down." );
-   addField( "maxLookAngle", TypeF32, Offset(maxLookAngle, PlayerData),
-      "@brief Highest angle (in radians) the player can look.\n\n"
-      "@note An angle of zero is straight ahead, with positive up and negative down." );
-   addField( "maxFreelookAngle", TypeF32, Offset(maxFreelookAngle, PlayerData),
-      "@brief Defines the maximum left and right angles (in radians) the player can "
-      "look in freelook mode.\n\n" );
+      addField( "minLookAngle", TypeF32, Offset(minLookAngle, PlayerData),
+         "@brief Lowest angle (in radians) the player can look.\n\n"
+         "@note An angle of zero is straight ahead, with positive up and negative down." );
+      addField( "maxLookAngle", TypeF32, Offset(maxLookAngle, PlayerData),
+         "@brief Highest angle (in radians) the player can look.\n\n"
+         "@note An angle of zero is straight ahead, with positive up and negative down." );
+      addField( "maxFreelookAngle", TypeF32, Offset(maxFreelookAngle, PlayerData),
+         "@brief Defines the maximum left and right angles (in radians) the player can "
+         "look in freelook mode.\n\n" );
 
    endGroup( "Camera" );
 
    addGroup( "Movement" );
 
-   addField( "maxStepHeight", TypeF32, Offset(maxStepHeight, PlayerData),
-      "@brief Maximum height the player can step up.\n\n"
-      "The player will automatically step onto changes in ground height less "
-      "than maxStepHeight.  The player will collide with ground height changes "
-      "greater than this." );
+      addField( "maxStepHeight", TypeF32, Offset(maxStepHeight, PlayerData),
+         "@brief Maximum height the player can step up.\n\n"
+         "The player will automatically step onto changes in ground height less "
+         "than maxStepHeight.  The player will collide with ground height changes "
+         "greater than this." );
 
-   addField( "runForce", TypeF32, Offset(runForce, PlayerData),
-      "@brief Force used to accelerate the player when running.\n\n" );
+      addField( "runForce", TypeF32, Offset(runForce, PlayerData),
+         "@brief Force used to accelerate the player when running.\n\n" );
 
-   addField( "runEnergyDrain", TypeF32, Offset(runEnergyDrain, PlayerData),
-      "@brief Energy value drained each tick that the player is moving.\n\n"
-      "The player will not be able to move when his energy falls below "
-      "minRunEnergy.\n"
-      "@note Setting this to zero will disable any energy drain.\n"
-      "@see minRunEnergy\n");
-   addField( "minRunEnergy", TypeF32, Offset(minRunEnergy, PlayerData),
-      "@brief Minimum energy level required to run or swim.\n\n"
-      "@see runEnergyDrain\n");
+      addField( "runEnergyDrain", TypeF32, Offset(runEnergyDrain, PlayerData),
+         "@brief Energy value drained each tick that the player is moving.\n\n"
+         "The player will not be able to move when his energy falls below "
+         "minRunEnergy.\n"
+         "@note Setting this to zero will disable any energy drain.\n"
+         "@see minRunEnergy\n");
+      addField( "minRunEnergy", TypeF32, Offset(minRunEnergy, PlayerData),
+         "@brief Minimum energy level required to run or swim.\n\n"
+         "@see runEnergyDrain\n");
 
-   addField( "maxForwardSpeed", TypeF32, Offset(maxForwardSpeed, PlayerData),
-      "@brief Maximum forward speed when running." );
-   addField( "maxBackwardSpeed", TypeF32, Offset(maxBackwardSpeed, PlayerData),
-      "@brief Maximum backward speed when running." );
-   addField( "maxSideSpeed", TypeF32, Offset(maxSideSpeed, PlayerData),
-      "@brief Maximum sideways speed when running." );
+      addField( "maxForwardSpeed", TypeF32, Offset(maxForwardSpeed, PlayerData),
+         "@brief Maximum forward speed when running." );
+      addField( "maxBackwardSpeed", TypeF32, Offset(maxBackwardSpeed, PlayerData),
+         "@brief Maximum backward speed when running." );
+      addField( "maxSideSpeed", TypeF32, Offset(maxSideSpeed, PlayerData),
+         "@brief Maximum sideways speed when running." );
 
-   addField( "runSurfaceAngle", TypeF32, Offset(runSurfaceAngle, PlayerData),
-      "@brief Maximum angle from vertical (in degrees) the player can run up.\n\n" );
+      addField( "runSurfaceAngle", TypeF32, Offset(runSurfaceAngle, PlayerData),
+         "@brief Maximum angle from vertical (in degrees) the player can run up.\n\n" );
 
-   addField( "minImpactSpeed", TypeF32, Offset(minImpactSpeed, PlayerData),
-      "@brief Minimum impact speed to apply falling damage.\n\n"
-      "This field also sets the minimum speed for the onImpact callback "
-      "to be invoked.\n"
-      "@see ShapeBaseData::onImpact()\n");
-   addField( "minLateralImpactSpeed", TypeF32, Offset(minLateralImpactSpeed, PlayerData),
-      "@brief Minimum impact speed to apply non-falling damage.\n\n"
-      "This field also sets the minimum speed for the onLateralImpact callback "
-      "to be invoked.\n"
-      "@see ShapeBaseData::onLateralImpact()\n");
+      addField( "minImpactSpeed", TypeF32, Offset(minImpactSpeed, PlayerData),
+         "@brief Minimum impact speed to apply falling damage.\n\n"
+         "This field also sets the minimum speed for the onImpact callback "
+         "to be invoked.\n"
+         "@see ShapeBaseData::onImpact()\n");
+      addField( "minLateralImpactSpeed", TypeF32, Offset(minLateralImpactSpeed, PlayerData),
+         "@brief Minimum impact speed to apply non-falling damage.\n\n"
+         "This field also sets the minimum speed for the onLateralImpact callback "
+         "to be invoked.\n"
+         "@see ShapeBaseData::onLateralImpact()\n");
 
-   addField( "horizMaxSpeed", TypeF32, Offset(horizMaxSpeed, PlayerData),
-      "@brief Maximum horizontal speed.\n\n"
-      "@note This limit is only enforced if the player's horizontal speed "
-      "exceeds horizResistSpeed.\n"
-      "@see horizResistSpeed\n"
-      "@see horizResistFactor\n" );
-   addField( "horizResistSpeed", TypeF32, Offset(horizResistSpeed, PlayerData),
-      "@brief Horizontal speed at which resistence will take place.\n\n"
-      "@see horizMaxSpeed\n"
-      "@see horizResistFactor\n" );
-   addField( "horizResistFactor", TypeF32, Offset(horizResistFactor, PlayerData),
-      "@brief Factor of resistence once horizResistSpeed has been reached.\n\n"
-      "@see horizMaxSpeed\n"
-      "@see horizResistSpeed\n" );
+      addField( "horizMaxSpeed", TypeF32, Offset(horizMaxSpeed, PlayerData),
+         "@brief Maximum horizontal speed.\n\n"
+         "@note This limit is only enforced if the player's horizontal speed "
+         "exceeds horizResistSpeed.\n"
+         "@see horizResistSpeed\n"
+         "@see horizResistFactor\n" );
+      addField( "horizResistSpeed", TypeF32, Offset(horizResistSpeed, PlayerData),
+         "@brief Horizontal speed at which resistence will take place.\n\n"
+         "@see horizMaxSpeed\n"
+         "@see horizResistFactor\n" );
+      addField( "horizResistFactor", TypeF32, Offset(horizResistFactor, PlayerData),
+         "@brief Factor of resistence once horizResistSpeed has been reached.\n\n"
+         "@see horizMaxSpeed\n"
+         "@see horizResistSpeed\n" );
 
-   addField( "upMaxSpeed", TypeF32, Offset(upMaxSpeed, PlayerData),
-      "@brief Maximum upwards speed.\n\n"
-      "@note This limit is only enforced if the player's upward speed exceeds "
-      "upResistSpeed.\n"
-      "@see upResistSpeed\n"
-      "@see upResistFactor\n" );
-   addField( "upResistSpeed", TypeF32, Offset(upResistSpeed, PlayerData),
-      "@brief Upwards speed at which resistence will take place.\n\n"
-      "@see upMaxSpeed\n"
-      "@see upResistFactor\n" );
-   addField( "upResistFactor", TypeF32, Offset(upResistFactor, PlayerData),
-      "@brief Factor of resistence once upResistSpeed has been reached.\n\n"
-      "@see upMaxSpeed\n"
-      "@see upResistSpeed\n" );
+      addField( "upMaxSpeed", TypeF32, Offset(upMaxSpeed, PlayerData),
+         "@brief Maximum upwards speed.\n\n"
+         "@note This limit is only enforced if the player's upward speed exceeds "
+         "upResistSpeed.\n"
+         "@see upResistSpeed\n"
+         "@see upResistFactor\n" );
+      addField( "upResistSpeed", TypeF32, Offset(upResistSpeed, PlayerData),
+         "@brief Upwards speed at which resistence will take place.\n\n"
+         "@see upMaxSpeed\n"
+         "@see upResistFactor\n" );
+      addField( "upResistFactor", TypeF32, Offset(upResistFactor, PlayerData),
+         "@brief Factor of resistence once upResistSpeed has been reached.\n\n"
+         "@see upMaxSpeed\n"
+         "@see upResistSpeed\n" );
 
    endGroup( "Movement" );
-
+   
    addGroup( "Movement: Jumping" );
 
-   addField( "jumpForce", TypeF32, Offset(jumpForce, PlayerData),
-      "@brief Force used to accelerate the player when a jump is initiated.\n\n" );
+      addField( "jumpForce", TypeF32, Offset(jumpForce, PlayerData),
+         "@brief Force used to accelerate the player when a jump is initiated.\n\n" );
 
-   addField( "jumpEnergyDrain", TypeF32, Offset(jumpEnergyDrain, PlayerData),
-      "@brief Energy level drained each time the player jumps.\n\n"
-      "@note Setting this to zero will disable any energy drain\n"
-      "@see minJumpEnergy\n");
-   addField( "minJumpEnergy", TypeF32, Offset(minJumpEnergy, PlayerData),
-      "@brief Minimum energy level required to jump.\n\n"
-      "@see jumpEnergyDrain\n");
+      addField( "jumpEnergyDrain", TypeF32, Offset(jumpEnergyDrain, PlayerData),
+         "@brief Energy level drained each time the player jumps.\n\n"
+         "@note Setting this to zero will disable any energy drain\n"
+         "@see minJumpEnergy\n");
+      addField( "minJumpEnergy", TypeF32, Offset(minJumpEnergy, PlayerData),
+         "@brief Minimum energy level required to jump.\n\n"
+         "@see jumpEnergyDrain\n");
 
-   addField( "minJumpSpeed", TypeF32, Offset(minJumpSpeed, PlayerData),
-      "@brief Minimum speed needed to jump.\n\n"
-      "If the player's own z velocity is greater than this, then it is used to scale "
-      "the jump speed, up to maxJumpSpeed.\n"
-      "@see maxJumpSpeed\n");
-   addField( "maxJumpSpeed", TypeF32, Offset(maxJumpSpeed, PlayerData),
-      "@brief Maximum vertical speed before the player can no longer jump.\n\n" );
-   addField( "jumpSurfaceAngle", TypeF32, Offset(jumpSurfaceAngle, PlayerData),
-      "@brief Angle from vertical (in degrees) where the player can jump.\n\n" );
-   addField( "jumpDelay", TypeS32, Offset(jumpDelay, PlayerData),
-      "@brief Delay time in number of ticks ticks between jumps.\n\n" );
-   addField( "airControl", TypeF32, Offset(airControl, PlayerData),
-      "@brief Amount of movement control the player has when in the air.\n\n"
-      "This is applied as a multiplier to the player's x and y motion.\n");
-   addField( "jumpTowardsNormal", TypeBool, Offset(jumpTowardsNormal, PlayerData),
-      "@brief Controls the direction of the jump impulse.\n"
-      "When false, jumps are always in the vertical (+Z) direction. When true "
-      "jumps are in the direction of the ground normal so long as the player is not "
-      "directly facing the surface.  If the player is directly facing the surface, then "
-      "they will jump straight up.\n" );
-
+      addField( "minJumpSpeed", TypeF32, Offset(minJumpSpeed, PlayerData),
+         "@brief Minimum speed needed to jump.\n\n"
+         "If the player's own z velocity is greater than this, then it is used to scale "
+         "the jump speed, up to maxJumpSpeed.\n"
+         "@see maxJumpSpeed\n");
+      addField( "maxJumpSpeed", TypeF32, Offset(maxJumpSpeed, PlayerData),
+         "@brief Maximum vertical speed before the player can no longer jump.\n\n" );
+      addField( "jumpSurfaceAngle", TypeF32, Offset(jumpSurfaceAngle, PlayerData),
+         "@brief Angle from vertical (in degrees) where the player can jump.\n\n" );
+      addField( "jumpDelay", TypeS32, Offset(jumpDelay, PlayerData),
+         "@brief Delay time in number of ticks ticks between jumps.\n\n" );
+      addField( "airControl", TypeF32, Offset(airControl, PlayerData),
+         "@brief Amount of movement control the player has when in the air.\n\n"
+         "This is applied as a multiplier to the player's x and y motion.\n");
+      addField( "jumpTowardsNormal", TypeBool, Offset(jumpTowardsNormal, PlayerData),
+         "@brief Controls the direction of the jump impulse.\n"
+         "When false, jumps are always in the vertical (+Z) direction. When true "
+         "jumps are in the direction of the ground normal so long as the player is not "
+         "directly facing the surface.  If the player is directly facing the surface, then "
+         "they will jump straight up.\n" );
+   
    endGroup( "Movement: Jumping" );
-
+   
    addGroup( "Movement: Sprinting" );
 
-   addField( "sprintForce", TypeF32, Offset(sprintForce, PlayerData),
-      "@brief Force used to accelerate the player when sprinting.\n\n" );
+      addField( "sprintForce", TypeF32, Offset(sprintForce, PlayerData),
+         "@brief Force used to accelerate the player when sprinting.\n\n" );
 
-   addField( "sprintEnergyDrain", TypeF32, Offset(sprintEnergyDrain, PlayerData),
-      "@brief Energy value drained each tick that the player is sprinting.\n\n"
-      "The player will not be able to move when his energy falls below "
-      "sprintEnergyDrain.\n"
-      "@note Setting this to zero will disable any energy drain.\n"
-      "@see minSprintEnergy\n");
-   addField( "minSprintEnergy", TypeF32, Offset(minSprintEnergy, PlayerData),
-      "@brief Minimum energy level required to sprint.\n\n"
-      "@see sprintEnergyDrain\n");
+      addField( "sprintEnergyDrain", TypeF32, Offset(sprintEnergyDrain, PlayerData),
+         "@brief Energy value drained each tick that the player is sprinting.\n\n"
+         "The player will not be able to move when his energy falls below "
+         "sprintEnergyDrain.\n"
+         "@note Setting this to zero will disable any energy drain.\n"
+         "@see minSprintEnergy\n");
+      addField( "minSprintEnergy", TypeF32, Offset(minSprintEnergy, PlayerData),
+         "@brief Minimum energy level required to sprint.\n\n"
+         "@see sprintEnergyDrain\n");
 
-   addField( "maxSprintForwardSpeed", TypeF32, Offset(maxSprintForwardSpeed, PlayerData),
-      "@brief Maximum forward speed when sprinting." );
-   addField( "maxSprintBackwardSpeed", TypeF32, Offset(maxSprintBackwardSpeed, PlayerData),
-      "@brief Maximum backward speed when sprinting." );
-   addField( "maxSprintSideSpeed", TypeF32, Offset(maxSprintSideSpeed, PlayerData),
-      "@brief Maximum sideways speed when sprinting." );
+      addField( "maxSprintForwardSpeed", TypeF32, Offset(maxSprintForwardSpeed, PlayerData),
+         "@brief Maximum forward speed when sprinting." );
+      addField( "maxSprintBackwardSpeed", TypeF32, Offset(maxSprintBackwardSpeed, PlayerData),
+         "@brief Maximum backward speed when sprinting." );
+      addField( "maxSprintSideSpeed", TypeF32, Offset(maxSprintSideSpeed, PlayerData),
+         "@brief Maximum sideways speed when sprinting." );
 
-   addField( "sprintStrafeScale", TypeF32, Offset(sprintStrafeScale, PlayerData),
-      "@brief Amount to scale strafing motion vector while sprinting." );
-   addField( "sprintYawScale", TypeF32, Offset(sprintYawScale, PlayerData),
-      "@brief Amount to scale yaw motion while sprinting." );
-   addField( "sprintPitchScale", TypeF32, Offset(sprintPitchScale, PlayerData),
-      "@brief Amount to scale pitch motion while sprinting." );
+      addField( "sprintStrafeScale", TypeF32, Offset(sprintStrafeScale, PlayerData),
+         "@brief Amount to scale strafing motion vector while sprinting." );
+      addField( "sprintYawScale", TypeF32, Offset(sprintYawScale, PlayerData),
+         "@brief Amount to scale yaw motion while sprinting." );
+      addField( "sprintPitchScale", TypeF32, Offset(sprintPitchScale, PlayerData),
+         "@brief Amount to scale pitch motion while sprinting." );
 
-   addField( "sprintCanJump", TypeBool, Offset(sprintCanJump, PlayerData),
-      "@brief Can the player jump while sprinting." );
+      addField( "sprintCanJump", TypeBool, Offset(sprintCanJump, PlayerData),
+         "@brief Can the player jump while sprinting." );
 
    endGroup( "Movement: Sprinting" );
 
    addGroup( "Movement: Swimming" );
 
-   addField( "swimForce", TypeF32, Offset(swimForce, PlayerData),
-      "@brief Force used to accelerate the player when swimming.\n\n" );
-   addField( "maxUnderwaterForwardSpeed", TypeF32, Offset(maxUnderwaterForwardSpeed, PlayerData),
-      "@brief Maximum forward speed when underwater.\n\n" );
-   addField( "maxUnderwaterBackwardSpeed", TypeF32, Offset(maxUnderwaterBackwardSpeed, PlayerData),
-      "@brief Maximum backward speed when underwater.\n\n" );
-   addField( "maxUnderwaterSideSpeed", TypeF32, Offset(maxUnderwaterSideSpeed, PlayerData),
-      "@brief Maximum sideways speed when underwater.\n\n" );
+      addField( "swimForce", TypeF32, Offset(swimForce, PlayerData),
+         "@brief Force used to accelerate the player when swimming.\n\n" );
+      addField( "maxUnderwaterForwardSpeed", TypeF32, Offset(maxUnderwaterForwardSpeed, PlayerData),
+         "@brief Maximum forward speed when underwater.\n\n" );
+      addField( "maxUnderwaterBackwardSpeed", TypeF32, Offset(maxUnderwaterBackwardSpeed, PlayerData),
+         "@brief Maximum backward speed when underwater.\n\n" );
+      addField( "maxUnderwaterSideSpeed", TypeF32, Offset(maxUnderwaterSideSpeed, PlayerData),
+         "@brief Maximum sideways speed when underwater.\n\n" );
 
    endGroup( "Movement: Swimming" );
 
    addGroup( "Movement: Crouching" );
 
-   addField( "crouchForce", TypeF32, Offset(crouchForce, PlayerData),
-      "@brief Force used to accelerate the player when crouching.\n\n" );
-   addField( "maxCrouchForwardSpeed", TypeF32, Offset(maxCrouchForwardSpeed, PlayerData),
-      "@brief Maximum forward speed when crouching.\n\n" );
-   addField( "maxCrouchBackwardSpeed", TypeF32, Offset(maxCrouchBackwardSpeed, PlayerData),
-      "@brief Maximum backward speed when crouching.\n\n" );
-   addField( "maxCrouchSideSpeed", TypeF32, Offset(maxCrouchSideSpeed, PlayerData),
-      "@brief Maximum sideways speed when crouching.\n\n" );
+      addField( "crouchForce", TypeF32, Offset(crouchForce, PlayerData),
+         "@brief Force used to accelerate the player when crouching.\n\n" );
+      addField( "maxCrouchForwardSpeed", TypeF32, Offset(maxCrouchForwardSpeed, PlayerData),
+         "@brief Maximum forward speed when crouching.\n\n" );
+      addField( "maxCrouchBackwardSpeed", TypeF32, Offset(maxCrouchBackwardSpeed, PlayerData),
+         "@brief Maximum backward speed when crouching.\n\n" );
+      addField( "maxCrouchSideSpeed", TypeF32, Offset(maxCrouchSideSpeed, PlayerData),
+         "@brief Maximum sideways speed when crouching.\n\n" );
 
    endGroup( "Movement: Crouching" );
 
    addGroup( "Movement: Prone" );
 
-   addField( "proneForce", TypeF32, Offset(proneForce, PlayerData),
-      "@brief Force used to accelerate the player when prone (laying down).\n\n" );
-   addField( "maxProneForwardSpeed", TypeF32, Offset(maxProneForwardSpeed, PlayerData),
-      "@brief Maximum forward speed when prone (laying down).\n\n" );
-   addField( "maxProneBackwardSpeed", TypeF32, Offset(maxProneBackwardSpeed, PlayerData),
-      "@brief Maximum backward speed when prone (laying down).\n\n" );
-   addField( "maxProneSideSpeed", TypeF32, Offset(maxProneSideSpeed, PlayerData),
-      "@brief Maximum sideways speed when prone (laying down).\n\n" );
+      addField( "proneForce", TypeF32, Offset(proneForce, PlayerData),
+         "@brief Force used to accelerate the player when prone (laying down).\n\n" );
+      addField( "maxProneForwardSpeed", TypeF32, Offset(maxProneForwardSpeed, PlayerData),
+         "@brief Maximum forward speed when prone (laying down).\n\n" );
+      addField( "maxProneBackwardSpeed", TypeF32, Offset(maxProneBackwardSpeed, PlayerData),
+         "@brief Maximum backward speed when prone (laying down).\n\n" );
+      addField( "maxProneSideSpeed", TypeF32, Offset(maxProneSideSpeed, PlayerData),
+         "@brief Maximum sideways speed when prone (laying down).\n\n" );
 
    endGroup( "Movement: Prone" );
 
    addGroup( "Movement: Jetting" );
 
-   addField( "jetJumpForce", TypeF32, Offset(jetJumpForce, PlayerData),
-      "@brief Force used to accelerate the player when a jet jump is initiated.\n\n" );
+      addField( "jetJumpForce", TypeF32, Offset(jetJumpForce, PlayerData),
+         "@brief Force used to accelerate the player when a jet jump is initiated.\n\n" );
 
-   addField( "jetJumpEnergyDrain", TypeF32, Offset(jetJumpEnergyDrain, PlayerData),
-      "@brief Energy level drained each time the player jet jumps.\n\n"
-      "@note Setting this to zero will disable any energy drain\n"
-      "@see jetMinJumpEnergy\n");
-   addField( "jetMinJumpEnergy", TypeF32, Offset(jetMinJumpEnergy, PlayerData),
-      "@brief Minimum energy level required to jet jump.\n\n"
-      "@see jetJumpEnergyDrain\n");
+      addField( "jetJumpEnergyDrain", TypeF32, Offset(jetJumpEnergyDrain, PlayerData),
+         "@brief Energy level drained each time the player jet jumps.\n\n"
+         "@note Setting this to zero will disable any energy drain\n"
+         "@see jetMinJumpEnergy\n");
+      addField( "jetMinJumpEnergy", TypeF32, Offset(jetMinJumpEnergy, PlayerData),
+         "@brief Minimum energy level required to jet jump.\n\n"
+         "@see jetJumpEnergyDrain\n");
 
-   addField( "jetMinJumpSpeed", TypeF32, Offset(jetMinJumpSpeed, PlayerData),
-      "@brief Minimum speed needed to jet jump.\n\n"
-      "If the player's own z velocity is greater than this, then it is used to scale "
-      "the jet jump speed, up to jetMaxJumpSpeed.\n"
-      "@see jetMaxJumpSpeed\n");
-   addField( "jetMaxJumpSpeed", TypeF32, Offset(jetMaxJumpSpeed, PlayerData),
-      "@brief Maximum vertical speed before the player can no longer jet jump.\n\n" );
-   addField( "jetJumpSurfaceAngle", TypeF32, Offset(jetJumpSurfaceAngle, PlayerData),
-      "@brief Angle from vertical (in degrees) where the player can jet jump.\n\n" );
+      addField( "jetMinJumpSpeed", TypeF32, Offset(jetMinJumpSpeed, PlayerData),
+         "@brief Minimum speed needed to jet jump.\n\n"
+         "If the player's own z velocity is greater than this, then it is used to scale "
+         "the jet jump speed, up to jetMaxJumpSpeed.\n"
+         "@see jetMaxJumpSpeed\n");
+      addField( "jetMaxJumpSpeed", TypeF32, Offset(jetMaxJumpSpeed, PlayerData),
+         "@brief Maximum vertical speed before the player can no longer jet jump.\n\n" );
+      addField( "jetJumpSurfaceAngle", TypeF32, Offset(jetJumpSurfaceAngle, PlayerData),
+         "@brief Angle from vertical (in degrees) where the player can jet jump.\n\n" );
 
    endGroup( "Movement: Jetting" );
 
    addGroup( "Falling" );
 
-   addField( "fallingSpeedThreshold", TypeF32, Offset(fallingSpeedThreshold, PlayerData),
-      "@brief Downward speed at which we consider the player falling.\n\n" );
+      addField( "fallingSpeedThreshold", TypeF32, Offset(fallingSpeedThreshold, PlayerData),
+         "@brief Downward speed at which we consider the player falling.\n\n" );
 
-   addField( "recoverDelay", TypeS32, Offset(recoverDelay, PlayerData),
-      "@brief Number of ticks for the player to recover from falling.\n\n" );
+      addField( "recoverDelay", TypeS32, Offset(recoverDelay, PlayerData),
+         "@brief Number of ticks for the player to recover from falling.\n\n" );
 
-   addField( "recoverRunForceScale", TypeF32, Offset(recoverRunForceScale, PlayerData),
-      "@brief Scale factor applied to runForce while in the recover state.\n\n"
-      "This can be used to temporarily slow the player's movement after a fall, or "
-      "prevent the player from moving at all if set to zero.\n" );
+      addField( "recoverRunForceScale", TypeF32, Offset(recoverRunForceScale, PlayerData),
+         "@brief Scale factor applied to runForce while in the recover state.\n\n"
+         "This can be used to temporarily slow the player's movement after a fall, or "
+         "prevent the player from moving at all if set to zero.\n" );
 
-   addField( "landSequenceTime", TypeF32, Offset(landSequenceTime, PlayerData),
-      "@brief Time of land sequence play back when using new recover system.\n\n"
-      "If greater than 0 then the legacy fall recovery system will be bypassed "
-      "in favour of just playing the player's land sequence.  The time to "
-      "recover from a fall then becomes this parameter's time and the land "
-      "sequence's playback will be scaled to match.\n"
-      "@see transitionToLand\n" );
+      addField( "landSequenceTime", TypeF32, Offset(landSequenceTime, PlayerData),
+         "@brief Time of land sequence play back when using new recover system.\n\n"
+         "If greater than 0 then the legacy fall recovery system will be bypassed "
+         "in favour of just playing the player's land sequence.  The time to "
+         "recover from a fall then becomes this parameter's time and the land "
+         "sequence's playback will be scaled to match.\n"
+         "@see transitionToLand\n" );
 
-   addField( "transitionToLand", TypeBool, Offset(transitionToLand, PlayerData),
-      "@brief When going from a fall to a land, should we transition between the two.\n\n"
-      "@note Only takes affect when landSequenceTime is greater than 0.\n"
-      "@see landSequenceTime\n" );
+      addField( "transitionToLand", TypeBool, Offset(transitionToLand, PlayerData),
+         "@brief When going from a fall to a land, should we transition between the two.\n\n"
+         "@note Only takes affect when landSequenceTime is greater than 0.\n"
+         "@see landSequenceTime\n" );
 
    endGroup( "Falling" );
 
    addGroup( "Collision" );
 
-   addField( "boundingBox", TypePoint3F, Offset(boxSize, PlayerData),
-      "@brief Size of the bounding box used by the player for collision.\n\n"
-      "Dimensions are given as \"width depth height\"." );
-   addField( "crouchBoundingBox", TypePoint3F, Offset(crouchBoxSize, PlayerData),
-      "@brief Collision bounding box used when the player is crouching.\n\n"
-      "@see boundingBox" );
-   addField( "proneBoundingBox", TypePoint3F, Offset(proneBoxSize, PlayerData),
-      "@brief Collision bounding box used when the player is prone (laying down).\n\n"
-      "@see boundingBox" );
-   addField( "swimBoundingBox", TypePoint3F, Offset(swimBoxSize, PlayerData),
-      "@brief Collision bounding box used when the player is swimming.\n\n"
-      "@see boundingBox" );
+      addField( "boundingBox", TypePoint3F, Offset(boxSize, PlayerData),
+         "@brief Size of the bounding box used by the player for collision.\n\n"
+         "Dimensions are given as \"width depth height\"." );
+      addField( "crouchBoundingBox", TypePoint3F, Offset(crouchBoxSize, PlayerData),
+         "@brief Collision bounding box used when the player is crouching.\n\n"
+         "@see boundingBox" );
+      addField( "proneBoundingBox", TypePoint3F, Offset(proneBoxSize, PlayerData),
+         "@brief Collision bounding box used when the player is prone (laying down).\n\n"
+         "@see boundingBox" );
+      addField( "swimBoundingBox", TypePoint3F, Offset(swimBoxSize, PlayerData),
+         "@brief Collision bounding box used when the player is swimming.\n\n"
+         "@see boundingBox" );
 
-   addField( "boxHeadPercentage", TypeF32, Offset(boxHeadPercentage, PlayerData),
-      "@brief Percentage of the player's bounding box height that represents the head.\n\n"
-      "Used when computing the damage location.\n"
-      "@see Player::getDamageLocation" );
-   addField( "boxTorsoPercentage", TypeF32, Offset(boxTorsoPercentage, PlayerData),
-      "@brief Percentage of the player's bounding box height that represents the torso.\n\n"
-      "Used when computing the damage location.\n"
-      "@see Player::getDamageLocation" );
-   addField( "boxHeadLeftPercentage", TypeF32, Offset(boxHeadLeftPercentage, PlayerData),
-      "@brief Percentage of the player's bounding box width that represents the left side of the head.\n\n"
-      "Used when computing the damage location.\n"
-      "@see Player::getDamageLocation" );
-   addField( "boxHeadRightPercentage", TypeF32, Offset(boxHeadRightPercentage, PlayerData),
-      "@brief Percentage of the player's bounding box width that represents the right side of the head.\n\n"
-      "Used when computing the damage location.\n"
-      "@see Player::getDamageLocation" );
-   addField( "boxHeadBackPercentage", TypeF32, Offset(boxHeadBackPercentage, PlayerData),
-      "@brief Percentage of the player's bounding box depth that represents the back side of the head.\n\n"
-      "Used when computing the damage location.\n"
-      "@see Player::getDamageLocation" );
-   addField( "boxHeadFrontPercentage", TypeF32, Offset(boxHeadFrontPercentage, PlayerData),
-      "@brief Percentage of the player's bounding box depth that represents the front side of the head.\n\n"
-      "Used when computing the damage location.\n"
-      "@see Player::getDamageLocation" );
+      addField( "boxHeadPercentage", TypeF32, Offset(boxHeadPercentage, PlayerData),
+         "@brief Percentage of the player's bounding box height that represents the head.\n\n"
+         "Used when computing the damage location.\n"
+         "@see Player::getDamageLocation" );
+      addField( "boxTorsoPercentage", TypeF32, Offset(boxTorsoPercentage, PlayerData),
+         "@brief Percentage of the player's bounding box height that represents the torso.\n\n"
+         "Used when computing the damage location.\n"
+         "@see Player::getDamageLocation" );
+      addField( "boxHeadLeftPercentage", TypeF32, Offset(boxHeadLeftPercentage, PlayerData),
+         "@brief Percentage of the player's bounding box width that represents the left side of the head.\n\n"
+         "Used when computing the damage location.\n"
+         "@see Player::getDamageLocation" );
+      addField( "boxHeadRightPercentage", TypeF32, Offset(boxHeadRightPercentage, PlayerData),
+         "@brief Percentage of the player's bounding box width that represents the right side of the head.\n\n"
+         "Used when computing the damage location.\n"
+         "@see Player::getDamageLocation" );
+      addField( "boxHeadBackPercentage", TypeF32, Offset(boxHeadBackPercentage, PlayerData),
+         "@brief Percentage of the player's bounding box depth that represents the back side of the head.\n\n"
+         "Used when computing the damage location.\n"
+         "@see Player::getDamageLocation" );
+      addField( "boxHeadFrontPercentage", TypeF32, Offset(boxHeadFrontPercentage, PlayerData),
+         "@brief Percentage of the player's bounding box depth that represents the front side of the head.\n\n"
+         "Used when computing the damage location.\n"
+         "@see Player::getDamageLocation" );
 
    endGroup( "Collision" );
-
+   
    addGroup( "Interaction: Footsteps" );
 
-   addField( "footPuffEmitter", TYPEID< ParticleEmitterData >(), Offset(footPuffEmitter, PlayerData),
-      "@brief Particle emitter used to generate footpuffs (particles created as the player "
-      "walks along the ground).\n\n"
-      "@note The generation of foot puffs requires the appropriate triggeres to be defined in the "
-      "player's animation sequences.  Without these, no foot puffs will be generated.\n");
-   addField( "footPuffNumParts", TypeS32, Offset(footPuffNumParts, PlayerData),
-      "@brief Number of footpuff particles to generate each step.\n\n"
-      "Each foot puff is randomly placed within the defined foot puff radius.  This "
-      "includes having footPuffNumParts set to one.\n"
-      "@see footPuffRadius\n");
-   addField( "footPuffRadius", TypeF32, Offset(footPuffRadius, PlayerData),
-      "@brief Particle creation radius for footpuff particles.\n\n"
-      "This is applied to each foot puff particle, even if footPuffNumParts is set to one.  So "
-      "set this value to zero if you want a single foot puff placed at exactly the same location "
-      "under the player each time.\n");
-   addField( "dustEmitter", TYPEID< ParticleEmitterData >(), Offset(dustEmitter, PlayerData),
-      "@brief Emitter used to generate dust particles.\n\n"
-      "@note Currently unused." );
+      addField( "footPuffEmitter", TYPEID< ParticleEmitterData >(), Offset(footPuffEmitter, PlayerData),
+         "@brief Particle emitter used to generate footpuffs (particles created as the player "
+         "walks along the ground).\n\n"
+         "@note The generation of foot puffs requires the appropriate triggeres to be defined in the "
+         "player's animation sequences.  Without these, no foot puffs will be generated.\n");
+      addField( "footPuffNumParts", TypeS32, Offset(footPuffNumParts, PlayerData),
+         "@brief Number of footpuff particles to generate each step.\n\n"
+         "Each foot puff is randomly placed within the defined foot puff radius.  This "
+         "includes having footPuffNumParts set to one.\n"
+         "@see footPuffRadius\n");
+      addField( "footPuffRadius", TypeF32, Offset(footPuffRadius, PlayerData),
+         "@brief Particle creation radius for footpuff particles.\n\n"
+         "This is applied to each foot puff particle, even if footPuffNumParts is set to one.  So "
+         "set this value to zero if you want a single foot puff placed at exactly the same location "
+         "under the player each time.\n");
+      addField( "dustEmitter", TYPEID< ParticleEmitterData >(), Offset(dustEmitter, PlayerData),
+         "@brief Emitter used to generate dust particles.\n\n"
+         "@note Currently unused." );
 
-   addField( "decalData", TYPEID< DecalData >(), Offset(decalData, PlayerData),
-      "@brief Decal to place on the ground for player footsteps.\n\n" );
-   addField( "decalOffset",TypeF32, Offset(decalOffset, PlayerData),
-      "@brief Distance from the center of the model to the right foot.\n\n"
-      "While this defines the distance to the right foot, it is also used to place "
-      "the left foot decal as well.  Just on the opposite side of the player." );
+      addField( "decalData", TYPEID< DecalData >(), Offset(decalData, PlayerData),
+         "@brief Decal to place on the ground for player footsteps.\n\n" );
+      addField( "decalOffset",TypeF32, Offset(decalOffset, PlayerData),
+         "@brief Distance from the center of the model to the right foot.\n\n"
+         "While this defines the distance to the right foot, it is also used to place "
+         "the left foot decal as well.  Just on the opposite side of the player." );
 
    endGroup( "Interaction: Footsteps" );
 
    addGroup( "Interaction: Sounds" );
 
-   addField( "FootSoftSound", TypeSFXTrackName, Offset(sound[FootSoft], PlayerData),
-      "@brief Sound to play when walking on a surface with Material footstepSoundId 0.\n\n" );
-   addField( "FootHardSound", TypeSFXTrackName, Offset(sound[FootHard], PlayerData),
-      "@brief Sound to play when walking on a surface with Material footstepSoundId 1.\n\n" );
-   addField( "FootMetalSound", TypeSFXTrackName, Offset(sound[FootMetal], PlayerData),
-      "@brief Sound to play when walking on a surface with Material footstepSoundId 2.\n\n" );
-   addField( "FootSnowSound", TypeSFXTrackName, Offset(sound[FootSnow], PlayerData),
-      "@brief Sound to play when walking on a surface with Material footstepSoundId 3.\n\n" );
+      addField( "FootSoftSound", TypeSFXTrackName, Offset(sound[FootSoft], PlayerData),
+         "@brief Sound to play when walking on a surface with Material footstepSoundId 0.\n\n" );
+      addField( "FootHardSound", TypeSFXTrackName, Offset(sound[FootHard], PlayerData),
+         "@brief Sound to play when walking on a surface with Material footstepSoundId 1.\n\n" );
+      addField( "FootMetalSound", TypeSFXTrackName, Offset(sound[FootMetal], PlayerData),
+         "@brief Sound to play when walking on a surface with Material footstepSoundId 2.\n\n" );
+      addField( "FootSnowSound", TypeSFXTrackName, Offset(sound[FootSnow], PlayerData),
+         "@brief Sound to play when walking on a surface with Material footstepSoundId 3.\n\n" );
 
-   addField( "FootShallowSound", TypeSFXTrackName, Offset(sound[FootShallowSplash], PlayerData),
-      "@brief Sound to play when walking in water and coverage is less than "
-      "footSplashHeight.\n\n"
-      "@see footSplashHeight\n" );
-   addField( "FootWadingSound", TypeSFXTrackName, Offset(sound[FootWading], PlayerData),
-      "@brief Sound to play when walking in water and coverage is less than 1, "
-      "but > footSplashHeight.\n\n"
-      "@see footSplashHeight\n" );
-   addField( "FootUnderwaterSound", TypeSFXTrackName, Offset(sound[FootUnderWater], PlayerData),
-      "@brief Sound to play when walking in water and coverage equals 1.0 "
-      "(fully underwater).\n\n" );
-   addField( "FootBubblesSound", TypeSFXTrackName, Offset(sound[FootBubbles], PlayerData),
-      "@brief Sound to play when walking in water and coverage equals 1.0 "
-      "(fully underwater).\n\n" );
-   addField( "movingBubblesSound", TypeSFXTrackName, Offset(sound[MoveBubbles], PlayerData),
-      "@brief Sound to play when in water and coverage equals 1.0 (fully underwater).\n\n"
-      "Note that unlike FootUnderwaterSound, this sound plays even if the "
-      "player is not moving around in the water.\n" );
-   addField( "waterBreathSound", TypeSFXTrackName, Offset(sound[WaterBreath], PlayerData),
-      "@brief Sound to play when in water and coverage equals 1.0 (fully underwater).\n\n"
-      "Note that unlike FootUnderwaterSound, this sound plays even if the "
-      "player is not moving around in the water.\n" );
+      addField( "FootShallowSound", TypeSFXTrackName, Offset(sound[FootShallowSplash], PlayerData),
+         "@brief Sound to play when walking in water and coverage is less than "
+         "footSplashHeight.\n\n"
+         "@see footSplashHeight\n" );
+      addField( "FootWadingSound", TypeSFXTrackName, Offset(sound[FootWading], PlayerData),
+         "@brief Sound to play when walking in water and coverage is less than 1, "
+         "but > footSplashHeight.\n\n"
+         "@see footSplashHeight\n" );
+      addField( "FootUnderwaterSound", TypeSFXTrackName, Offset(sound[FootUnderWater], PlayerData),
+         "@brief Sound to play when walking in water and coverage equals 1.0 "
+         "(fully underwater).\n\n" );
+      addField( "FootBubblesSound", TypeSFXTrackName, Offset(sound[FootBubbles], PlayerData),
+         "@brief Sound to play when walking in water and coverage equals 1.0 "
+         "(fully underwater).\n\n" );
+      addField( "movingBubblesSound", TypeSFXTrackName, Offset(sound[MoveBubbles], PlayerData),
+         "@brief Sound to play when in water and coverage equals 1.0 (fully underwater).\n\n"
+         "Note that unlike FootUnderwaterSound, this sound plays even if the "
+         "player is not moving around in the water.\n" );
+      addField( "waterBreathSound", TypeSFXTrackName, Offset(sound[WaterBreath], PlayerData),
+         "@brief Sound to play when in water and coverage equals 1.0 (fully underwater).\n\n"
+         "Note that unlike FootUnderwaterSound, this sound plays even if the "
+         "player is not moving around in the water.\n" );
 
-   addField( "impactSoftSound", TypeSFXTrackName, Offset(sound[ImpactSoft], PlayerData),
-      "@brief Sound to play after falling on a surface with Material footstepSoundId 0.\n\n" );
-   addField( "impactHardSound", TypeSFXTrackName, Offset(sound[ImpactHard], PlayerData),
-      "@brief Sound to play after falling on a surface with Material footstepSoundId 1.\n\n" );
-   addField( "impactMetalSound", TypeSFXTrackName, Offset(sound[ImpactMetal], PlayerData),
-      "@brief Sound to play after falling on a surface with Material footstepSoundId 2.\n\n" );
-   addField( "impactSnowSound", TypeSFXTrackName, Offset(sound[ImpactSnow], PlayerData),
-      "@brief Sound to play after falling on a surface with Material footstepSoundId 3.\n\n" );
+      addField( "impactSoftSound", TypeSFXTrackName, Offset(sound[ImpactSoft], PlayerData),
+         "@brief Sound to play after falling on a surface with Material footstepSoundId 0.\n\n" );
+      addField( "impactHardSound", TypeSFXTrackName, Offset(sound[ImpactHard], PlayerData),
+         "@brief Sound to play after falling on a surface with Material footstepSoundId 1.\n\n" );
+      addField( "impactMetalSound", TypeSFXTrackName, Offset(sound[ImpactMetal], PlayerData),
+         "@brief Sound to play after falling on a surface with Material footstepSoundId 2.\n\n" );
+      addField( "impactSnowSound", TypeSFXTrackName, Offset(sound[ImpactSnow], PlayerData),
+         "@brief Sound to play after falling on a surface with Material footstepSoundId 3.\n\n" );
 
-   addField( "impactWaterEasy", TypeSFXTrackName, Offset(sound[ImpactWaterEasy], PlayerData),
-      "@brief Sound to play when entering the water with velocity < "
-      "mediumSplashSoundVelocity.\n\n"
-      "@see mediumSplashSoundVelocity\n");
-   addField( "impactWaterMedium", TypeSFXTrackName, Offset(sound[ImpactWaterMedium], PlayerData),
-      "@brief Sound to play when entering the water with velocity >= "
-      "mediumSplashSoundVelocity and < hardSplashSoundVelocity.\n\n"
-      "@see mediumSplashSoundVelocity\n"
-      "@see hardSplashSoundVelocity\n");
-   addField( "impactWaterHard", TypeSFXTrackName, Offset(sound[ImpactWaterHard], PlayerData),
-      "@brief Sound to play when entering the water with velocity >= "
-      "hardSplashSoundVelocity.\n\n"
-      "@see hardSplashSoundVelocity\n");
-   addField( "exitingWater", TypeSFXTrackName, Offset(sound[ExitWater], PlayerData),
-      "@brief Sound to play when exiting the water with velocity >= exitSplashSoundVelocity.\n\n"
-      "@see exitSplashSoundVelocity\n");
+      addField( "impactWaterEasy", TypeSFXTrackName, Offset(sound[ImpactWaterEasy], PlayerData),
+         "@brief Sound to play when entering the water with velocity < "
+         "mediumSplashSoundVelocity.\n\n"
+         "@see mediumSplashSoundVelocity\n");
+      addField( "impactWaterMedium", TypeSFXTrackName, Offset(sound[ImpactWaterMedium], PlayerData),
+         "@brief Sound to play when entering the water with velocity >= "
+         "mediumSplashSoundVelocity and < hardSplashSoundVelocity.\n\n"
+         "@see mediumSplashSoundVelocity\n"
+         "@see hardSplashSoundVelocity\n");
+      addField( "impactWaterHard", TypeSFXTrackName, Offset(sound[ImpactWaterHard], PlayerData),
+         "@brief Sound to play when entering the water with velocity >= "
+         "hardSplashSoundVelocity.\n\n"
+         "@see hardSplashSoundVelocity\n");
+      addField( "exitingWater", TypeSFXTrackName, Offset(sound[ExitWater], PlayerData),
+         "@brief Sound to play when exiting the water with velocity >= exitSplashSoundVelocity.\n\n"
+         "@see exitSplashSoundVelocity\n");
 
    endGroup( "Interaction: Sounds" );
 
    addGroup( "Interaction: Splashes" );
 
-   addField( "splash", TYPEID< SplashData >(), Offset(splash, PlayerData),
-      "@brief SplashData datablock used to create splashes when the player moves "
-      "through water.\n\n" );
-   addField( "splashVelocity", TypeF32, Offset(splashVelocity, PlayerData),
-      "@brief Minimum velocity when moving through water to generate splashes.\n\n" );
-   addField( "splashAngle", TypeF32, Offset(splashAngle, PlayerData),
-      "@brief Maximum angle (in degrees) from pure vertical movement in water to "
-      "generate splashes.\n\n" );
+      addField( "splash", TYPEID< SplashData >(), Offset(splash, PlayerData),
+         "@brief SplashData datablock used to create splashes when the player moves "
+         "through water.\n\n" );
+      addField( "splashVelocity", TypeF32, Offset(splashVelocity, PlayerData),
+         "@brief Minimum velocity when moving through water to generate splashes.\n\n" );
+      addField( "splashAngle", TypeF32, Offset(splashAngle, PlayerData),
+         "@brief Maximum angle (in degrees) from pure vertical movement in water to "
+         "generate splashes.\n\n" );
 
-   addField( "splashFreqMod", TypeF32, Offset(splashFreqMod, PlayerData),
-      "@brief Multipled by speed to determine the number of splash particles to generate.\n\n" );
-   addField( "splashVelEpsilon", TypeF32, Offset(splashVelEpsilon, PlayerData),
-      "@brief Minimum speed to generate splash particles.\n\n" );
-   addField( "bubbleEmitTime", TypeF32, Offset(bubbleEmitTime, PlayerData),
-      "@brief Time in seconds to generate bubble particles after entering the water.\n\n" );
-   addField( "splashEmitter", TYPEID< ParticleEmitterData >(), Offset(splashEmitterList, PlayerData), NUM_SPLASH_EMITTERS,
-      "@brief Particle emitters used to generate splash particles.\n\n" );
+      addField( "splashFreqMod", TypeF32, Offset(splashFreqMod, PlayerData),
+         "@brief Multipled by speed to determine the number of splash particles to generate.\n\n" );
+      addField( "splashVelEpsilon", TypeF32, Offset(splashVelEpsilon, PlayerData),
+         "@brief Minimum speed to generate splash particles.\n\n" );
+      addField( "bubbleEmitTime", TypeF32, Offset(bubbleEmitTime, PlayerData),
+         "@brief Time in seconds to generate bubble particles after entering the water.\n\n" );
+      addField( "splashEmitter", TYPEID< ParticleEmitterData >(), Offset(splashEmitterList, PlayerData), NUM_SPLASH_EMITTERS,
+         "@brief Particle emitters used to generate splash particles.\n\n" );
 
-   addField( "footstepSplashHeight", TypeF32, Offset(footSplashHeight, PlayerData),
-      "@brief Water coverage level to choose between FootShallowSound and FootWadingSound.\n\n"
-      "@see FootShallowSound\n"
-      "@see FootWadingSound\n");
+      addField( "footstepSplashHeight", TypeF32, Offset(footSplashHeight, PlayerData),
+         "@brief Water coverage level to choose between FootShallowSound and FootWadingSound.\n\n"
+         "@see FootShallowSound\n"
+         "@see FootWadingSound\n");
 
-   addField( "mediumSplashSoundVelocity", TypeF32, Offset(medSplashSoundVel, PlayerData),
-      "@brief Minimum velocity when entering the water for choosing between the impactWaterEasy and "
-      "impactWaterMedium sounds to play.\n\n"
-      "@see impactWaterEasy\n"
-      "@see impactWaterMedium\n" );
-   addField( "hardSplashSoundVelocity", TypeF32, Offset(hardSplashSoundVel, PlayerData),
-      "@brief Minimum velocity when entering the water for choosing between the impactWaterMedium and "
-      "impactWaterHard sound to play.\n\n"
-      "@see impactWaterMedium\n"
-      "@see impactWaterHard\n" );
-   addField( "exitSplashSoundVelocity", TypeF32, Offset(exitSplashSoundVel, PlayerData),
-      "@brief Minimum velocity when leaving the water for the exitingWater sound to "
-      "play.\n\n"
-      "@see exitingWater");
+      addField( "mediumSplashSoundVelocity", TypeF32, Offset(medSplashSoundVel, PlayerData),
+         "@brief Minimum velocity when entering the water for choosing between the impactWaterEasy and "
+         "impactWaterMedium sounds to play.\n\n"
+         "@see impactWaterEasy\n"
+         "@see impactWaterMedium\n" );
+      addField( "hardSplashSoundVelocity", TypeF32, Offset(hardSplashSoundVel, PlayerData),
+         "@brief Minimum velocity when entering the water for choosing between the impactWaterMedium and "
+         "impactWaterHard sound to play.\n\n"
+         "@see impactWaterMedium\n"
+         "@see impactWaterHard\n" );
+      addField( "exitSplashSoundVelocity", TypeF32, Offset(exitSplashSoundVel, PlayerData),
+         "@brief Minimum velocity when leaving the water for the exitingWater sound to "
+         "play.\n\n"
+         "@see exitingWater");
 
    endGroup( "Interaction: Splashes" );
 
    addGroup( "Interaction: Ground Impact" );
 
-   addField( "groundImpactMinSpeed", TypeF32, Offset(groundImpactMinSpeed, PlayerData),
-      "@brief Minimum falling impact speed to apply damage and initiate the camera "
-      "shaking effect.\n\n" );
-   addField( "groundImpactShakeFreq", TypePoint3F, Offset(groundImpactShakeFreq, PlayerData),
-      "@brief Frequency of the camera shake effect after falling.\n\n"
-      "This is how fast to shake the camera.\n");
-   addField( "groundImpactShakeAmp", TypePoint3F, Offset(groundImpactShakeAmp, PlayerData),
-      "@brief Amplitude of the camera shake effect after falling.\n\n"
-      "This is how much to shake the camera.\n");
-   addField( "groundImpactShakeDuration", TypeF32, Offset(groundImpactShakeDuration, PlayerData),
-      "@brief Duration (in seconds) of the camera shake effect after falling.\n\n"
-      "This is how long to shake the camera.\n");
-   addField( "groundImpactShakeFalloff", TypeF32, Offset(groundImpactShakeFalloff, PlayerData),
-      "@brief Falloff factor of the camera shake effect after falling.\n\n"
-      "This is how to fade the camera shake over the duration.\n");
+      addField( "groundImpactMinSpeed", TypeF32, Offset(groundImpactMinSpeed, PlayerData),
+         "@brief Minimum falling impact speed to apply damage and initiate the camera "
+         "shaking effect.\n\n" );
+      addField( "groundImpactShakeFreq", TypePoint3F, Offset(groundImpactShakeFreq, PlayerData),
+         "@brief Frequency of the camera shake effect after falling.\n\n"
+         "This is how fast to shake the camera.\n");
+      addField( "groundImpactShakeAmp", TypePoint3F, Offset(groundImpactShakeAmp, PlayerData),
+         "@brief Amplitude of the camera shake effect after falling.\n\n"
+         "This is how much to shake the camera.\n");
+      addField( "groundImpactShakeDuration", TypeF32, Offset(groundImpactShakeDuration, PlayerData),
+         "@brief Duration (in seconds) of the camera shake effect after falling.\n\n"
+         "This is how long to shake the camera.\n");
+      addField( "groundImpactShakeFalloff", TypeF32, Offset(groundImpactShakeFalloff, PlayerData),
+         "@brief Falloff factor of the camera shake effect after falling.\n\n"
+         "This is how to fade the camera shake over the duration.\n");
 
    endGroup( "Interaction: Ground Impact" );
 
    addGroup( "Physics" );
 
-   // PhysicsPlayer
-   addField( "physicsPlayerType", TypeString, Offset(physicsPlayerType, PlayerData),
-      "@brief Specifies the type of physics used by the player.\n\n"
-      "This depends on the physics module used.  An example is 'Capsule'.\n"
-      "@note Not current used.\n");
+      // PhysicsPlayer
+      addField( "physicsPlayerType", TypeString, Offset(physicsPlayerType, PlayerData),
+         "@brief Specifies the type of physics used by the player.\n\n"
+         "This depends on the physics module used.  An example is 'Capsule'.\n"
+         "@note Not current used.\n");
 
    endGroup( "Physics" );
 
    addGroup( "First Person Arms" );
 
-   addField( "imageAnimPrefixFP", TypeCaseString, Offset(imageAnimPrefixFP, PlayerData),
-      "@brief Optional prefix to all mounted image animation sequences in first person.\n\n"
-      "This defines a prefix that will be added when looking up mounted image "
-      "animation sequences while in first person.  It allows for the customization "
-      "of a first person image based on the type of player.\n");
+      addField( "imageAnimPrefixFP", TypeCaseString, Offset(imageAnimPrefixFP, PlayerData),
+         "@brief Optional prefix to all mounted image animation sequences in first person.\n\n"
+         "This defines a prefix that will be added when looking up mounted image "
+         "animation sequences while in first person.  It allows for the customization "
+         "of a first person image based on the type of player.\n");
 
-   // Mounted images arrays
-   addArray( "Mounted Images", ShapeBase::MaxMountedImages );
+      // Mounted images arrays
+      addArray( "Mounted Images", ShapeBase::MaxMountedImages );
 
-   addField( "shapeNameFP", TypeShapeFilename, Offset(shapeNameFP, PlayerData), ShapeBase::MaxMountedImages,
-      "@brief File name of this player's shape that will be used in conjunction with the corresponding mounted image.\n\n"
-      "These optional parameters correspond to each mounted image slot to indicate a shape that is rendered "
-      "in addition to the mounted image shape.  Typically these are a player's arms (or arm) that is "
-      "animated along with the mounted image's state animation sequences.\n");
+         addField( "shapeNameFP", TypeShapeFilename, Offset(shapeNameFP, PlayerData), ShapeBase::MaxMountedImages,
+            "@brief File name of this player's shape that will be used in conjunction with the corresponding mounted image.\n\n"
+            "These optional parameters correspond to each mounted image slot to indicate a shape that is rendered "
+            "in addition to the mounted image shape.  Typically these are a player's arms (or arm) that is "
+            "animated along with the mounted image's state animation sequences.\n");
 
-   endArray( "Mounted Images" );
+      endArray( "Mounted Images" );
 
    endGroup( "First Person Arms" );
 
    addGroup( "Third Person" );
 
-   addField( "imageAnimPrefix", TypeCaseString, Offset(imageAnimPrefix, PlayerData),
-      "@brief Optional prefix to all mounted image animation sequences in third person.\n\n"
-      "This defines a prefix that will be added when looking up mounted image "
-      "animation sequences while in third person.  It allows for the customization "
-      "of a third person image based on the type of player.\n");
+      addField( "imageAnimPrefix", TypeCaseString, Offset(imageAnimPrefix, PlayerData),
+         "@brief Optional prefix to all mounted image animation sequences in third person.\n\n"
+         "This defines a prefix that will be added when looking up mounted image "
+         "animation sequences while in third person.  It allows for the customization "
+         "of a third person image based on the type of player.\n");
 
-   addField( "allowImageStateAnimation", TypeBool, Offset(allowImageStateAnimation, PlayerData),
-      "@brief Allow mounted images to request a sequence be played on the Player.\n\n"
-      "When true a new thread is added to the player to allow for "
-      "mounted images to request a sequence be played on the player "
-      "through the image's state machine.  It is only optional so "
-      "that we don't create a TSThread on the player if we don't "
-      "need to.\n");
+      addField( "allowImageStateAnimation", TypeBool, Offset(allowImageStateAnimation, PlayerData),
+         "@brief Allow mounted images to request a sequence be played on the Player.\n\n"
+         "When true a new thread is added to the player to allow for "
+         "mounted images to request a sequence be played on the player "
+         "through the image's state machine.  It is only optional so "
+         "that we don't create a TSThread on the player if we don't "
+         "need to.\n");
 
    endGroup( "Third Person" );
 
@@ -1190,7 +1190,7 @@ void PlayerData::packData(BitStream* stream)
 
    stream->writeFlag(renderFirstPerson);
    stream->writeFlag(firstPersonShadows);
-
+   
    stream->write(minLookAngle);
    stream->write(maxLookAngle);
    stream->write(maxFreelookAngle);
@@ -1551,13 +1551,13 @@ void PlayerData::unpackData(BitStream* stream)
 //----------------------------------------------------------------------------
 
 ImplementEnumType( PlayerPose,
-                  "@brief The pose of the Player.\n\n"
-                  "@ingroup gameObjects\n\n")
-{ Player::StandPose,    "Stand",    "Standard movement pose.\n" },
-{ Player::SprintPose,   "Sprint",   "Sprinting pose.\n" },
-{ Player::CrouchPose,   "Crouch",   "Crouch pose.\n" },
-{ Player::PronePose,    "Prone",    "Prone pose.\n" },
-{ Player::SwimPose,     "Swim",     "Swimming pose.\n" },
+   "@brief The pose of the Player.\n\n"
+   "@ingroup gameObjects\n\n")
+   { Player::StandPose,    "Stand",    "Standard movement pose.\n" },
+   { Player::SprintPose,   "Sprint",   "Sprinting pose.\n" },
+   { Player::CrouchPose,   "Crouch",   "Crouch pose.\n" },
+   { Player::PronePose,    "Prone",    "Prone pose.\n" },
+   { Player::SwimPose,     "Swim",     "Swimming pose.\n" },
 EndImplementEnumType;
 
 //----------------------------------------------------------------------------
@@ -1565,8 +1565,8 @@ EndImplementEnumType;
 IMPLEMENT_CO_NETOBJECT_V1(Player);
 
 ConsoleDocClass( Player,
-                "@ingroup gameObjects\n"
-                );
+   "@ingroup gameObjects\n"
+);
 
 F32 Player::mGravity = -20;
 
@@ -1658,9 +1658,6 @@ Player::Player()
 
    mLastAbsoluteYaw = 0.0f;
    mLastAbsolutePitch = 0.0f;
-   // IPS SpellSystem -----
-   mSpeedModifier = 1;
-   // ----- IPS SpellSystem
 }
 
 Player::~Player()
@@ -1700,7 +1697,7 @@ bool Player::onAdd()
       {
          mShapeInstance->clearTransition(mActionAnimation.thread);
          mShapeInstance->setPos(mActionAnimation.thread,
-            mActionAnimation.forward ? 1.0f : 0.0f);
+                                mActionAnimation.forward ? 1.0f : 0.0f);
          if (inDeathAnim())
             mDeath.lastPos = 1.0f;
       }
@@ -1729,7 +1726,7 @@ bool Player::onAdd()
          if ( mDataBlock->splashEmitterList[i] ) 
          {
             // IPS Pro -----
-            mSplashEmitter[i] = mDataBlock->splashEmitterList[i]->createEmitter();
+			 mSplashEmitter[i] = mDataBlock->splashEmitterList[i]->createEmitter();
             // ----- IPS Pro
             mSplashEmitter[i]->onNewDataBlock( mDataBlock->splashEmitterList[i], false );
             if( !mSplashEmitter[i]->registerObject() )
@@ -1752,11 +1749,11 @@ bool Player::onAdd()
 
       mPhysicsRep = PHYSICSMGR->createPlayer();
       mPhysicsRep->init(   mDataBlock->physicsPlayerType,
-         mDataBlock->boxSize,
-         mDataBlock->runSurfaceCos,
-         mDataBlock->maxStepHeight,
-         this, 
-         world );
+                           mDataBlock->boxSize,
+                           mDataBlock->runSurfaceCos,
+                           mDataBlock->maxStepHeight,
+                           this, 
+                           world );
       mPhysicsRep->setTransform( getTransform() );
    }
 
@@ -1823,9 +1820,9 @@ bool Player::onNewDataBlock( GameBaseData *dptr, bool reload )
       }
       if (mArmAnimation.action == PlayerData::NullAnimation) {
          mArmAnimation.action = (prevAction != PlayerData::NullAnimation)?
-prevAction: mDataBlock->lookAction;
+            prevAction: mDataBlock->lookAction;
          mShapeInstance->setSequence(mArmAnimation.thread,
-            mDataBlock->actionList[mArmAnimation.action].sequence,0);
+           mDataBlock->actionList[mArmAnimation.action].sequence,0);
       }
    }
    else
@@ -1863,83 +1860,83 @@ prevAction: mDataBlock->lookAction;
             break;
          }
 
-         // Reset the image state driven animation thread.  This will be properly built
-         // in onImageStateAnimation() when needed.
-         mImageStateThread = 0;
+   // Reset the image state driven animation thread.  This will be properly built
+   // in onImageStateAnimation() when needed.
+   mImageStateThread = 0;
 
-         // Initialize the primary thread, the actual sequence is
-         // set later depending on player actions.
-         mActionAnimation.action = PlayerData::NullAnimation;
-         mActionAnimation.thread = mShapeInstance->addThread();
-         updateAnimationTree(!isGhost());
+   // Initialize the primary thread, the actual sequence is
+   // set later depending on player actions.
+   mActionAnimation.action = PlayerData::NullAnimation;
+   mActionAnimation.thread = mShapeInstance->addThread();
+   updateAnimationTree(!isGhost());
 
-         // First person mounted image shapes.  Only on client.
-         if ( isGhost() )
+   // First person mounted image shapes.  Only on client.
+   if ( isGhost() )
+   {
+      for (U32 i=0; i<ShapeBase::MaxMountedImages; ++i)
+      {
+         if (bool(mDataBlock->mShapeFP[i]))
          {
-            for (U32 i=0; i<ShapeBase::MaxMountedImages; ++i)
+            mShapeFPInstance[i] = new TSShapeInstance(mDataBlock->mShapeFP[i], isClientObject());
+
+            mShapeFPInstance[i]->cloneMaterialList();
+
+            // Ambient animation
+            if (mShapeFPAmbientThread[i])
             {
-               if (bool(mDataBlock->mShapeFP[i]))
+               S32 seq = mShapeFPInstance[i]->getShape()->findSequence("ambient");
+               if (seq != -1)
                {
-                  mShapeFPInstance[i] = new TSShapeInstance(mDataBlock->mShapeFP[i], isClientObject());
-
-                  mShapeFPInstance[i]->cloneMaterialList();
-
-                  // Ambient animation
-                  if (mShapeFPAmbientThread[i])
-                  {
-                     S32 seq = mShapeFPInstance[i]->getShape()->findSequence("ambient");
-                     if (seq != -1)
-                     {
-                        mShapeFPAmbientThread[i] = mShapeFPInstance[i]->addThread();
-                        mShapeFPInstance[i]->setTimeScale(mShapeFPAmbientThread[i], 1);
-                        mShapeFPInstance[i]->setSequence(mShapeFPAmbientThread[i], seq, 0);
-                     }
-                  }
-
-                  // Standard state animation
-                  mShapeFPAnimThread[i] = mShapeFPInstance[i]->addThread();
-                  if (mShapeFPAnimThread[i])
-                  {
-                     mShapeFPInstance[i]->setTimeScale(mShapeFPAnimThread[i],0);
-                  }
+                  mShapeFPAmbientThread[i] = mShapeFPInstance[i]->addThread();
+                  mShapeFPInstance[i]->setTimeScale(mShapeFPAmbientThread[i], 1);
+                  mShapeFPInstance[i]->setSequence(mShapeFPAmbientThread[i], seq, 0);
                }
             }
+
+            // Standard state animation
+            mShapeFPAnimThread[i] = mShapeFPInstance[i]->addThread();
+            if (mShapeFPAnimThread[i])
+            {
+               mShapeFPInstance[i]->setTimeScale(mShapeFPAnimThread[i],0);
+            }
          }
+      }
+   }
 
-         if ( isGhost() )
-         {
-            // Create the sounds ahead of time.  This reduces runtime
-            // costs and makes the system easier to understand.
+   if ( isGhost() )
+   {
+      // Create the sounds ahead of time.  This reduces runtime
+      // costs and makes the system easier to understand.
 
-            SFX_DELETE( mMoveBubbleSound );
-            SFX_DELETE( mWaterBreathSound );
+      SFX_DELETE( mMoveBubbleSound );
+      SFX_DELETE( mWaterBreathSound );
 
-            if ( mDataBlock->sound[PlayerData::MoveBubbles] )
-               mMoveBubbleSound = SFX->createSource( mDataBlock->sound[PlayerData::MoveBubbles] );
+      if ( mDataBlock->sound[PlayerData::MoveBubbles] )
+         mMoveBubbleSound = SFX->createSource( mDataBlock->sound[PlayerData::MoveBubbles] );
 
-            if ( mDataBlock->sound[PlayerData::WaterBreath] )
-               mWaterBreathSound = SFX->createSource( mDataBlock->sound[PlayerData::WaterBreath] );
-         }
+      if ( mDataBlock->sound[PlayerData::WaterBreath] )
+         mWaterBreathSound = SFX->createSource( mDataBlock->sound[PlayerData::WaterBreath] );
+   }
 
-         mObjBox.maxExtents.x = mDataBlock->boxSize.x * 0.5f;
-         mObjBox.maxExtents.y = mDataBlock->boxSize.y * 0.5f;
-         mObjBox.maxExtents.z = mDataBlock->boxSize.z;
-         mObjBox.minExtents.x = -mObjBox.maxExtents.x;
-         mObjBox.minExtents.y = -mObjBox.maxExtents.y;
-         mObjBox.minExtents.z = 0.0f;
+   mObjBox.maxExtents.x = mDataBlock->boxSize.x * 0.5f;
+   mObjBox.maxExtents.y = mDataBlock->boxSize.y * 0.5f;
+   mObjBox.maxExtents.z = mDataBlock->boxSize.z;
+   mObjBox.minExtents.x = -mObjBox.maxExtents.x;
+   mObjBox.minExtents.y = -mObjBox.maxExtents.y;
+   mObjBox.minExtents.z = 0.0f;
 
-         // Setup the box for our convex object...
-         mObjBox.getCenter(&mConvex.mCenter);
-         mConvex.mSize.x = mObjBox.len_x() / 2.0f;
-         mConvex.mSize.y = mObjBox.len_y() / 2.0f;
-         mConvex.mSize.z = mObjBox.len_z() / 2.0f;
+   // Setup the box for our convex object...
+   mObjBox.getCenter(&mConvex.mCenter);
+   mConvex.mSize.x = mObjBox.len_x() / 2.0f;
+   mConvex.mSize.y = mObjBox.len_y() / 2.0f;
+   mConvex.mSize.z = mObjBox.len_z() / 2.0f;
 
-         // Initialize our scaled attributes as well
-         onScaleChanged();
-         resetWorldBox();
+   // Initialize our scaled attributes as well
+   onScaleChanged();
+   resetWorldBox();
 
-         scriptOnNewDataBlock();
-         return true;
+   scriptOnNewDataBlock();
+   return true;
 }
 
 //----------------------------------------------------------------------------
@@ -2052,9 +2049,9 @@ void Player::processTick(const Move* move)
          pMove = NullMove;
          cMove = *move;
          //if (isMounted()) {
-         // Filter Jump trigger if mounted
-         //pMove.trigger[2] = move->trigger[2];
-         //cMove.trigger[2] = false;
+            // Filter Jump trigger if mounted
+            //pMove.trigger[2] = move->trigger[2];
+            //cMove.trigger[2] = false;
          //}
          if (move->freeLook) {
             // Filter yaw/picth/roll when freelooking.
@@ -2186,20 +2183,20 @@ void Player::interpolateTick(F32 dt)
 
    setRenderPosition(pos,rot,dt);
 
-   /*
+/*
    // apply camera effects - is this the best place? - bramage
    GameConnection* connection = GameConnection::getConnectionToServer();
    if( connection->isFirstPerson() )
    {
-   ShapeBase *obj = dynamic_cast<ShapeBase*>(connection->getControlObject());
-   if( obj == this )
-   {
-   MatrixF curTrans = getRenderTransform();
-   curTrans.mul( gCamFXMgr.getTrans() );
-   Parent::setRenderTransform( curTrans );
+      ShapeBase *obj = dynamic_cast<ShapeBase*>(connection->getControlObject());
+      if( obj == this )
+      {
+         MatrixF curTrans = getRenderTransform();
+         curTrans.mul( gCamFXMgr.getTrans() );
+         Parent::setRenderTransform( curTrans );
+      }
    }
-   }
-   */
+*/
 
    updateLookAnimation(dt);
    delta.dt = dt;
@@ -2243,27 +2240,27 @@ void Player::setState(ActionState state, U32 recoverTicks)
       // will get reset when the object is added to a manager.
       if (isProperlyAdded()) {
          switch (state) {
-         case RecoverState: {
-            if (mDataBlock->landSequenceTime > 0.0f)
-            {
-               // Use the land sequence as the basis for the recovery
-               setActionThread(PlayerData::LandAnim, true, false, true, true);
-               F32 timeScale = mShapeInstance->getDuration(mActionAnimation.thread) / mDataBlock->landSequenceTime;
-               mShapeInstance->setTimeScale(mActionAnimation.thread,timeScale);
-               mRecoverDelay =  mDataBlock->landSequenceTime;
+            case RecoverState: {
+               if (mDataBlock->landSequenceTime > 0.0f)
+               {
+                  // Use the land sequence as the basis for the recovery
+                  setActionThread(PlayerData::LandAnim, true, false, true, true);
+                  F32 timeScale = mShapeInstance->getDuration(mActionAnimation.thread) / mDataBlock->landSequenceTime;
+                  mShapeInstance->setTimeScale(mActionAnimation.thread,timeScale);
+                  mRecoverDelay =  mDataBlock->landSequenceTime;
+               }
+               else
+               {
+                  // Legacy recover system
+                  mRecoverTicks = recoverTicks;
+                  mReversePending = U32(F32(mRecoverTicks) / sLandReverseScale);
+                  setActionThread(PlayerData::LandAnim, true, false, true, true);
+               }
+               break;
             }
-            else
-            {
-               // Legacy recover system
-               mRecoverTicks = recoverTicks;
-               mReversePending = U32(F32(mRecoverTicks) / sLandReverseScale);
-               setActionThread(PlayerData::LandAnim, true, false, true, true);
-            }
-            break;
-                            }
-
-         default:
-            break;
+            
+            default:
+               break;
          }
       }
 
@@ -2275,54 +2272,54 @@ void Player::updateState()
 {
    switch (mState)
    {
-   case RecoverState:
-      if (mDataBlock->landSequenceTime > 0.0f)
-      {
-         // Count down the land time
-         mRecoverDelay -= TickSec;
-         if (mRecoverDelay <= 0.0f)
+      case RecoverState:
+         if (mDataBlock->landSequenceTime > 0.0f)
          {
-            setState(MoveState);
-         }
-      }
-      else
-      {
-         // Legacy recover system
-         if (mRecoverTicks-- <= 0)
-         {
-            if (mReversePending && mActionAnimation.action != PlayerData::NullAnimation)
-            {
-               // this serves and counter, and direction state
-               mRecoverTicks = mReversePending;
-               mActionAnimation.forward = false;
-
-               S32 seq = mDataBlock->actionList[mActionAnimation.action].sequence;
-               S32 imageBasedSeq = convertActionToImagePrefix(mActionAnimation.action);
-               if (imageBasedSeq != -1)
-                  seq = imageBasedSeq;
-
-               F32 pos = mShapeInstance->getPos(mActionAnimation.thread);
-
-               mShapeInstance->setTimeScale(mActionAnimation.thread, -sLandReverseScale);
-               mShapeInstance->transitionToSequence(mActionAnimation.thread,
-                  seq, pos, sAnimationTransitionTime, true);
-               mReversePending = 0;
-            }
-            else
+            // Count down the land time
+            mRecoverDelay -= TickSec;
+            if (mRecoverDelay <= 0.0f)
             {
                setState(MoveState);
             }
-         }        // Stand back up slowly only if not moving much-
-         else if (!mReversePending && mVelocity.lenSquared() > sSlowStandThreshSquared)
-         {
-            mActionAnimation.waitForEnd = false;
-            setState(MoveState);
          }
-      }
-      break;
+         else
+         {
+            // Legacy recover system
+            if (mRecoverTicks-- <= 0)
+            {
+               if (mReversePending && mActionAnimation.action != PlayerData::NullAnimation)
+               {
+                  // this serves and counter, and direction state
+                  mRecoverTicks = mReversePending;
+                  mActionAnimation.forward = false;
 
-   default:
-      break;
+                  S32 seq = mDataBlock->actionList[mActionAnimation.action].sequence;
+                  S32 imageBasedSeq = convertActionToImagePrefix(mActionAnimation.action);
+                  if (imageBasedSeq != -1)
+                     seq = imageBasedSeq;
+
+                  F32 pos = mShapeInstance->getPos(mActionAnimation.thread);
+
+                  mShapeInstance->setTimeScale(mActionAnimation.thread, -sLandReverseScale);
+                  mShapeInstance->transitionToSequence(mActionAnimation.thread,
+                                                       seq, pos, sAnimationTransitionTime, true);
+                  mReversePending = 0;
+               }
+               else
+               {
+                  setState(MoveState);
+               }
+            }        // Stand back up slowly only if not moving much-
+            else if (!mReversePending && mVelocity.lenSquared() > sSlowStandThreshSquared)
+            {
+               mActionAnimation.waitForEnd = false;
+               setState(MoveState);
+            }
+         }
+         break;
+      
+      default:
+         break;
    }
 }
 
@@ -2334,10 +2331,6 @@ const char* Player::getStateName()
       return "Mounted";
    if (mState == RecoverState)
       return "Recover";
-   // IPS SpellSystem -----
-   if( mState == Immobilized)
-      return "Immobilized";
-   // ----- IPS SpellSystem
    return "Move";
 }
 
@@ -2407,18 +2400,18 @@ void Player::getDamageLocation(const Point3F& in_rPos, const char *&out_rpVert, 
 
       switch (index)
       {
-      case 0: out_rpQuad = "left_back";      break;
-      case 1: out_rpQuad = "middle_back";    break;
-      case 2: out_rpQuad = "right_back";     break;
-      case 3: out_rpQuad = "left_middle";    break;
-      case 4: out_rpQuad = "middle_middle";  break;
-      case 5: out_rpQuad = "right_middle";   break;
-      case 6: out_rpQuad = "left_front";     break;
-      case 7: out_rpQuad = "middle_front";   break;
-      case 8: out_rpQuad = "right_front";    break;
+         case 0: out_rpQuad = "left_back";      break;
+         case 1: out_rpQuad = "middle_back";    break;
+         case 2: out_rpQuad = "right_back";     break;
+         case 3: out_rpQuad = "left_middle";    break;
+         case 4: out_rpQuad = "middle_middle";  break;
+         case 5: out_rpQuad = "right_middle";   break;
+         case 6: out_rpQuad = "left_front";     break;
+         case 7: out_rpQuad = "middle_front";   break;
+         case 8: out_rpQuad = "right_front";    break;
 
-      default:
-         AssertFatal(0, "Bad non-tant index");
+         default:
+            AssertFatal(0, "Bad non-tant index");
       };
    }
 }
@@ -2441,25 +2434,25 @@ void Player::setPose( Pose pose )
    // Not added yet, just assign the pose and return.
    if ( !isProperlyAdded() )   
       return;
-
+        
    Point3F boxSize(1,1,1);
 
    // Resize the player boxes
    switch (pose) 
    {
-   case StandPose:
-   case SprintPose:
-      boxSize = mDataBlock->boxSize;
-      break;
-   case CrouchPose:
-      boxSize = mDataBlock->crouchBoxSize;         
-      break;
-   case PronePose:
-      boxSize = mDataBlock->proneBoxSize;         
-      break;
-   case SwimPose:
-      boxSize = mDataBlock->swimBoxSize;
-      break;
+      case StandPose:
+      case SprintPose:
+         boxSize = mDataBlock->boxSize;
+         break;
+      case CrouchPose:
+         boxSize = mDataBlock->crouchBoxSize;         
+         break;
+      case PronePose:
+         boxSize = mDataBlock->proneBoxSize;         
+         break;
+      case SwimPose:
+         boxSize = mDataBlock->swimBoxSize;
+         break;
    }
 
    // Object and World Boxes...
@@ -2636,7 +2629,7 @@ void Player::updateMove(const Move* move)
          if (p > M_PI_F) 
             p -= M_2PI_F;
          mHead.x = mClampF(mHead.x + p,mDataBlock->minLookAngle,
-            mDataBlock->maxLookAngle);
+                           mDataBlock->maxLookAngle);
 
          F32 y = move->yaw * (mPose == SprintPose ? mDataBlock->sprintYawScale : 1.0f);
          if (y > M_PI_F)
@@ -2645,8 +2638,8 @@ void Player::updateMove(const Move* move)
          if (move->freeLook && ((isMounted() && getMountNode() == 0) || (con && !con->isFirstPerson())))
          {
             mHead.z = mClampF(mHead.z + y,
-               -mDataBlock->maxFreelookAngle,
-               mDataBlock->maxFreelookAngle);
+                              -mDataBlock->maxFreelookAngle,
+                              mDataBlock->maxFreelookAngle);
          }
          else
          {
@@ -2702,44 +2695,44 @@ void Player::updateMove(const Move* move)
       {
          if ( mSwimming )
             moveSpeed = getMax(mDataBlock->maxUnderwaterForwardSpeed * move->y,
-            mDataBlock->maxUnderwaterSideSpeed * mFabs(move->x));
+                               mDataBlock->maxUnderwaterSideSpeed * mFabs(move->x));
          else if ( mPose == PronePose )
             moveSpeed = getMax(mDataBlock->maxProneForwardSpeed * move->y,
-            mDataBlock->maxProneSideSpeed * mFabs(move->x));
+                               mDataBlock->maxProneSideSpeed * mFabs(move->x));
          else if ( mPose == CrouchPose )
             moveSpeed = getMax(mDataBlock->maxCrouchForwardSpeed * move->y,
-            mDataBlock->maxCrouchSideSpeed * mFabs(move->x));
+                               mDataBlock->maxCrouchSideSpeed * mFabs(move->x));
          else if ( mPose == SprintPose )
             moveSpeed = getMax(mDataBlock->maxSprintForwardSpeed * move->y,
-            mDataBlock->maxSprintSideSpeed * mFabs(move->x));
+                               mDataBlock->maxSprintSideSpeed * mFabs(move->x));
 
          else // StandPose
             moveSpeed = getMax(mDataBlock->maxForwardSpeed * move->y,
-            mDataBlock->maxSideSpeed * mFabs(move->x));
+                               mDataBlock->maxSideSpeed * mFabs(move->x));
       }
       else
       {
          if ( mSwimming )
             moveSpeed = getMax(mDataBlock->maxUnderwaterBackwardSpeed * mFabs(move->y),
-            mDataBlock->maxUnderwaterSideSpeed * mFabs(move->x));
+                               mDataBlock->maxUnderwaterSideSpeed * mFabs(move->x));
          else if ( mPose == PronePose )
             moveSpeed = getMax(mDataBlock->maxProneBackwardSpeed * mFabs(move->y),
-            mDataBlock->maxProneSideSpeed * mFabs(move->x));
+                               mDataBlock->maxProneSideSpeed * mFabs(move->x));
          else if ( mPose == CrouchPose )
             moveSpeed = getMax(mDataBlock->maxCrouchBackwardSpeed * mFabs(move->y),
-            mDataBlock->maxCrouchSideSpeed * mFabs(move->x));         
+                               mDataBlock->maxCrouchSideSpeed * mFabs(move->x));         
          else if ( mPose == SprintPose )
             moveSpeed = getMax(mDataBlock->maxSprintBackwardSpeed * mFabs(move->y),
-            mDataBlock->maxSprintSideSpeed * mFabs(move->x));         
+                               mDataBlock->maxSprintSideSpeed * mFabs(move->x));         
          else // StandPose
             moveSpeed = getMax(mDataBlock->maxBackwardSpeed * mFabs(move->y),
-            mDataBlock->maxSideSpeed * mFabs(move->x));
+                               mDataBlock->maxSideSpeed * mFabs(move->x));
       }
 
       // Cancel any script driven animations if we are going to move.
       if (moveVec.x + moveVec.y + moveVec.z != 0.0f &&
-         (mActionAnimation.action >= PlayerData::NumTableActionAnims
-         || mActionAnimation.action == PlayerData::LandAnim))
+          (mActionAnimation.action >= PlayerData::NumTableActionAnims
+               || mActionAnimation.action == PlayerData::LandAnim))
          mActionAnimation.action = PlayerData::NullAnimation;
    }
    else
@@ -2747,9 +2740,6 @@ void Player::updateMove(const Move* move)
       moveVec.set(0.0f, 0.0f, 0.0f);
       moveSpeed = 0.0f;
    }
-   // IPS SpellSystem -----
-   moveSpeed *= mSpeedModifier;
-   // ----- IPS SpellSystem
 
    // Acceleration due to gravity
    VectorF acc(0.0f, 0.0f, mGravity * mGravityMod * TickSec);
@@ -2762,7 +2752,7 @@ void Player::updateMove(const Move* move)
       findContact( &runSurface, &jumpSurface, &contactNormal );
    if ( jumpSurface )
       mJumpSurfaceNormal = contactNormal;
-
+   
    // If we don't have a runSurface but we do have a contactNormal,
    // then we are standing on something that is too steep.
    // Deflect the force of gravity by the normal so we slide.
@@ -2937,7 +2927,7 @@ void Player::updateMove(const Move* move)
       // If we are swimming but close enough to the shore/ground
       // we can still have a surface-normal. In this case align the
       // velocity to the normal to make getting out of water easier.
-
+      
       moveVec.normalize();
       F32 isSwimUp = mDot( moveVec, contactNormal );
 
@@ -3052,7 +3042,7 @@ void Player::updateMove(const Move* move)
       if (zSpeedScale <= mDataBlock->jetMaxJumpSpeed)
       {
          zSpeedScale = (zSpeedScale <= mDataBlock->jetMinJumpSpeed)? 1:
-            1 - (zSpeedScale - mDataBlock->jetMinJumpSpeed) / (mDataBlock->jetMaxJumpSpeed - mDataBlock->jetMinJumpSpeed);
+         1 - (zSpeedScale - mDataBlock->jetMinJumpSpeed) / (mDataBlock->jetMaxJumpSpeed - mDataBlock->jetMinJumpSpeed);
 
          // Desired jump direction
          VectorF pv = moveVec;
@@ -3124,10 +3114,10 @@ void Player::updateMove(const Move* move)
          F32 currHeight = getPosition().z;
          const F32 C = 2.0f;
          const F32 M = 0.1f;
-
+         
          if ( currHeight + mVelocity.z * TickSec * C > mLiquidHeight )
             buoyancyForce *= M;
-
+                  
          //mVelocity.z -= buoyancyForce;
       }
    }
@@ -3152,7 +3142,7 @@ void Player::updateMove(const Move* move)
       mWorldToObj.mulV(mVelocity,&vel);
       mFalling = vel.z < mDataBlock->fallingSpeedThreshold;
    }
-
+   
    // Vehicle Dismount   
    if ( !isGhost() && move->trigger[sVehicleDismountTrigger] && canJump())
       mDataBlock->doDismount_callback( this );
@@ -3250,16 +3240,12 @@ bool Player::checkDismountPosition(const MatrixF& oldMat, const MatrixF& mat)
 
 bool Player::canJump()
 {
-   // IPS SpellSystem -----
-   return mAllowJumping && mState == MoveState && mDamageState == Enabled && !isMounted() && !mJumpDelay && mEnergy >= mDataBlock->minJumpEnergy && mJumpSurfaceLastContact < JumpSkipContactsMax && !mSwimming && (mPose != SprintPose || mDataBlock->sprintCanJump) && mSpeedModifier != 0;
-   // ----- IPS SpellSystem
+   return mAllowJumping && mState == MoveState && mDamageState == Enabled && !isMounted() && !mJumpDelay && mEnergy >= mDataBlock->minJumpEnergy && mJumpSurfaceLastContact < JumpSkipContactsMax && !mSwimming && (mPose != SprintPose || mDataBlock->sprintCanJump);
 }
 
 bool Player::canJetJump()
 {
-   // IPS SpellSystem -----
-   return mAllowJetJumping && mState == MoveState && mDamageState == Enabled && !isMounted() && mEnergy >= mDataBlock->jetMinJumpEnergy && mDataBlock->jetJumpForce != 0.0f && mSpeedModifier != 0;
-   // ----- IPS SpellSystem
+   return mAllowJetJumping && mState == MoveState && mDamageState == Enabled && !isMounted() && mEnergy >= mDataBlock->jetMinJumpEnergy && mDataBlock->jetJumpForce != 0.0f;
 }
 
 bool Player::canSwim()
@@ -3275,19 +3261,19 @@ bool Player::canCrouch()
       return false;
 
    if ( mState != MoveState || 
-      mDamageState != Enabled || 
-      isMounted() || 
-      mSwimming ||
-      mFalling )
+        mDamageState != Enabled || 
+        isMounted() || 
+        mSwimming ||
+        mFalling )
       return false;
 
    // Can't crouch if no crouch animation!
    if ( mDataBlock->actionList[PlayerData::CrouchRootAnim].sequence == -1 )
       return false;       
 
-   // We are already in this pose, so don't test it again...
-   if ( mPose == CrouchPose )
-      return true;
+	// We are already in this pose, so don't test it again...
+	if ( mPose == CrouchPose )
+		return true;
 
    // Do standard Torque physics test here!
    if ( !mPhysicsRep )
@@ -3331,14 +3317,14 @@ bool Player::canCrouch()
 bool Player::canStand()
 {   
    if ( mState != MoveState || 
-      mDamageState != Enabled || 
-      isMounted() || 
-      mSwimming )
+        mDamageState != Enabled || 
+        isMounted() || 
+        mSwimming )
       return false;
 
    // We are already in this pose, so don't test it again...
-   if ( mPose == StandPose )
-      return true;
+	if ( mPose == StandPose )
+		return true;
 
    // Do standard Torque physics test here!
    if ( !mPhysicsRep )
@@ -3387,10 +3373,10 @@ bool Player::canProne()
       return false;
 
    if ( mState != MoveState || 
-      mDamageState != Enabled || 
-      isMounted() || 
-      mSwimming ||
-      mFalling )
+        mDamageState != Enabled || 
+        isMounted() || 
+        mSwimming ||
+        mFalling )
       return false;
 
    // Can't go prone if no prone animation!
@@ -3401,9 +3387,9 @@ bool Player::canProne()
    if ( !mPhysicsRep )
       return true;
 
-   // We are already in this pose, so don't test it again...
-   if ( mPose == PronePose )
-      return true;
+	// We are already in this pose, so don't test it again...
+	if ( mPose == PronePose )
+		return true;
 
    return mPhysicsRep->testSpacials( getPosition(), mDataBlock->proneBoxSize );
 }
@@ -3453,15 +3439,15 @@ void Player::updateLookAnimation(F32 dT)
       // TG: Adjust arm position to avoid collision.
       F32 tp = mControlObject? 0.5:
          (renderHead.x - mArmRange.min) / mArmRange.delta;
-   mShapeInstance->setPos(mArmAnimation.thread,mClampF(tp,0,1));
+      mShapeInstance->setPos(mArmAnimation.thread,mClampF(tp,0,1));
    }
-
+   
    if (mHeadVThread) 
    {
       F32 tp = (renderHead.x - mHeadVRange.min) / mHeadVRange.delta;
       mShapeInstance->setPos(mHeadVThread,mClampF(tp,0,1));
    }
-
+   
    if (mHeadHThread) 
    {
       F32 dt = 2 * mDataBlock->maxFreelookAngle;
@@ -3501,7 +3487,7 @@ void Player::updateDeathOffsets()
 {
    if (inDeathAnim())
       // Get ground delta from the last time we offset this.
-         mDeath.lastPos = deathDelta(mDeath.posAdd);
+      mDeath.lastPos = deathDelta(mDeath.posAdd);
    else
       mDeath.clear();
 }
@@ -3593,7 +3579,7 @@ MatrixF * Player::Death::fallToGround(F32 dt, const Point3F& loc, F32 curZ, F32 
          normal.normalize();
          mat.set(EulerF (0.0f, 0.0f, curZ));
          mat.mulV(upY, & ahead);
-         mCross(ahead, normal, &sideVec);
+	      mCross(ahead, normal, &sideVec);
          sideVec.normalize();
          mCross(normal, sideVec, &ahead);
 
@@ -3786,7 +3772,7 @@ void Player::updateActionThread()
    {
       bool triggeredLeft = false;
       bool triggeredRight = false;
-
+      
       F32 offset = 0.0f;
       if( mShapeInstance->getTriggerState( 1 ) )
       {
@@ -3808,15 +3794,15 @@ void Player::updateActionThread()
          mat.mulP( Point3F( offset, 0.0f, 0.0f), &pos );
 
          if( gClientContainer.castRay( Point3F( pos.x, pos.y, pos.z + 0.01f ),
-            Point3F( pos.x, pos.y, pos.z - 2.0f ),
-            STATIC_COLLISION_TYPEMASK | VehicleObjectType, &rInfo ) )
+               Point3F( pos.x, pos.y, pos.z - 2.0f ),
+               STATIC_COLLISION_TYPEMASK | VehicleObjectType, &rInfo ) )
          {
             Material* material = ( rInfo.material ? dynamic_cast< Material* >( rInfo.material->getMaterial() ) : 0 );
 
             // Put footprints on surface, if appropriate for material.
 
             if( material && material->mShowFootprints
-               && mDataBlock->decalData )
+                && mDataBlock->decalData )
             {
                Point3F normal;
                Point3F tangent;
@@ -3824,15 +3810,15 @@ void Player::updateActionThread()
                mObjToWorld.getColumn( 2, &normal );
                gDecalManager->addDecal( rInfo.point, normal, tangent, mDataBlock->decalData, getScale().y );
             }
-
+            
             // Emit footpuffs.
 
             if( rInfo.t <= 0.5 && mWaterCoverage == 0.0
-               && material && material->mShowDust )
+                && material && material->mShowDust )
             {
                // New emitter every time for visibility reasons
                // IPS Pro -----
-               ParticleEmitter * emitter = mDataBlock->footPuffEmitter->createEmitter();
+				ParticleEmitter * emitter = mDataBlock->footPuffEmitter->createEmitter();
                // ----- IPS Pro
                emitter->onNewDataBlock( mDataBlock->footPuffEmitter, false );
 
@@ -3840,9 +3826,9 @@ void Player::updateActionThread()
 
                for( U32 x = 0; x < getMin( Material::NUM_EFFECT_COLOR_STAGES, ParticleData::PDC_NUM_KEYS ); ++ x )
                   colorList[ x ].set( material->mEffectColor[ x ].red,
-                  material->mEffectColor[ x ].green,
-                  material->mEffectColor[ x ].blue,
-                  material->mEffectColor[ x ].alpha );
+                                      material->mEffectColor[ x ].green,
+                                      material->mEffectColor[ x ].blue,
+                                      material->mEffectColor[ x ].alpha );
                for( U32 x = Material::NUM_EFFECT_COLOR_STAGES; x < ParticleData::PDC_NUM_KEYS; ++ x )
                   colorList[ x ].set( 1.0, 1.0, 1.0, 0.0 );
 
@@ -3862,7 +3848,7 @@ void Player::updateActionThread()
             }
 
             // Play footstep sound.
-
+            
             playFootstepSound( triggeredLeft, material, rInfo.object );
          }
       }
@@ -3874,8 +3860,8 @@ void Player::updateActionThread()
       mMountPending = (isMounted() ? 0 : (mMountPending - 1));
 
    if (mActionAnimation.action == PlayerData::NullAnimation ||
-      ((!mActionAnimation.waitForEnd || mActionAnimation.atEnd)) &&
-      !mActionAnimation.holdAtEnd && (mActionAnimation.delayTicks -= !mMountPending) <= 0)
+       ((!mActionAnimation.waitForEnd || mActionAnimation.atEnd)) &&
+       !mActionAnimation.holdAtEnd && (mActionAnimation.delayTicks -= !mMountPending) <= 0)
    {
       //The scripting language will get a call back when a script animation has finished...
       //  example: When the chat menu animations are done playing...
@@ -3885,7 +3871,7 @@ void Player::updateActionThread()
    }
 
    if ( (mActionAnimation.action != PlayerData::LandAnim) &&
-      (mActionAnimation.action != PlayerData::NullAnimation) )
+        (mActionAnimation.action != PlayerData::NullAnimation) )
    {
       // Update action animation time scale to match ground velocity
       PlayerData::ActionAnimation &anim =
@@ -3901,7 +3887,7 @@ void Player::updateActionThread()
       }
 
       mShapeInstance->setTimeScale(mActionAnimation.thread,
-         mActionAnimation.forward? scale: -scale);
+                                   mActionAnimation.forward? scale: -scale);
    }
    PROFILE_END();
 }
@@ -3964,7 +3950,7 @@ void Player::pickActionAnimation()
       // Go into root position unless something was set explicitly
       // from a script.
       if (mActionAnimation.action != PlayerData::RootAnim &&
-         mActionAnimation.action < PlayerData::NumTableActionAnims)
+          mActionAnimation.action < PlayerData::NumTableActionAnims)
          setActionThread(PlayerData::RootAnim,true,false,false);
       return;
    }
@@ -3972,7 +3958,7 @@ void Player::pickActionAnimation()
    bool forward = true;
    U32 action = PlayerData::RootAnim;
    bool fsp = false;
-
+   
    // Jetting overrides the fall animation condition
    if (mJetting)
    {
@@ -4318,17 +4304,17 @@ const char* Player::getImageAnimPrefix(U32 imageSlot, S32 imageShapeIndex)
 
    switch (imageShapeIndex)
    {
-   case ShapeBaseImageData::StandardImageShape:
+      case ShapeBaseImageData::StandardImageShape:
       {
          return mDataBlock->imageAnimPrefix;
       }
 
-   case ShapeBaseImageData::FirstPersonImageShape:
+      case ShapeBaseImageData::FirstPersonImageShape:
       {
          return mDataBlock->imageAnimPrefixFP;
       }
 
-   default:
+      default:
       {
          return "";
       }
@@ -4526,9 +4512,9 @@ void Player::updateAnimationTree(bool firstPerson)
    if (firstPerson)
       if (mActionAnimation.firstPerson)
          mode = 0;
-   //            TSShapeInstance::MaskNodeRotation;
-   //            TSShapeInstance::MaskNodePosX |
-   //            TSShapeInstance::MaskNodePosY;
+//            TSShapeInstance::MaskNodeRotation;
+//            TSShapeInstance::MaskNodePosX |
+//            TSShapeInstance::MaskNodePosY;
       else
          mode = TSShapeInstance::MaskNodeAllButBlend;
 
@@ -4569,7 +4555,7 @@ bool Player::step(Point3F *pos,F32 *maxStep,F32 time)
    CollisionWorkingList* pList = rList.wLink.mNext;
    while (pList != &rList) {
       Convex* pConvex = pList->mConvex;
-
+      
       // Alright, here's the deal... a polysoup mesh really needs to be 
       // designed with stepping in mind.  If there are too many smallish polygons
       // the stepping system here gets confused and allows you to run up walls 
@@ -4623,7 +4609,7 @@ Point3F Player::_move( const F32 travelTime, Collision *outCol )
 {
    // Try and move to new pos
    F32 totalMotion  = 0.0f;
-
+   
    // TODO: not used?
    //F32 initialSpeed = mVelocity.len();
 
@@ -4668,8 +4654,8 @@ Point3F Player::_move( const F32 travelTime, Collision *outCol )
       Point3F distance = end - start;
 
       if (mFabs(distance.x) < mObjBox.len_x() &&
-         mFabs(distance.y) < mObjBox.len_y() &&
-         mFabs(distance.z) < mObjBox.len_z())
+          mFabs(distance.y) < mObjBox.len_y() &&
+          mFabs(distance.z) < mObjBox.len_z())
       {
          // We can potentially early out of this.  If there are no polys in the clipped polylist at our
          //  end position, then we can bail, and just set start = end;
@@ -4834,7 +4820,7 @@ Point3F Player::_move( const F32 travelTime, Collision *outCol )
             {
                // Re-orient velocity along the crease.
                if (mDot(dv,firstNormal) < 0.0f &&
-                  mDot(collision->normal,firstNormal) < 0.0f)
+                   mDot(collision->normal,firstNormal) < 0.0f)
                {
                   VectorF nv;
                   mCross(collision->normal,firstNormal,&nv);
@@ -4931,8 +4917,8 @@ void Player::_handleCollision( const Collision &collision )
 {
    // Track collisions
    if (  !isGhost() && 
-      collision.object && 
-      collision.object != mContactInfo.contactObject )
+         collision.object && 
+         collision.object != mContactInfo.contactObject )
       queueCollision( collision.object, mVelocity - collision.object->getVelocity() );
 }
 
@@ -5034,7 +5020,7 @@ bool Player::updatePos(const F32 travelTime)
          newPos = delta.posVec;
       else
          newPos = _move( travelTime, &col );
-
+   
       _handleCollision( col );
    }
 
@@ -5070,17 +5056,17 @@ bool Player::updatePos(const F32 travelTime)
    // Check the total distance moved.  If it is more than 1000th of the velocity, then
    //  we moved a fair amount...
    //if (totalMotion >= (0.001f * initialSpeed))
-   return true;
+      return true;
    //else
-   //return false;
+      //return false;
 }
 
 
 //----------------------------------------------------------------------------
-
+ 
 void Player::_findContact( SceneObject **contactObject, 
-                          VectorF *contactNormal, 
-                          Vector<SceneObject*> *outOverlapObjects )
+                           VectorF *contactNormal, 
+                           Vector<SceneObject*> *outOverlapObjects )
 {
    Point3F pos;
    getTransform().getColumn(3,&pos);
@@ -5122,9 +5108,9 @@ void Player::_findContact( SceneObject **contactObject,
       Convex* pConvex = pList->mConvex;
 
       U32 objectMask = pConvex->getObject()->getTypeMask();
-
+      
       if (  ( objectMask & sCollisionMoveMask ) &&
-         !( objectMask & PhysicalZoneObjectType ) )
+            !( objectMask & PhysicalZoneObjectType ) )
       {
          Box3F convexBox = pConvex->getBoundingBox();
          if (plistBox.isOverlapped(convexBox))
@@ -5196,8 +5182,8 @@ void Player::findContact( bool *run, bool *jump, VectorF *contactNormal )
          // If we've overlapped the worldbounding boxes, then that's it...
          Item* item = static_cast<Item*>( obj );
          if (  getWorldBox().isOverlapped(item->getWorldBox()) &&
-            item->getCollisionObject() != this && 
-            !item->isHidden() )
+               item->getCollisionObject() != this && 
+               !item->isHidden() )
             queueCollision(item,getVelocity() - item->getVelocity());
       }
    }
@@ -5207,7 +5193,7 @@ void Player::findContact( bool *run, bool *jump, VectorF *contactNormal )
    *jump = vd > mDataBlock->jumpSurfaceCos;
 
    mContactInfo.clear();
-
+  
    mContactInfo.contacted = contactObject != NULL;
    mContactInfo.contactObject = contactObject;
 
@@ -5233,11 +5219,11 @@ void Player::checkMissionArea()
    getTransform().getColumn(3, &pos);
 
    if ((pos.x < area.point.x || pos.x > area.point.x + area.extent.x ||
-      pos.y < area.point.y || pos.y > area.point.y + area.extent.y)) {
-         if(mInMissionArea) {
-            mInMissionArea = false;
-            mDataBlock->onLeaveMissionArea_callback( this );
-         }
+       pos.y < area.point.y || pos.y > area.point.y + area.extent.y)) {
+      if(mInMissionArea) {
+         mInMissionArea = false;
+         mDataBlock->onLeaveMissionArea_callback( this );
+      }
    }
    else if(!mInMissionArea)
    {
@@ -5590,7 +5576,7 @@ void Player::getMuzzleTransform(U32 imageSlot,MatrixF* mat)
    enableCollision();
 
    enableHeadZCalc();
-
+  
    *mat = nmat;
 }
 
@@ -5632,7 +5618,7 @@ void Player::getRenderMuzzleTransform(U32 imageSlot,MatrixF* mat)
    enableCollision();
 
    enableHeadZCalc();
-
+  
    *mat = nmat;
 }
 
@@ -5790,7 +5776,7 @@ F32 Player::getSpeed() const
 
 void Player::setVelocity(const VectorF& vel)
 {
-   AssertFatal( !mIsNaN( vel ), "Player::setVelocity() - The velocity is NaN!" );
+	AssertFatal( !mIsNaN( vel ), "Player::setVelocity() - The velocity is NaN!" );
 
    mVelocity = vel;
    setMaskBits(MoveMask);
@@ -5798,7 +5784,7 @@ void Player::setVelocity(const VectorF& vel)
 
 void Player::applyImpulse(const Point3F&,const VectorF& vec)
 {
-   AssertFatal( !mIsNaN( vec ), "Player::applyImpulse() - The vector is NaN!" );
+	AssertFatal( !mIsNaN( vec ), "Player::applyImpulse() - The vector is NaN!" );
 
    // Players ignore angular velocity
    VectorF vel;
@@ -5905,9 +5891,9 @@ void Player::buildConvex(const Box3F& box, Convex* convex)
    CollisionWorkingList& wl = convex->getWorkingList();
    for (CollisionWorkingList* itr = wl.wLink.mNext; itr != &wl; itr = itr->wLink.mNext) {
       if (itr->mConvex->getType() == BoxConvexType &&
-         itr->mConvex->getObject() == this) {
-            cc = itr->mConvex;
-            break;
+          itr->mConvex->getObject() == this) {
+         cc = itr->mConvex;
+         break;
       }
    }
    if (cc)
@@ -5956,7 +5942,7 @@ void Player::updateWorkingCollisionSet()
    {
       if (mWorkingQueryBox.isContained(convexBox) == false)
          // Needed region is outside the cached region.  Update it.
-            updateSet = true;
+         updateSet = true;
    }
    else
    {
@@ -6001,9 +5987,6 @@ void Player::writePacketData(GameConnection *connection, BitStream *stream)
       stream->write(mVelocity.x);
       stream->write(mVelocity.y);
       stream->write(mVelocity.z);
-      // IPS SpellSystem -----
-      stream->writeInt(mSpeedModifier * 1000, 16);
-      // ----- IPS SpellSystem
       stream->writeInt(mJumpSurfaceLastContact > 15 ? 15 : mJumpSurfaceLastContact, 4);
 
       if (stream->writeFlag(!mAllowSprinting || !mAllowCrouching || !mAllowProne || !mAllowJumping || !mAllowJetJumping || !mAllowSwimming))
@@ -6058,9 +6041,6 @@ void Player::readPacketData(GameConnection *connection, BitStream *stream)
       stream->read(&mVelocity.x);
       stream->read(&mVelocity.y);
       stream->read(&mVelocity.z);
-      // IPS SpellSystem -----
-      mSpeedModifier = stream->readInt(16) / 1000.0f;
-      // ----- IPS SpellSystem
       stream->setCompressionPoint(pos);
       delta.pos = pos;
       mJumpSurfaceLastContact = stream->readInt(4);
@@ -6117,25 +6097,25 @@ U32 Player::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
       stream->writeInt(mImpactSound, PlayerData::ImpactBits);
 
    if (stream->writeFlag(mask & ActionMask &&
-      mActionAnimation.action != PlayerData::NullAnimation &&
-      mActionAnimation.action >= PlayerData::NumTableActionAnims)) {
-         stream->writeInt(mActionAnimation.action,PlayerData::ActionAnimBits);
-         stream->writeFlag(mActionAnimation.holdAtEnd);
-         stream->writeFlag(mActionAnimation.atEnd);
-         stream->writeFlag(mActionAnimation.firstPerson);
-         if (!mActionAnimation.atEnd) {
-            // If somewhere in middle on initial update, must send position-
-            F32   where = mShapeInstance->getPos(mActionAnimation.thread);
-            if (stream->writeFlag((mask & InitialUpdateMask) != 0 && where > 0))
-               stream->writeSignedFloat(where, 6);
-         }
+         mActionAnimation.action != PlayerData::NullAnimation &&
+         mActionAnimation.action >= PlayerData::NumTableActionAnims)) {
+      stream->writeInt(mActionAnimation.action,PlayerData::ActionAnimBits);
+      stream->writeFlag(mActionAnimation.holdAtEnd);
+      stream->writeFlag(mActionAnimation.atEnd);
+      stream->writeFlag(mActionAnimation.firstPerson);
+      if (!mActionAnimation.atEnd) {
+         // If somewhere in middle on initial update, must send position-
+         F32   where = mShapeInstance->getPos(mActionAnimation.thread);
+         if (stream->writeFlag((mask & InitialUpdateMask) != 0 && where > 0))
+            stream->writeSignedFloat(where, 6);
+      }
    }
 
    if (stream->writeFlag(mask & ActionMask &&
-      mArmAnimation.action != PlayerData::NullAnimation &&
-      (!(mask & InitialUpdateMask) ||
-      mArmAnimation.action != mDataBlock->lookAction))) {
-         stream->writeInt(mArmAnimation.action,PlayerData::ActionAnimBits);
+         mArmAnimation.action != PlayerData::NullAnimation &&
+         (!(mask & InitialUpdateMask) ||
+         mArmAnimation.action != mDataBlock->lookAction))) {
+      stream->writeInt(mArmAnimation.action,PlayerData::ActionAnimBits);
    }
 
    // The rest of the data is part of the control object packet update.
@@ -6167,9 +6147,6 @@ U32 Player::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
             len = 8191;
          stream->writeInt((S32)len, 13);
       }
-      // IPS SpellSystem -----
-      stream->writeInt(mSpeedModifier * 1000, 16);
-      // ----- IPS SpellSystem
       stream->writeFloat(mRot.z / M_2PI_F, 7);
       stream->writeSignedFloat(mHead.x / mDataBlock->maxLookAngle, 6);
       stream->writeSignedFloat(mHead.z / mDataBlock->maxFreelookAngle, 6);
@@ -6206,7 +6183,7 @@ void Player::unpackUpdate(NetConnection *con, BitStream *stream)
          {
             mShapeInstance->clearTransition(mActionAnimation.thread);
             mShapeInstance->setPos(mActionAnimation.thread,
-               mActionAnimation.forward? 1: 0);
+                                   mActionAnimation.forward? 1: 0);
             if (inDeath)
                mDeath.lastPos = 1.0f;
          }
@@ -6266,10 +6243,7 @@ void Player::unpackUpdate(NetConnection *con, BitStream *stream)
       {
          mVelocity.set(0.0f, 0.0f, 0.0f);
       }
-      // IPS SpellSystem -----
-      mSpeedModifier = stream->readInt(16) / 1000.0f;
-      // ----- IPS SpellSystem
-
+      
       rot.y = rot.x = 0.0f;
       rot.z = stream->readFloat(7) * M_2PI_F;
       mHead.x = stream->readSignedFloat(6) * mDataBlock->maxLookAngle;
@@ -6357,99 +6331,99 @@ void Player::unpackUpdate(NetConnection *con, BitStream *stream)
 
 //----------------------------------------------------------------------------
 DefineEngineMethod( Player, getPose, const char*, (),,
-                   "@brief Get the name of the player's current pose.\n\n"
+   "@brief Get the name of the player's current pose.\n\n"
 
-                   "The pose is one of the following:\n\n<ul>"
-                   "<li>Stand - Standard movement pose.</li>"
-                   "<li>Sprint - Sprinting pose.</li>"
-                   "<li>Crouch - Crouch pose.</li>"
-                   "<li>Prone - Prone pose.</li>"
-                   "<li>Swim - Swimming pose.</li></ul>\n"
+   "The pose is one of the following:\n\n<ul>"
+   "<li>Stand - Standard movement pose.</li>"
+   "<li>Sprint - Sprinting pose.</li>"
+   "<li>Crouch - Crouch pose.</li>"
+   "<li>Prone - Prone pose.</li>"
+   "<li>Swim - Swimming pose.</li></ul>\n"
 
-                   "@return The current pose; one of: \"Stand\", \"Sprint\", \"Crouch\", \"Prone\", \"Swim\"\n" )
+   "@return The current pose; one of: \"Stand\", \"Sprint\", \"Crouch\", \"Prone\", \"Swim\"\n" )
 {
    return object->getPoseName();
 }
 
 DefineEngineMethod( Player, allowAllPoses, void, (),,
-                   "@brief Allow all poses a chance to occur.\n\n"
-                   "This method resets any poses that have manually been blocked from occuring.  "
-                   "This includes the regular pose states such as sprinting, crouch, being prone "
-                   "and swimming.  It also includes being able to jump and jet jump.  While this "
-                   "is allowing these poses to occur it doesn't mean that they all can due to other "
-                   "conditions.  We're just not manually blocking them from being allowed.\n"
-                   "@see allowJumping()\n"
-                   "@see allowJetJumping()\n"
-                   "@see allowSprinting()\n"
-                   "@see allowCrouching()\n"
-                   "@see allowProne()\n"
-                   "@see allowSwimming()\n" )
+   "@brief Allow all poses a chance to occur.\n\n"
+   "This method resets any poses that have manually been blocked from occuring.  "
+   "This includes the regular pose states such as sprinting, crouch, being prone "
+   "and swimming.  It also includes being able to jump and jet jump.  While this "
+   "is allowing these poses to occur it doesn't mean that they all can due to other "
+   "conditions.  We're just not manually blocking them from being allowed.\n"
+   "@see allowJumping()\n"
+   "@see allowJetJumping()\n"
+   "@see allowSprinting()\n"
+   "@see allowCrouching()\n"
+   "@see allowProne()\n"
+   "@see allowSwimming()\n" )
 {
    object->allowAllPoses();
 }
 
 DefineEngineMethod( Player, allowJumping, void, (bool state),,
-                   "@brief Set if the Player is allowed to jump.\n\n"
-                   "The default is to allow jumping unless there are other environmental concerns "
-                   "that prevent it.  This method is mainly used to explicitly disallow jumping "
-                   "at any time.\n"
-                   "@param state Set to true to allow jumping, false to disable it.\n"
-                   "@see allowAllPoses()\n" )
+   "@brief Set if the Player is allowed to jump.\n\n"
+   "The default is to allow jumping unless there are other environmental concerns "
+   "that prevent it.  This method is mainly used to explicitly disallow jumping "
+   "at any time.\n"
+   "@param state Set to true to allow jumping, false to disable it.\n"
+   "@see allowAllPoses()\n" )
 {
    object->allowJumping(state);
 }
 
 DefineEngineMethod( Player, allowJetJumping, void, (bool state),,
-                   "@brief Set if the Player is allowed to jet jump.\n\n"
-                   "The default is to allow jet jumping unless there are other environmental concerns "
-                   "that prevent it.  This method is mainly used to explicitly disallow jet jumping "
-                   "at any time.\n"
-                   "@param state Set to true to allow jet jumping, false to disable it.\n"
-                   "@see allowAllPoses()\n" )
+   "@brief Set if the Player is allowed to jet jump.\n\n"
+   "The default is to allow jet jumping unless there are other environmental concerns "
+   "that prevent it.  This method is mainly used to explicitly disallow jet jumping "
+   "at any time.\n"
+   "@param state Set to true to allow jet jumping, false to disable it.\n"
+   "@see allowAllPoses()\n" )
 {
    object->allowJetJumping(state);
 }
 
 DefineEngineMethod( Player, allowSprinting, void, (bool state),,
-                   "@brief Set if the Player is allowed to sprint.\n\n"
-                   "The default is to allow sprinting unless there are other environmental concerns "
-                   "that prevent it.  This method is mainly used to explicitly disallow sprinting "
-                   "at any time.\n"
-                   "@param state Set to true to allow sprinting, false to disable it.\n"
-                   "@see allowAllPoses()\n" )
+   "@brief Set if the Player is allowed to sprint.\n\n"
+   "The default is to allow sprinting unless there are other environmental concerns "
+   "that prevent it.  This method is mainly used to explicitly disallow sprinting "
+   "at any time.\n"
+   "@param state Set to true to allow sprinting, false to disable it.\n"
+   "@see allowAllPoses()\n" )
 {
    object->allowSprinting(state);
 }
 
 DefineEngineMethod( Player, allowCrouching, void, (bool state),,
-                   "@brief Set if the Player is allowed to crouch.\n\n"
-                   "The default is to allow crouching unless there are other environmental concerns "
-                   "that prevent it.  This method is mainly used to explicitly disallow crouching "
-                   "at any time.\n"
-                   "@param state Set to true to allow crouching, false to disable it.\n"
-                   "@see allowAllPoses()\n" )
+   "@brief Set if the Player is allowed to crouch.\n\n"
+   "The default is to allow crouching unless there are other environmental concerns "
+   "that prevent it.  This method is mainly used to explicitly disallow crouching "
+   "at any time.\n"
+   "@param state Set to true to allow crouching, false to disable it.\n"
+   "@see allowAllPoses()\n" )
 {
    object->allowCrouching(state);
 }
 
 DefineEngineMethod( Player, allowProne, void, (bool state),,
-                   "@brief Set if the Player is allowed to go prone.\n\n"
-                   "The default is to allow being prone unless there are other environmental concerns "
-                   "that prevent it.  This method is mainly used to explicitly disallow going prone "
-                   "at any time.\n"
-                   "@param state Set to true to allow being prone, false to disable it.\n"
-                   "@see allowAllPoses()\n" )
+   "@brief Set if the Player is allowed to go prone.\n\n"
+   "The default is to allow being prone unless there are other environmental concerns "
+   "that prevent it.  This method is mainly used to explicitly disallow going prone "
+   "at any time.\n"
+   "@param state Set to true to allow being prone, false to disable it.\n"
+   "@see allowAllPoses()\n" )
 {
    object->allowProne(state);
 }
 
 DefineEngineMethod( Player, allowSwimming, void, (bool state),,
-                   "@brief Set if the Player is allowed to swim.\n\n"
-                   "The default is to allow swimming unless there are other environmental concerns "
-                   "that prevent it.  This method is mainly used to explicitly disallow swimming "
-                   "at any time.\n"
-                   "@param state Set to true to allow swimming, false to disable it.\n"
-                   "@see allowAllPoses()\n" )
+   "@brief Set if the Player is allowed to swim.\n\n"
+   "The default is to allow swimming unless there are other environmental concerns "
+   "that prevent it.  This method is mainly used to explicitly disallow swimming "
+   "at any time.\n"
+   "@param state Set to true to allow swimming, false to disable it.\n"
+   "@see allowAllPoses()\n" )
 {
    object->allowSwimming(state);
 }
@@ -6457,72 +6431,72 @@ DefineEngineMethod( Player, allowSwimming, void, (bool state),,
 //----------------------------------------------------------------------------
 
 DefineEngineMethod( Player, getState, const char*, (),,
-                   "@brief Get the name of the player's current state.\n\n"
+   "@brief Get the name of the player's current state.\n\n"
 
-                   "The state is one of the following:\n\n<ul>"
-                   "<li>Dead - The Player is dead.</li>"
-                   "<li>Mounted - The Player is mounted to an object such as a vehicle.</li>"
-                   "<li>Move - The Player is free to move.  The usual state.</li>"
-                   "<li>Recover - The Player is recovering from a fall.  See PlayerData::recoverDelay.</li></ul>\n"
+   "The state is one of the following:\n\n<ul>"
+   "<li>Dead - The Player is dead.</li>"
+   "<li>Mounted - The Player is mounted to an object such as a vehicle.</li>"
+   "<li>Move - The Player is free to move.  The usual state.</li>"
+   "<li>Recover - The Player is recovering from a fall.  See PlayerData::recoverDelay.</li></ul>\n"
 
-                   "@return The current state; one of: \"Dead\", \"Mounted\", \"Move\", \"Recover\"\n" )
+   "@return The current state; one of: \"Dead\", \"Mounted\", \"Move\", \"Recover\"\n" )
 {
    return object->getStateName();
 }
 
 DefineEngineMethod( Player, getDamageLocation, const char*, ( Point3F pos ),,
-                   "@brief Get the named damage location and modifier for a given world position.\n\n"
+   "@brief Get the named damage location and modifier for a given world position.\n\n"
 
-                   "the Player object can simulate different hit locations based on a pre-defined set "
-                   "of PlayerData defined percentages.  These hit percentages divide up the Player's "
-                   "bounding box into different regions.  The diagram below demonstrates how the various "
-                   "PlayerData properties split up the bounding volume:\n\n"
+   "the Player object can simulate different hit locations based on a pre-defined set "
+   "of PlayerData defined percentages.  These hit percentages divide up the Player's "
+   "bounding box into different regions.  The diagram below demonstrates how the various "
+   "PlayerData properties split up the bounding volume:\n\n"
 
-                   "<img src=\"images/player_damageloc.png\">\n\n"
+   "<img src=\"images/player_damageloc.png\">\n\n"
 
-                   "While you may pass in any world position and getDamageLocation() will provide a best-fit "
-                   "location, you should be aware that this can produce some interesting results.  For example, "
-                   "any position that is above PlayerData::boxHeadPercentage will be considered a 'head' hit, even "
-                   "if the world position is high in the sky.  Therefore it may be wise to keep the passed in point "
-                   "to somewhere on the surface of, or within, the Player's bounding volume.\n\n"
+   "While you may pass in any world position and getDamageLocation() will provide a best-fit "
+   "location, you should be aware that this can produce some interesting results.  For example, "
+   "any position that is above PlayerData::boxHeadPercentage will be considered a 'head' hit, even "
+   "if the world position is high in the sky.  Therefore it may be wise to keep the passed in point "
+   "to somewhere on the surface of, or within, the Player's bounding volume.\n\n"
 
-                   "@note This method will not return an accurate location when the player is "
-                   "prone or swimming.\n\n"
+   "@note This method will not return an accurate location when the player is "
+   "prone or swimming.\n\n"
 
-                   "@param pos A world position for which to retrieve a body region on this player.\n"
+   "@param pos A world position for which to retrieve a body region on this player.\n"
 
-                   "@return a string containing two words (space separated strings), where the "
-                   "first is a location and the second is a modifier.\n\n"
+   "@return a string containing two words (space separated strings), where the "
+   "first is a location and the second is a modifier.\n\n"
 
-                   "Posible locations:<ul>"
-                   "<li>head</li>"
-                   "<li>torso</li>"
-                   "<li>legs</li></ul>\n"
+   "Posible locations:<ul>"
+   "<li>head</li>"
+   "<li>torso</li>"
+   "<li>legs</li></ul>\n"
 
-                   "Head modifiers:<ul>"
-                   "<li>left_back</li>"
-                   "<li>middle_back</li>"
-                   "<li>right_back</li>"
-                   "<li>left_middle</li>"
-                   "<li>middle_middle</li>"
-                   "<li>right_middle</li>"
-                   "<li>left_front</li>"
-                   "<li>middle_front</li>"
-                   "<li>right_front</li></ul>\n"
+   "Head modifiers:<ul>"
+   "<li>left_back</li>"
+   "<li>middle_back</li>"
+   "<li>right_back</li>"
+   "<li>left_middle</li>"
+   "<li>middle_middle</li>"
+   "<li>right_middle</li>"
+   "<li>left_front</li>"
+   "<li>middle_front</li>"
+   "<li>right_front</li></ul>\n"
 
-                   "Legs/Torso modifiers:<ul>"
-                   "<li>front_left</li>"
-                   "<li>front_right</li>"
-                   "<li>back_left</li>"
-                   "<li>back_right</li></ul>\n"
+   "Legs/Torso modifiers:<ul>"
+   "<li>front_left</li>"
+   "<li>front_right</li>"
+   "<li>back_left</li>"
+   "<li>back_right</li></ul>\n"
 
-                   "@see PlayerData::boxHeadPercentage\n"
-                   "@see PlayerData::boxHeadFrontPercentage\n"
-                   "@see PlayerData::boxHeadBackPercentage\n"
-                   "@see PlayerData::boxHeadLeftPercentage\n"
-                   "@see PlayerData::boxHeadRightPercentage\n"
-                   "@see PlayerData::boxTorsoPercentage\n"
-                   )
+   "@see PlayerData::boxHeadPercentage\n"
+   "@see PlayerData::boxHeadFrontPercentage\n"
+   "@see PlayerData::boxHeadBackPercentage\n"
+   "@see PlayerData::boxHeadLeftPercentage\n"
+   "@see PlayerData::boxHeadRightPercentage\n"
+   "@see PlayerData::boxTorsoPercentage\n"
+   )
 {
    const char *buffer1;
    const char *buffer2;
@@ -6535,88 +6509,88 @@ DefineEngineMethod( Player, getDamageLocation, const char*, ( Point3F pos ),,
 }
 
 DefineEngineMethod( Player, setArmThread, bool, ( const char* name ),,
-                   "@brief Set the sequence that controls the player's arms (dynamically adjusted "
-                   "to match look direction).\n\n"
-                   "@param name Name of the sequence to play on the player's arms.\n"
-                   "@return true if successful, false if failed.\n"
-                   "@note By default the 'look' sequence is used, if available.\n")
+   "@brief Set the sequence that controls the player's arms (dynamically adjusted "
+   "to match look direction).\n\n"
+   "@param name Name of the sequence to play on the player's arms.\n"
+   "@return true if successful, false if failed.\n"
+   "@note By default the 'look' sequence is used, if available.\n")
 {
    return object->setArmThread( name );
 }
 
 DefineEngineMethod( Player, setActionThread, bool, ( const char* name, bool hold, bool fsp ), ( false, true ),
-                   "@brief Set the main action sequence to play for this player.\n\n"
-                   "@param name Name of the action sequence to set\n"
-                   "@param hold Set to false to get a callback on the datablock when the sequence ends (PlayerData::animationDone()).  "
-                   "When set to true no callback is made.\n"
-                   "@param fsp True if first person and none of the spine nodes in the shape should animate.  False will allow the shape's "
-                   "spine nodes to animate.\n"
-                   "@return True if succesful, false if failed\n"
-
-                   "@note The spine nodes for the Player's shape are named as follows:\n\n<ul>"
-                   "<li>Bip01 Pelvis</li>"
-                   "<li>Bip01 Spine</li>"
-                   "<li>Bip01 Spine1</li>"
-                   "<li>Bip01 Spine2</li>"
-                   "<li>Bip01 Neck</li>"
-                   "<li>Bip01 Head</li></ul>\n\n"
-
-                   "You cannot use setActionThread() to have the Player play one of the motion "
-                   "determined action animation sequences.  These sequences are chosen based on how "
-                   "the Player moves and the Player's current pose.  The names of these sequences are:\n\n<ul>"
-                   "<li>root</li>"
-                   "<li>run</li>"
-                   "<li>side</li>"
-                   "<li>side_right</li>"
-                   "<li>crouch_root</li>"
-                   "<li>crouch_forward</li>"
-                   "<li>crouch_backward</li>"
-                   "<li>crouch_side</li>"
-                   "<li>crouch_right</li>"
-                   "<li>prone_root</li>"
-                   "<li>prone_forward</li>"
-                   "<li>prone_backward</li>"
-                   "<li>swim_root</li>"
-                   "<li>swim_forward</li>"
-                   "<li>swim_backward</li>"
-                   "<li>swim_left</li>"
-                   "<li>swim_right</li>"
-                   "<li>fall</li>"
-                   "<li>jump</li>"
-                   "<li>standjump</li>"
-                   "<li>land</li>"
-                   "<li>jet</li></ul>\n\n"
-
-                   "If the player moves in any direction then the animation sequence set using this "
-                   "method will be cancelled and the chosen mation-based sequence will take over.  This makes "
-                   "great for times when the Player cannot move, such as when mounted, or when it doesn't matter "
-                   "if the action sequence changes, such as waving and saluting.\n"
-
-                   "@tsexample\n"
-                   "// Place the player in a sitting position after being mounted\n"
-                   "%player.setActionThread( \"sitting\", true, true );\n"
-                   "@endtsexample\n")
+   "@brief Set the main action sequence to play for this player.\n\n"
+   "@param name Name of the action sequence to set\n"
+   "@param hold Set to false to get a callback on the datablock when the sequence ends (PlayerData::animationDone()).  "
+   "When set to true no callback is made.\n"
+   "@param fsp True if first person and none of the spine nodes in the shape should animate.  False will allow the shape's "
+   "spine nodes to animate.\n"
+   "@return True if succesful, false if failed\n"
+   
+   "@note The spine nodes for the Player's shape are named as follows:\n\n<ul>"
+   "<li>Bip01 Pelvis</li>"
+   "<li>Bip01 Spine</li>"
+   "<li>Bip01 Spine1</li>"
+   "<li>Bip01 Spine2</li>"
+   "<li>Bip01 Neck</li>"
+   "<li>Bip01 Head</li></ul>\n\n"
+   
+   "You cannot use setActionThread() to have the Player play one of the motion "
+   "determined action animation sequences.  These sequences are chosen based on how "
+   "the Player moves and the Player's current pose.  The names of these sequences are:\n\n<ul>"
+   "<li>root</li>"
+   "<li>run</li>"
+   "<li>side</li>"
+   "<li>side_right</li>"
+   "<li>crouch_root</li>"
+   "<li>crouch_forward</li>"
+   "<li>crouch_backward</li>"
+   "<li>crouch_side</li>"
+   "<li>crouch_right</li>"
+   "<li>prone_root</li>"
+   "<li>prone_forward</li>"
+   "<li>prone_backward</li>"
+   "<li>swim_root</li>"
+   "<li>swim_forward</li>"
+   "<li>swim_backward</li>"
+   "<li>swim_left</li>"
+   "<li>swim_right</li>"
+   "<li>fall</li>"
+   "<li>jump</li>"
+   "<li>standjump</li>"
+   "<li>land</li>"
+   "<li>jet</li></ul>\n\n"
+   
+   "If the player moves in any direction then the animation sequence set using this "
+   "method will be cancelled and the chosen mation-based sequence will take over.  This makes "
+   "great for times when the Player cannot move, such as when mounted, or when it doesn't matter "
+   "if the action sequence changes, such as waving and saluting.\n"
+   
+   "@tsexample\n"
+      "// Place the player in a sitting position after being mounted\n"
+      "%player.setActionThread( \"sitting\", true, true );\n"
+	"@endtsexample\n")
 {
    return object->setActionThread( name, hold, true, fsp);
 }
 
 DefineEngineMethod( Player, setControlObject, bool, ( ShapeBase* obj ),,
-                   "@brief Set the object to be controlled by this player\n\n"
+   "@brief Set the object to be controlled by this player\n\n"
 
-                   "It is possible to have the moves sent to the Player object from the "
-                   "GameConnection to be passed along to another object.  This happens, for example "
-                   "when a player is mounted to a vehicle.  The move commands pass through the Player "
-                   "and on to the vehicle (while the player remains stationary within the vehicle).  "
-                   "With setControlObject() you can have the Player pass along its moves to any object.  "
-                   "One possible use is for a player to move a remote controlled vehicle.  In this case "
-                   "the player does not mount the vehicle directly, but still wants to be able to control it.\n"
+   "It is possible to have the moves sent to the Player object from the "
+   "GameConnection to be passed along to another object.  This happens, for example "
+   "when a player is mounted to a vehicle.  The move commands pass through the Player "
+   "and on to the vehicle (while the player remains stationary within the vehicle).  "
+   "With setControlObject() you can have the Player pass along its moves to any object.  "
+   "One possible use is for a player to move a remote controlled vehicle.  In this case "
+   "the player does not mount the vehicle directly, but still wants to be able to control it.\n"
 
-                   "@param obj Object to control with this player\n"
-                   "@return True if the object is valid, false if not\n"
+   "@param obj Object to control with this player\n"
+   "@return True if the object is valid, false if not\n"
 
-                   "@see getControlObject()\n"
-                   "@see clearControlObject()\n"
-                   "@see GameConnection::setControlObject()")
+   "@see getControlObject()\n"
+   "@see clearControlObject()\n"
+   "@see GameConnection::setControlObject()")
 {
    if (obj) {
       object->setControlObject(obj);
@@ -6628,52 +6602,52 @@ DefineEngineMethod( Player, setControlObject, bool, ( ShapeBase* obj ),,
 }
 
 DefineEngineMethod( Player, getControlObject, S32, (),,
-                   "@brief Get the current object we are controlling.\n\n"
-                   "@return ID of the ShapeBase object we control, or 0 if not controlling an "
-                   "object.\n"
-                   "@see setControlObject()\n"
-                   "@see clearControlObject()")
+   "@brief Get the current object we are controlling.\n\n"
+   "@return ID of the ShapeBase object we control, or 0 if not controlling an "
+   "object.\n"
+   "@see setControlObject()\n"
+   "@see clearControlObject()")
 {
    ShapeBase* controlObject = object->getControlObject();
    return controlObject ? controlObject->getId(): 0;
 }
 
 DefineEngineMethod( Player, clearControlObject, void, (),,
-                   "@brief Clears the player's current control object.\n\n"
-                   "Returns control to the player. This internally calls "
-                   "Player::setControlObject(0).\n"
-                   "@tsexample\n"
-                   "%player.clearControlObject();\n"
-                   "echo(%player.getControlObject()); //<-- Returns 0, player assumes control\n"
-                   "%player.setControlObject(%vehicle);\n"
-                   "echo(%player.getControlObject()); //<-- Returns %vehicle, player controls the vehicle now.\n"
-                   "@endtsexample\n"
-                   "@note If the player does not have a control object, the player will receive all moves "
-                   "from its GameConnection.  If you're looking to remove control from the player itself "
-                   "(i.e. stop sending moves to the player) use GameConnection::setControlObject() to transfer "
-                   "control to another object, such as a camera.\n"
-                   "@see setControlObject()\n"
-                   "@see getControlObject()\n"
-                   "@see GameConnection::setControlObject()\n")
+   "@brief Clears the player's current control object.\n\n"
+   "Returns control to the player. This internally calls "
+   "Player::setControlObject(0).\n"
+   "@tsexample\n"
+		"%player.clearControlObject();\n"
+      "echo(%player.getControlObject()); //<-- Returns 0, player assumes control\n"
+      "%player.setControlObject(%vehicle);\n"
+      "echo(%player.getControlObject()); //<-- Returns %vehicle, player controls the vehicle now.\n"
+	"@endtsexample\n"
+   "@note If the player does not have a control object, the player will receive all moves "
+   "from its GameConnection.  If you're looking to remove control from the player itself "
+   "(i.e. stop sending moves to the player) use GameConnection::setControlObject() to transfer "
+   "control to another object, such as a camera.\n"
+   "@see setControlObject()\n"
+   "@see getControlObject()\n"
+   "@see GameConnection::setControlObject()\n")
 {
    object->setControlObject(0);
 }
 
 DefineEngineMethod( Player, checkDismountPoint, bool, ( Point3F oldPos, Point3F pos ),,
-                   "@brief Check if it is safe to dismount at this position.\n\n"
+   "@brief Check if it is safe to dismount at this position.\n\n"
 
-                   "Internally this method casts a ray from oldPos to pos to determine if it hits the "
-                   "terrain, an interior object, a water object, another player, a static shape, "
-                   "a vehicle (exluding the one currently mounted), or physical zone.  If this ray "
-                   "is in the clear, then the player's bounding box is also checked for a collision at "
-                   "the pos position.  If this displaced bounding box is also in the clear, then "
-                   "checkDismountPoint() returns true.\n"
+   "Internally this method casts a ray from oldPos to pos to determine if it hits the "
+   "terrain, an interior object, a water object, another player, a static shape, "
+   "a vehicle (exluding the one currently mounted), or physical zone.  If this ray "
+   "is in the clear, then the player's bounding box is also checked for a collision at "
+   "the pos position.  If this displaced bounding box is also in the clear, then "
+   "checkDismountPoint() returns true.\n"
 
-                   "@param oldPos The player's current position\n"
-                   "@param pos The dismount position to check\n"
-                   "@return True if the dismount position is clear, false if not\n"
-
-                   "@note The player must be already mounted for this method to not assert.\n")
+   "@param oldPos The player's current position\n"
+   "@param pos The dismount position to check\n"
+   "@return True if the dismount position is clear, false if not\n"
+   
+   "@note The player must be already mounted for this method to not assert.\n")
 {
    MatrixF oldPosMat(true);
    oldPosMat.setColumn(3, oldPos);
@@ -6683,8 +6657,8 @@ DefineEngineMethod( Player, checkDismountPoint, bool, ( Point3F oldPos, Point3F 
 }
 
 DefineEngineMethod( Player, getNumDeathAnimations, S32, ( ),,
-                   "@brief Get the number of death animations available to this player.\n\n"
-                   "Death animations are assumed to be named death1-N using consecutive indices." )
+   "@brief Get the number of death animations available to this player.\n\n"
+   "Death animations are assumed to be named death1-N using consecutive indices." )
 {
    S32 count = 0;
    const PlayerData * db = dynamic_cast<PlayerData*>( object->getDataBlock() );
@@ -6705,63 +6679,63 @@ void Player::consoleInit()
       "@brief Determines if the player is rendered or not.\n\n"
       "Used on the client side to disable the rendering of all Player objects.  This is "
       "mainly for the tools or debugging.\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::renderMyItems",TypeBool, &sRenderMyItems,
       "@brief Determines if mounted shapes are rendered or not.\n\n"
       "Used on the client side to disable the rendering of all Player mounted objects.  This is "
       "mainly used for the tools or debugging.\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::renderCollision", TypeBool, &sRenderPlayerCollision, 
       "@brief Determines if the player's collision mesh should be rendered.\n\n"
       "This is mainly used for the tools and debugging.\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
 
    Con::addVariable("$player::minWarpTicks",TypeF32,&sMinWarpTicks, 
       "@brief Fraction of tick at which instant warp occures on the client.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::maxWarpTicks",TypeS32,&sMaxWarpTicks, 
       "@brief When a warp needs to occur due to the client being too far off from the server, this is the "
       "maximum number of ticks we'll allow the client to warp to catch up.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::maxPredictionTicks",TypeS32,&sMaxPredictionTicks, 
       "@brief Maximum number of ticks to predict on the client from the last known move obtained from the server.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
 
    Con::addVariable("$player::maxImpulseVelocity", TypeF32, &sMaxImpulseVelocity, 
       "@brief The maximum velocity allowed due to a single impulse.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
 
    // Move triggers
    Con::addVariable("$player::jumpTrigger", TypeS32, &sJumpTrigger, 
       "@brief The move trigger index used for player jumping.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::crouchTrigger", TypeS32, &sCrouchTrigger, 
       "@brief The move trigger index used for player crouching.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::proneTrigger", TypeS32, &sProneTrigger, 
       "@brief The move trigger index used for player prone pose.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::sprintTrigger", TypeS32, &sSprintTrigger, 
       "@brief The move trigger index used for player sprinting.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::imageTrigger0", TypeS32, &sImageTrigger0, 
       "@brief The move trigger index used to trigger mounted image 0.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::imageTrigger1", TypeS32, &sImageTrigger1, 
       "@brief The move trigger index used to trigger mounted image 1 or alternate fire "
       "on mounted image 0.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::jumpJetTrigger", TypeS32, &sJumpJetTrigger, 
       "@brief The move trigger index used for player jump jetting.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
    Con::addVariable("$player::vehicleDismountTrigger", TypeS32, &sVehicleDismountTrigger, 
       "@brief The move trigger index used to dismount player.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
 
    // ExtendedMove support
    Con::addVariable("$player::extendedMoveHeadPosRotIndex", TypeS32, &smExtendedMoveHeadPosRotIndex, 
       "@brief The ExtendedMove position/rotation index used for head movements.\n\n"
-      "@ingroup GameObjects\n");
+	   "@ingroup GameObjects\n");
 }
 
 //--------------------------------------------------------------------------
@@ -6857,11 +6831,11 @@ void Player::playFootstepSound( bool triggeredLeft, Material* contactMaterial, S
       case 3: // Snow
          SFX->playOnce( mDataBlock->sound[PlayerData::FootSnow], &footMat );
          break;
-         /*
-         default: //Hard
+      /*
+      default: //Hard
          SFX->playOnce( mDataBlock->sound[PlayerData::FootHard], &footMat );
          break;
-         */
+      */
       }
    }
 }
@@ -6876,9 +6850,9 @@ void Player:: playImpactSound()
       mat.mulP(Point3F(mDataBlock->decalOffset,0.0f,0.0f), &pos);
 
       if( gClientContainer.castRay( Point3F( pos.x, pos.y, pos.z + 0.01f ),
-         Point3F( pos.x, pos.y, pos.z - 2.0f ),
-         STATIC_COLLISION_TYPEMASK | VehicleObjectType,
-         &rInfo ) )
+                                    Point3F( pos.x, pos.y, pos.z - 2.0f ),
+                                    STATIC_COLLISION_TYPEMASK | VehicleObjectType,
+                                    &rInfo ) )
       {
          Material* material = ( rInfo.material ? dynamic_cast< Material* >( rInfo.material->getMaterial() ) : 0 );
 
@@ -6911,7 +6885,7 @@ void Player:: playImpactSound()
                SFX->playOnce( mDataBlock->sound[ PlayerData::ImpactSnow ], &getTransform() );
                break;
                /*
-               default:
+            default:
                //Hard
                alxPlay(mDataBlock->sound[PlayerData::ImpactHard], &getTransform());
                break;
@@ -6951,9 +6925,9 @@ void Player::updateSplash()
 
          RayInfo rInfo;
          if (gClientContainer.castRay(mLastPos, curPos,
-            WaterObjectType, &rInfo)) {
-               createSplash( rInfo.point, speed );
-               mBubbleEmitterTime = 0.0;
+               WaterObjectType, &rInfo)) {
+            createSplash( rInfo.point, speed );
+            mBubbleEmitterTime = 0.0;
          }
 
       }
@@ -7002,8 +6976,8 @@ void Player::updateFroth( F32 dt )
    for ( i=0; i<PlayerData::BUBBLE_EMITTER; i++ ) {
       if (mSplashEmitter[i] )
          mSplashEmitter[i]->emitParticles( mLastWaterPos,
-         contactPoint, Point3F( 0.0, 0.0, 1.0 ),
-         moveDir, emitRate );
+            contactPoint, Point3F( 0.0, 0.0, 1.0 ),
+            moveDir, emitRate );
    }
    mLastWaterPos = contactPoint;
 }
@@ -7051,7 +7025,7 @@ bool Player::collidingWithWater( Point3F &waterHeight )
 {
    if ( !mCurrentWaterObject )
       return false;
-
+   
    Point3F curPos = getPosition();
 
    if ( mWorldBox.maxExtents.z < mLiquidHeight )
@@ -7107,11 +7081,11 @@ void Player::prepRenderImage( SceneRenderState* state )
    /*
    if ( mPhysicsRep && Con::getBoolVariable("$PhysicsPlayer::DebugRender",false) )
    {
-   ObjectRenderInst *ri = state->getRenderPass()->allocInst<ObjectRenderInst>();
-   ri->renderDelegate.bind( mPhysicsRep, &PhysicsPlayer::renderDebug );
-   ri->objectIndex = -1;
-   ri->type = RenderPassManager::RIT_Editor;
-   state->getRenderPass()->addInst( ri );
+      ObjectRenderInst *ri = state->getRenderPass()->allocInst<ObjectRenderInst>();
+      ri->renderDelegate.bind( mPhysicsRep, &PhysicsPlayer::renderDebug );
+      ri->objectIndex = -1;
+      ri->type = RenderPassManager::RIT_Editor;
+      state->getRenderPass()->addInst( ri );
    }
    */
 
@@ -7145,8 +7119,8 @@ void Player::prepRenderImage( SceneRenderState* state )
    // now that we know if we're rendering the player
    // and mounted shapes.
    return ShapeBase::_prepRenderImage( state, 
-      renderPlayer, 
-      renderItems );
+                                       renderPlayer, 
+                                       renderItems );
 }
 
 void Player::renderConvex( ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat )

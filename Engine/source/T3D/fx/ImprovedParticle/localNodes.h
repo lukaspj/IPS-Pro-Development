@@ -35,10 +35,10 @@
 
 #ifndef _H_LOCAL_NODES
 #define _H_LOCAL_NODES
-#include "graphEmitterNode.h"
-#include "sphereEmitterNode.h"
-#include "maskEmitterNode.h"
-#include "groundEmitterNode.h"
+#include "Emitters/graphEmitterNode.h"
+#include "Emitters/sphereEmitterNode.h"
+#include "Emitters/maskEmitterNode.h"
+#include "Emitters/groundEmitterNode.h"
 
 // Clientside versions of the emitters for the ParticleEffect
 

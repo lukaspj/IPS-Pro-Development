@@ -106,7 +106,7 @@ void AttractionBehaviour::updateParticle(Particle* part, F32 time)
 
 				// Get the vector that points from the particle down to the target 
 				// location.
-            VectorF diff = (target - part->pos);
+				VectorF diff = (target - part->pos);
 				// Get the attraction range as a vector
 				VectorF attR = VectorF(attractionrange);
 				// If the particle is really close to the target location, just
@@ -176,11 +176,11 @@ bool AttractionBehaviour::onAdd()
 void AttractionBehaviour::packData(BitStream* stream)
 {
 	Parent::packData(stream);
-	stream->writeInt(attractionrange*1000, 15);
+	stream->writeInt(attractionrange*1000, 20);
 	for(int i = 0; i < attrobjectCount; i++)
 	{
 		stream->writeInt(AttractionMode[i], 4);
-		stream->writeInt(Amount[i]*1000, 15);
+		stream->writeInt(Amount[i]*1000, 20);
 		stream->writeString(attractedObjectID[i]);
 		stream->writeString(Attraction_offset[i]);
 	}
@@ -193,11 +193,11 @@ void AttractionBehaviour::unpackData(BitStream* stream)
 {
 	Parent::unpackData(stream);
 
-	attractionrange = stream->readInt(15)  / 1000.0f;
+	attractionrange = stream->readInt(20)  / 1000.0f;
 	for(int i = 0; i < attrobjectCount; i++)
 	{
 		AttractionMode[i] = stream->readInt(4);
-		Amount[i] = stream->readInt(15) / 1000.0f;
+		Amount[i] = stream->readInt(20) / 1000.0f;
 		char buf[256];
 		stream->readString(buf);
 		attractedObjectID[i] = dStrdup(buf);

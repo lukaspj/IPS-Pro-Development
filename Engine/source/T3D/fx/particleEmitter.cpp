@@ -422,7 +422,7 @@ bool ParticleEmitterData::preload(bool server, String &errorStr)
          ParticleDataUpdateMask |= ParticleData::ParticleVectorPreloadFlags::ParticleTextures;
       }
    }
-   
+
    // if blend-style is undefined check legacy useInvAlpha settings
    if (blendStyle == ParticleRenderInst::BlendUndefined && particleDataBlocks.size() > 0)
    {
@@ -835,7 +835,7 @@ void ParticleEmitter::deleteWhenEmpty()
       if( !mParticleManager->n_parts )
       {
          // We're already empty, so delete us now.
-         
+
          mDead = true;
          deleteObject();
       }
@@ -1451,7 +1451,7 @@ void ParticleEmitter::update( U32 ms )
             bhv->updateParticle(this, part, t);
       }
       part->relPos += part->vel * t;
-      part->pos = part->pos + part->vel * t;
+      part->pos += part->vel * t;
       for(int i = 0; i < ParticleBehaviourCount; i++)
       {
          IParticleBehaviour* bhv = BHVs[i];
@@ -1551,9 +1551,9 @@ U32 ParticleEmitter::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
    {
       if(stream->writeFlag(!ParticleBHVs[i].isNull()))
       {
-         stream->writeRangedU32(ParticleBHVs[i]->getId(), 
-                                 DataBlockObjectIdFirst,
-                                 DataBlockObjectIdLast);
+         stream->writeRangedU32( ParticleBHVs[i]->getId(),
+            DataBlockObjectIdFirst,
+            DataBlockObjectIdLast );
       }
    }
 
@@ -1576,7 +1576,7 @@ void ParticleEmitter::unpackUpdate(NetConnection* con, BitStream* stream)
       sa_velocityVariance = stream->readInt(14) / 100.0f;
       sa_ejectionOffset = stream->readInt(16) / 100.0f;
    }
-
+   
    for(int i = 0; i < ParticleBehaviourCount; i++)
    {
       if ( stream->readFlag() )

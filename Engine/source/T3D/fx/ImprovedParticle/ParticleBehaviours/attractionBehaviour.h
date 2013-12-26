@@ -45,7 +45,7 @@
 #endif
 
 #ifndef _H_MESH_EMITTER
-#include "../meshEmitter.h"
+#include "../MeshEmitters/meshEmitter.h"
 #endif
 
 #ifndef attrobjectCount
