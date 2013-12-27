@@ -215,7 +215,6 @@ void GuiSpellCtrl::onRender(Point2I offset, const RectI &updateRect)
          F32 coeff = F32(cd) / mSpellData->mCooldown;
          RectI rect(offset.x, offset.y + (getExtent().y * (1-coeff)), getExtent().x, getExtent().y * coeff);
          GFX->getDrawUtil()->drawRectFill(rect, ColorI(0,0,0,100));
-         //fbctrl.setcooldownmanager(localclientconnection.player.spellmanager)
       }
    }
 

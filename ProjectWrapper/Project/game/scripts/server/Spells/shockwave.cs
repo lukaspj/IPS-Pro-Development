@@ -51,17 +51,17 @@ function DOTImpact::ShockwaveRockEmission(%this)
       rotation = %this.Rotation;
    };
    %this.Position = VectorAdd(%pos, %this.Delta);
-   //schedule(1000, 0, ShockwaveRemovePrefab, %prefab);
-   //%prefab.schedule(1500, "delete");
+   schedule(1000, 0, ShockwaveRemovePrefab, %prefab);
    %tween = new Tween(){
       Duration = 0.5;
-      ValueName = "$test";
+      target = %prefab.getId();
+      ValueName = "z";
       ValueTarget = %prefab.position.z + 1.5;
       EaseDirection = $Ease::Out;
       EaseType = $Ease::Circular;
    };
    %prefab.zTween = %tween;
-   //%tween.Play();
+   %tween.Play();
 }
 
 function BoxImpact::ShockwaveHit(%this, %src, %tgt)
@@ -72,16 +72,7 @@ function BoxImpact::ShockwaveHit(%this, %src, %tgt)
 
 function ShockwaveRemovePrefab(%prefab)
 {
-   %prefab.zTween.delete();
-   %tween = new Tween(){
-      Duration = 0.5;
-      target = %prefab;
-      ValueName = "z";
-      ValueTarget = %prefab.position.z - 1.5;
-      EaseDirection = $Ease::Out;
-      EaseType = $Ease::Circular;  
-   };
-   %tween.Play();
-   //%prefab.zTween.Reverse();
-   //%prefab.schedule(600, "delete");
+   %prefab.zTween.Reverse();
+   %prefab.zTween.schedule(600, "delete");
+   %prefab.schedule(600, "delete");
 }

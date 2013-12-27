@@ -63,6 +63,8 @@ public:
    void SetGlobalField(F32 value);
    void SetInitialValue();
 
+   static bool setTargetProperty(void *obj, const char *index, const char *db);
+
    void Play();
    void Reverse();
    void Rewind();

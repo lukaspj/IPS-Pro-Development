@@ -161,7 +161,6 @@ public:
 	U32					MaxUpdateIndex;
 	U32					TSU;
 
-	bool				grounded;
 	bool				mActive;
 	SimObjectPtr<IParticleBehaviour> ParticleBHVs[ParticleBehaviourCount];
 

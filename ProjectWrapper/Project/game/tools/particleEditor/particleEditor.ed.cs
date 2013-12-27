@@ -156,13 +156,13 @@ function ParticleEditor::resetEmitterNode( %this )
    {
       if( !isObject( TestEmitterNodeData ) )
       {
-         datablock SphereEmitterNodeData( TestEmitterNodeData )
+         datablock ParticleEmitterNodeData( TestEmitterNodeData )
          {
             timeMultiple = 1;
          };
       }
 
-      $ParticleEditor::emitterNode = new SphereEmitterNode()
+      $ParticleEditor::emitterNode = new ParticleEmitterNode()
       {
          emitter = PEE_EmitterSelector.getText();
          velocity = 1;

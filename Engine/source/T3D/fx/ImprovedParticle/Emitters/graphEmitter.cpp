@@ -94,14 +94,14 @@ ConsoleDocClass( GraphEmitterData,
 				"@see ParticleEmitterNode\n"
 				);
 
-typedef GraphEmitter::EnumProgressMode gProgressMode;
+typedef GraphEmitterData::EnumProgressMode gProgressMode;
 DefineEnumType( gProgressMode );
 
 ImplementEnumType( gProgressMode,
 				  "The way the t value of the graphEmitter is increased.\n"
 				  "@ingroup FX\n\n")
-{ GraphEmitter::byParticleCount,				"ParticleCount",	"Increase t value when a new particle is emitted.\n" },
-{ GraphEmitter::byTime,							"ByTime",			"Increase t value with time.\n" },
+{ GraphEmitterData::byParticleCount,				"ParticleCount",	"Increase t value when a new particle is emitted.\n" },
+{ GraphEmitterData::byTime,							"ByTime",			"Increase t value with time.\n" },
 EndImplementEnumType;
 
 //-----------------------------------------------------------------------------
@@ -116,13 +116,13 @@ GraphEmitterData::GraphEmitterData()
 	funcMax = 2000;
 	funcMin = 0;
 
-	ProgressMode = 0;
+   ProgressMode = EnumProgressMode::byParticleCount;
 
 	Reverse = false;
 	Loop = true;
-	Grounded = false;
+	mGrounded = false;
 
-	timeScale = 1.0;
+	mTimeScale = 1.0;
 }
 
 //-----------------------------------------------------------------------------
@@ -132,7 +132,7 @@ void GraphEmitterData::initPersistFields()
 {
 	addGroup( "Expression");
 
-	addField( "Grounded", TYPEID< bool >(), Offset(Grounded, GraphEmitterData),
+   addField( "Grounded", TypeBool, Offset(mGrounded, GraphEmitterData),
 		"Emit particles along the terrain rather than at the nodes position." );
 
 	addField( "xFunc", TYPEID< StringTableEntry >(), Offset(xFunc, GraphEmitterData),
@@ -150,16 +150,16 @@ void GraphEmitterData::initPersistFields()
 	addField( "funcMin", TYPEID< S32 >(), Offset(funcMin, GraphEmitterData),
 		"The expressions interval, minimum." );
 
-	addField( "timeScale", TYPEID< F32 >(), Offset(timeScale, GraphEmitterData),
+	addField( "timeScale", TYPEID< F32 >(), Offset(mTimeScale, GraphEmitterData),
 		"The amount to scale the t value with." );
 
-	addField( "ProgressMode", TYPEID< GraphEmitter::EnumProgressMode >(), Offset(ProgressMode, GraphEmitterData),
+   addField( "ProgressMode", TYPEID< gProgressMode >(), Offset(ProgressMode, GraphEmitterData),
 		"String value that controls how the t value is increased." );
 
-	addField( "Reverse", TYPEID< bool >(), Offset(Reverse, GraphEmitterData),
+   addField( "Reverse", TypeBool, Offset(Reverse, GraphEmitterData),
 		"Reverse the graphEmitter." );
 
-	addField( "Loop", TYPEID< bool >(), Offset(Loop, GraphEmitterData),
+	addField( "Loop", TypeBool, Offset(Loop, GraphEmitterData),
 		"Loop the graphEmitter." );
 
 	endGroup( "Expression" );
@@ -179,11 +179,11 @@ void GraphEmitterData::packData(BitStream* stream)
 	stream->writeString(zFunc);
 	stream->writeInt(funcMax,32);
 	stream->writeInt(funcMin,32);
-	stream->writeInt(timeScale,32);
+	stream->writeInt(mTimeScale,32);
 	stream->writeInt(ProgressMode, 1);
 	stream->writeFlag(Reverse);
 	stream->writeFlag(Loop);
-	stream->writeFlag(Grounded);
+	stream->writeFlag(mGrounded);
 }
 
 //-----------------------------------------------------------------------------
@@ -208,12 +208,12 @@ void GraphEmitterData::unpackData(BitStream* stream)
 	funcMax = stream->readInt(32);
 	funcMin = stream->readInt(32);
 
-	timeScale = stream->readInt(32);
+	mTimeScale = stream->readInt(32);
 
-	ProgressMode = stream->readInt(1);
+	ProgressMode = (EnumProgressMode)stream->readInt(1);
 	Reverse = stream->readFlag();
 	Loop = stream->readFlag();
-	Grounded = stream->readFlag();
+	mGrounded = stream->readFlag();
 }
 
 //-----------------------------------------------------------------------------
@@ -572,8 +572,8 @@ bool GraphEmitter::onNewDataBlock( GameBaseData *dptr, bool reload )
 		particleProg = funcMin;
 	Loop = DataBlock->Loop;
 
-	timeScale = DataBlock->timeScale;
-   grounded = DataBlock->Grounded;
+	timeScale = DataBlock->mTimeScale;
+   mGrounded = DataBlock->mGrounded;
 
 	// Todo: Uncomment if this is a "leaf" class
 	//scriptOnNewDataBlock();
@@ -630,23 +630,23 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 	// Limit the amount of error messages to avoid lag
 	if(mInternalClock - lastErrorTime > 5000)
 	{
-	try{
-		resultx = xfuncParser.Eval();
-		resulty = yfuncParser.Eval();
-		resultz = zfuncParser.Eval();
-	}
-	catch(mu::Parser::exception_type &e)
-	{
-				lastErrorTime = mInternalClock;
-		std::string expr = e.GetExpr();
-		std::string tok = e.GetToken();
-		size_t pos = e.GetPos();
-		std::string msg = e.GetMsg();
-		Con::errorf("Parsing error! Failed to parse: \n %s\nAt token: %s\nAt position: %u\nMessage: %s",expr.c_str(),tok.c_str(),pos,msg.c_str());
-	}
+	   try{
+		   resultx = xfuncParser.Eval();
+		   resulty = yfuncParser.Eval();
+		   resultz = zfuncParser.Eval();
+	   }
+	   catch(mu::Parser::exception_type &e)
+	   {
+				   lastErrorTime = mInternalClock;
+		   std::string expr = e.GetExpr();
+		   std::string tok = e.GetToken();
+		   size_t pos = e.GetPos();
+		   std::string msg = e.GetMsg();
+		   Con::errorf("Parsing error! Failed to parse: \n %s\nAt token: %s\nAt position: %u\nMessage: %s",expr.c_str(),tok.c_str(),pos,msg.c_str());
+	   }
    }
 
-   if(grounded)
+   if(standAloneEmitter ? mGrounded : DataBlock->mGrounded)
 	{
 		F32 theHeight;
 		Point3F TerNorm;
@@ -800,7 +800,7 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 				Con::errorf("Parsing error! Failed to parse: \n %s\nAt token: %s\nAt position: %u\nMessage: %s",expr.c_str(),tok.c_str(),pos,msg.c_str());
 			}
 		}
-      bool isGrounded = standAloneEmitter ? grounded : DataBlock->Grounded;
+      bool isGrounded = standAloneEmitter ? mGrounded : DataBlock->mGrounded;
       if(isGrounded)
 		{
 			F32 theHeight;

@@ -179,9 +179,9 @@ namespace SpellSystem
                   }
                }
                if(CDManager)
-                  conn->setDataField("SpellSystemCDManager", NULL, CDManager->getIdString());
+                  conn->setDataField(StringTable->insert("SpellSystemCDManager"), NULL, CDManager->getIdString());
                else
-                  conn->setDataField("SpellSystemCDManager", NULL, "");
+                  conn->setDataField(StringTable->insert("SpellSystemCDManager"), NULL, "");
             }
          }
       }
@@ -303,16 +303,16 @@ namespace SpellSystem
          {
             SpellManager* mgr;
             GameBase* ctrlObj = ((GameConnection*)conn)->getControlObject();
-            const char* managerName = ctrlObj->getDataField("SpellManager", NULL);
+            const char* managerName = ctrlObj->getDataField(StringTable->insert("SpellManager"), NULL);
             if(Sim::findObject(managerName, mgr))
                mgr->BeginCast((SpellData*)theSpell);
          }
          if(actionMask & CreateCDMGR)
          {
             if(CDManager)
-               conn->setDataField("SpellSystemCDManager", NULL, CDManager->getIdString());
+               conn->setDataField(StringTable->insert("SpellSystemCDManager"), NULL, CDManager->getIdString());
             else
-               conn->setDataField("SpellSystemCDManager", NULL, "");
+               conn->setDataField(StringTable->insert("SpellSystemCDManager"), NULL, "");
          }
          actionMask = 0;
       }

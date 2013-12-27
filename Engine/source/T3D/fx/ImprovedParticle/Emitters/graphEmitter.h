@@ -52,6 +52,12 @@ class GraphEmitterData : public ParticleEmitterData
 
 	//------- Functions -------
 public:
+
+	enum EnumProgressMode {
+		byParticleCount = 0,
+		byTime,
+	};
+
 	GraphEmitterData();
 	DECLARE_CONOBJECT(GraphEmitterData);
 	static void initPersistFields();
@@ -70,13 +76,13 @@ public:
 	S32		funcMin;				///< The lower boundary for the t-value
 	S32		particleProg;			///< The t-value
 
-	U8		ProgressMode;			///< Enum that defines how the t-value rises
+   EnumProgressMode ProgressMode;			///< Enum that defines how the t-value rises
 
 	bool	Reverse;				///< If true, the t-value is falling
 	bool	Loop;					///< If true, the t-value will iterate between the upper and the lower boundary
-	bool	Grounded;				///< If true, particles will be emitted along the terrain
+	bool	mGrounded;				///< If true, particles will be emitted along the terrain
 
-	F32		timeScale;				///< A coefficient for the t-value
+	F32	mTimeScale;				///< A coefficient for the t-value
 
 	//------- Callbacks -------
 	// onBoundaryLimit is called when the t-value reaches funcMax or funcMin
@@ -96,10 +102,6 @@ class GraphEmitter : public ParticleEmitter
 	};
 
 public:
-	enum EnumProgressMode {
-		byParticleCount = 0,
-		byTime,
-	};
 
 	//------- Functions -------
 public:
@@ -129,11 +131,11 @@ public:
 	S32		funcMin;							///< The lower boundary for the t-value
 	F32		particleProg;						///< The t-value
 
-	U8		ProgressMode;						///< Enum that defines how the t-value rises
+	S32		ProgressMode;						///< Enum that defines how the t-value rises
 
 	bool	Reverse;							///< If true, the t-value is falling
 	bool	Loop;								///< If true, the t-value will iterate between the upper and the lower boundary
-   //bool  mGrounded;                 ///> If true, the particles will be emitted along the terrain
+   bool  mGrounded;                 ///> If true, the particles will be emitted along the terrain
 
 	F32		timeScale;							///< A coefficient for the t-value
 

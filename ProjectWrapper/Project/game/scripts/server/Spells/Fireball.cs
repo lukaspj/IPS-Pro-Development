@@ -1,14 +1,14 @@
 // SpellSpecific datablocks ----------------------------------------------------
-datablock SpellData(Fireball1 : DefaultTargetSpell)
+datablock SpellData(Fireball : DefaultTargetSpell)
 {
    ChannelTimesMS[1] = 1600;
    CooldownMS = 3000;
    Logo = "art/particles/fire.png";
    Cost = 20;
 };
-datablock BezierProjectileData(Fireball1Projectile : FireballProjectile) { };
+datablock BezierProjectileData(FireballProjectile : FireballProjectile) { };
 
-function Fireball1::onChannelBegin(%this, %spell)
+function Fireball::onChannelBegin(%this, %spell)
 {
    // Optional: This line forces the player into an animation and
    // roots it.
@@ -20,29 +20,27 @@ function Fireball1::onChannelBegin(%this, %spell)
       AttractionMode[0] = Attract;
       attractedObjectID[0] = %spell.getSource();
    };
-   %spell.baseEmitter = new GraphEmitterNode(){
-      dataBlock = g_defaultNode;
+   %spell.baseEmitter = new ParticleEmitterNode(){
+      dataBlock = DefaultEmitterNodeData;
       emitter = FireballChannelEmitterBASE;
-      ParticleBehaviour[0] = %bhv1;
-      standAloneEmitter = true;
       position = %spell.getSource().position;
-      Grounded = true;
    };
+   %spell.baseEmitter.getEmitter().ParticleBehaviour[0] = %bhv1;
 }
 
-function Fireball1::onChannelEnd(%this, %spell)
+function Fireball::onChannelEnd(%this, %spell)
 {
    // Optional: This line releases the player from any forced animation
    // %spell.getSource().ForceAnimation(0);
-   %bhv1 = %spell.baseEmitter.ParticleBehaviour[0];
+   %bhv1 = %spell.baseEmitter.getEmitter().ParticleBehaviour[0];
    %spell.baseEmitter.delete();
    %bhv1.schedule(100, "delete");
 }
 
-function Fireball1::onCast(%this, %spell)
+function Fireball::onCast(%this, %spell)
 {
    %src = %spell.getSource();
    %tgt = %spell.getTarget();
-   %projectile = Fireball1Projectile;
+   %projectile = FireballProjectile;
    ThrowHomingProjectile(%src, %tgt, %projectile);
 }

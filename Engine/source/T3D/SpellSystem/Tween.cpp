@@ -72,13 +72,35 @@ void Tween::onRemove()
 void Tween::initPersistFields()
 {
    addField("Duration", TypeF32, Offset(mDuration, Tween), "");
-   addField("Target", TYPEID<SimObject>(), Offset(mTarget, Tween), "");
+   addField( "Target",  TYPEID< SimObject >(), Offset(mTarget, Tween), "");
+   //addProtectedField( "Target",  TYPEID< SimObject >(), Offset(mTarget, Tween), 
+   //      &setTargetProperty, &defaultProtectedGetFn, 
+	//	"Datablock to use when emitting particles." );
    addField("ValueName", TYPEID<const char*>(), Offset(mValueName, Tween), "");
    addField("ValueTarget", TypeF32, Offset(mValueTarget, Tween), "");
    addField("EaseDirection", TypeS32, Offset(mEaseDirection, Tween), "");
    addField("EaseType", TypeS32, Offset(mEaseType, Tween), "");
 
    Parent::initPersistFields();
+}
+
+bool Tween::setTargetProperty(void *obj, const char *index, const char *db)
+{
+   if( db == NULL || !db || !db[ 0 ] )
+   {
+      Con::errorf( "GameBase::setDataBlockProperty - Can't unset datablock on GameBase objects" );
+      return false;
+   }
+   
+   Tween* object = static_cast< Tween* >( obj );
+   SimObject* target;
+   if( Sim::findObject( db, target ) ) {
+      object->mTarget = target;
+      return true;
+   }
+   
+   Con::errorf( "ParticleEmitterNode::setEmitterProperty - Could not find data block \"%s\"", db );
+   return false;
 }
 
 void Tween::interpolateTick(F32 delta)
@@ -91,7 +113,7 @@ void Tween::processTick()
 
 void Tween::advanceTime(F32 time)
 {
-   if(mTarget && mTarget->isDeleted()){
+   if(!mTarget || mTarget->isDeleted()){
       mTarget = NULL;
       return;
    }
@@ -148,8 +170,8 @@ void Tween::Rewind()
 
 void Tween::Reverse()
 {
+   mCurrentTime = 0;
    mState = TweenState::PlayingReversed;
-   SetInitialValue();
 }
 
 void Tween::SetValueByTime(F32 time)
@@ -186,7 +208,7 @@ void Tween::SetTargetField(F32 value)
    case 'X':
       if(size == 1)
       {
-         SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+         SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
          if(obj)
          {
             Point3F pos = obj->getPosition();
@@ -199,7 +221,7 @@ void Tween::SetTargetField(F32 value)
    case 'Y':
       if(size == 1)
       {
-         SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+         SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
          if(obj)
          {
             Point3F pos = obj->getPosition();
@@ -212,7 +234,7 @@ void Tween::SetTargetField(F32 value)
    case 'Z':
       if(size == 1)
       {
-         SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+         SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
          if(obj)
          {
             Point3F pos = obj->getPosition();
@@ -231,7 +253,7 @@ void Tween::SetTargetField(F32 value)
       case 'X':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                EulerF euler = obj->getTransform().toEuler();
@@ -245,7 +267,7 @@ void Tween::SetTargetField(F32 value)
       case 'Y':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                EulerF euler = obj->getTransform().toEuler();
@@ -259,7 +281,7 @@ void Tween::SetTargetField(F32 value)
       case 'Z':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                EulerF euler = obj->getTransform().toEuler();
@@ -283,7 +305,7 @@ void Tween::SetTargetField(F32 value)
       case 'X':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                VectorF scale = obj->getScale();
@@ -296,7 +318,7 @@ void Tween::SetTargetField(F32 value)
       case 'Y':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                VectorF scale = obj->getScale();
@@ -309,7 +331,7 @@ void Tween::SetTargetField(F32 value)
       case 'Z':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                VectorF scale = obj->getScale();
@@ -332,7 +354,7 @@ void Tween::SetTargetField(F32 value)
 void Tween::SetGlobalField(F32 value)
 {
    char buffer[6];
-   dSprintf(buffer, sizeof(buffer), "%s", value);
+   dSprintf(buffer, sizeof(buffer), "%f", value);
    Con::setVariable(mValueName, buffer);
 }
 
@@ -346,6 +368,11 @@ void Tween::SetInitialValue()
       return;
    }
 
+   if(!mTarget) {
+      mInitialValue = Con::getFloatVariable(mValueName);
+      return;
+   }
+
    switch (mValueName[0])
    {
       // Position BEGIN -----
@@ -353,7 +380,7 @@ void Tween::SetInitialValue()
    case 'X':
       if(size == 1)
       {
-         SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+         SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
          if(obj)
          {
             mInitialValue = obj->getPosition().x;
@@ -365,7 +392,7 @@ void Tween::SetInitialValue()
    case 'Y':
       if(size == 1)
       {
-         SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+         SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
          if(obj)
          {
             mInitialValue = obj->getPosition().y;
@@ -377,7 +404,7 @@ void Tween::SetInitialValue()
    case 'Z':
       if(size == 1)
       {
-         SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+         SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
          if(obj)
          {
             mInitialValue = obj->getPosition().z;
@@ -395,7 +422,7 @@ void Tween::SetInitialValue()
       case 'X':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                mInitialValue = obj->getTransform().toEuler().x;
@@ -407,7 +434,7 @@ void Tween::SetInitialValue()
       case 'Y':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                mInitialValue = obj->getTransform().toEuler().y;
@@ -419,7 +446,7 @@ void Tween::SetInitialValue()
       case 'Z':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                mInitialValue = obj->getTransform().toEuler().z;
@@ -441,7 +468,7 @@ void Tween::SetInitialValue()
       case 'X':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                mInitialValue = obj->getScale().x;
@@ -453,7 +480,7 @@ void Tween::SetInitialValue()
       case 'Y':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                mInitialValue = obj->getScale().y;
@@ -465,7 +492,7 @@ void Tween::SetInitialValue()
       case 'Z':
          if(size == 2)
          {
-            SceneObject* obj = dynamic_cast<SceneObject*>(mTarget);
+            SceneObject* obj = dynamic_cast<SceneObject*>((SimObject*)mTarget);
             if(obj)
             {
                mInitialValue = obj->getScale().z;

@@ -10,7 +10,6 @@
 #include "ts\tsShapeInstance.h"
 
 #include "ImprovedParticle\ParticleBehaviours\attractionBehaviour.h"
-#include "ImprovedParticle\Emitters\particleEmitterImpl.h"
 
 IMPLEMENT_CO_DATABLOCK_V1(ParticleEmitterNodeData);
 IMPLEMENT_CO_NETOBJECT_V1(ParticleEmitterNode);
@@ -114,7 +113,7 @@ void ParticleEmitterNode::initPersistFields()
 
 
 
-bool ParticleEmitterNode::setEmitterProperty( void *obj, const char *index, const char *db)
+bool ParticleEmitterNode::setEmitterProperty(void *obj, const char *index, const char *db)
 {
    if( db == NULL || !db || !db[ 0 ] )
    {
