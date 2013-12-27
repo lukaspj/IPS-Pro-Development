@@ -1658,6 +1658,9 @@ Player::Player()
 
    mLastAbsoluteYaw = 0.0f;
    mLastAbsolutePitch = 0.0f;
+   // IPS SpellSystem -----
+   mSpeedModifier = 1;
+   // ----- IPS SpellSystem
 }
 
 Player::~Player()
@@ -2331,6 +2334,10 @@ const char* Player::getStateName()
       return "Mounted";
    if (mState == RecoverState)
       return "Recover";
+   // IPS SpellSystem -----
+   if( mState == Immobilized)
+      return "Immobilized";
+   // ----- IPS SpellSystem
    return "Move";
 }
 
@@ -2740,6 +2747,9 @@ void Player::updateMove(const Move* move)
       moveVec.set(0.0f, 0.0f, 0.0f);
       moveSpeed = 0.0f;
    }
+   // IPS SpellSystem -----
+   moveSpeed *= mSpeedModifier;
+   // ----- IPS SpellSystem
 
    // Acceleration due to gravity
    VectorF acc(0.0f, 0.0f, mGravity * mGravityMod * TickSec);
@@ -3240,12 +3250,16 @@ bool Player::checkDismountPosition(const MatrixF& oldMat, const MatrixF& mat)
 
 bool Player::canJump()
 {
-   return mAllowJumping && mState == MoveState && mDamageState == Enabled && !isMounted() && !mJumpDelay && mEnergy >= mDataBlock->minJumpEnergy && mJumpSurfaceLastContact < JumpSkipContactsMax && !mSwimming && (mPose != SprintPose || mDataBlock->sprintCanJump);
+   // IPS SpellSystem -----
+   return mAllowJumping && mState == MoveState && mDamageState == Enabled && !isMounted() && !mJumpDelay && mEnergy >= mDataBlock->minJumpEnergy && mJumpSurfaceLastContact < JumpSkipContactsMax && !mSwimming && (mPose != SprintPose || mDataBlock->sprintCanJump) && mSpeedModifier != 0;
+   // ----- IPS SpellSystem
 }
 
 bool Player::canJetJump()
 {
-   return mAllowJetJumping && mState == MoveState && mDamageState == Enabled && !isMounted() && mEnergy >= mDataBlock->jetMinJumpEnergy && mDataBlock->jetJumpForce != 0.0f;
+   // IPS SpellSystem -----
+   return mAllowJetJumping && mState == MoveState && mDamageState == Enabled && !isMounted() && mEnergy >= mDataBlock->jetMinJumpEnergy && mDataBlock->jetJumpForce != 0.0f && mSpeedModifier != 0;
+   // ----- IPS SpellSystem
 }
 
 bool Player::canSwim()
@@ -5987,6 +6001,9 @@ void Player::writePacketData(GameConnection *connection, BitStream *stream)
       stream->write(mVelocity.x);
       stream->write(mVelocity.y);
       stream->write(mVelocity.z);
+      // IPS SpellSystem -----
+      stream->writeInt(mSpeedModifier * 1000, 16);
+      // ----- IPS SpellSystem
       stream->writeInt(mJumpSurfaceLastContact > 15 ? 15 : mJumpSurfaceLastContact, 4);
 
       if (stream->writeFlag(!mAllowSprinting || !mAllowCrouching || !mAllowProne || !mAllowJumping || !mAllowJetJumping || !mAllowSwimming))
@@ -6041,6 +6058,9 @@ void Player::readPacketData(GameConnection *connection, BitStream *stream)
       stream->read(&mVelocity.x);
       stream->read(&mVelocity.y);
       stream->read(&mVelocity.z);
+      // IPS SpellSystem -----
+      mSpeedModifier = stream->readInt(16) / 1000.0f;
+      // ----- IPS SpellSystem
       stream->setCompressionPoint(pos);
       delta.pos = pos;
       mJumpSurfaceLastContact = stream->readInt(4);
@@ -6147,6 +6167,9 @@ U32 Player::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
             len = 8191;
          stream->writeInt((S32)len, 13);
       }
+      // IPS SpellSystem -----
+      stream->writeInt(mSpeedModifier * 1000, 16);
+      // ----- IPS SpellSystem
       stream->writeFloat(mRot.z / M_2PI_F, 7);
       stream->writeSignedFloat(mHead.x / mDataBlock->maxLookAngle, 6);
       stream->writeSignedFloat(mHead.z / mDataBlock->maxFreelookAngle, 6);
@@ -6243,7 +6266,10 @@ void Player::unpackUpdate(NetConnection *con, BitStream *stream)
       {
          mVelocity.set(0.0f, 0.0f, 0.0f);
       }
-      
+      // IPS SpellSystem -----
+      mSpeedModifier = stream->readInt(16) / 1000.0f;
+      // ----- IPS SpellSystem
+
       rot.y = rot.x = 0.0f;
       rot.z = stream->readFloat(7) * M_2PI_F;
       mHead.x = stream->readSignedFloat(6) * mDataBlock->maxLookAngle;
