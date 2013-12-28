@@ -1529,6 +1529,9 @@ void ParticleEmitter::onStaticModified(const char* slotName, const char*newValue
       strcmp(slotName, "standAloneEmitter") == 0)
       setMaskBits(sa_Mask);
 
+   if(strcmp(slotName, "ParticleBehaviour") == 0)
+      setMaskBits(0);
+
    Parent::onStaticModified(slotName, newValue);
 }
 

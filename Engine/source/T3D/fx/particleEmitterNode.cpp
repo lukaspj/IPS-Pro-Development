@@ -8,6 +8,7 @@
 #include "console\simPersistID.h"
 #include "math/mTransform.h"
 #include "ts\tsShapeInstance.h"
+#include "T3D/gameBase/gameConnection.h"
 
 #include "ImprovedParticle\ParticleBehaviours\attractionBehaviour.h"
 
@@ -403,3 +404,44 @@ DefineEngineMethod(ParticleEmitterNode, getEmitter, SimObject*,(),,
 {
    return object->getEmitter();
 }
+
+void ParticleEmitterNode::addParticleBehaviour(IParticleBehaviour* bhv, bool overrideLast)
+{
+   if(isClientObject())
+   {
+      bool success = false;
+      for (int i = 0; i < ParticleBehaviourCount; i++)
+      {
+         IParticleBehaviour* ibhv = getEmitter()->ParticleBHVs[i];
+         if(!ibhv)
+         {
+            getEmitter()->ParticleBHVs[i] = bhv;
+            success = true;
+            break;
+         }
+      }
+      if(!success && overrideLast)
+         getEmitter()->ParticleBHVs[ParticleBehaviourCount - 1] = bhv;
+   }
+   else {
+      SimGroup* pClientGroup = Sim::getClientGroup();
+      
+      SimGroup::iterator itr = pClientGroup->begin();
+      for ( ; itr != pClientGroup->end(); itr++ )
+      {
+         GameConnection* gc = static_cast<GameConnection*>(*itr);
+         if ( gc ) {
+            NetEvent* evt = (NetEvent*)new ParticleBehaviourNetEvent(bhv, this, overrideLast);
+            gc->postNetEvent( evt );
+         }
+      }
+   }
+}
+
+DefineEngineMethod(ParticleEmitterNode, addParticleBehaviour, void, (IParticleBehaviour* bhv, bool overrideLast), (NULL, false), "")
+{
+   object->addParticleBehaviour(bhv, overrideLast);
+}
+
+typedef ParticleBehaviourNetEvent PBEvt;
+IMPLEMENT_CO_NETEVENT_V1(PBEvt);

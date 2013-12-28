@@ -783,12 +783,13 @@ bool GraphEmitter::addParticle(const Point3F& pos,
 		F32 resultz = 0;
 		// Evaluate the expressions and get the results.
 		// Limit the amount of error messages to avoid lag
-		if(mInternalClock - lastErrorTime > 5000)
+		if(lastErrorTime == 0 || mInternalClock - lastErrorTime > 5000)
 		{
 		try{
 			resultx = xfuncParser.Eval();
 			resulty = yfuncParser.Eval();
 			resultz = zfuncParser.Eval();
+         lastErrorTime = 0;
 		}
 		catch(mu::Parser::exception_type &e)
 		{

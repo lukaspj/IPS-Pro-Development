@@ -50,6 +50,8 @@ public:
 	bool onAdd();
 	void packData(BitStream*);
 	void unpackData(BitStream*);
+   virtual void packUpdate(BitStream* stream, NetConnection*) { packData(stream); };
+   virtual void unpackUpdate(BitStream* stream, NetConnection*) { unpackData(stream); };
 	bool preload(bool server, String &errorStr);
 	static void initPersistFields();
 	

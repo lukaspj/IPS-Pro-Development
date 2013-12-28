@@ -79,6 +79,8 @@ public:
 	virtual bool onAdd();
 	virtual void packData(BitStream* stream);
 	virtual void unpackData(BitStream* stream);
+   virtual void packUpdate(BitStream*, NetConnection*);
+   virtual void unpackUpdate(BitStream*, NetConnection*);
 	virtual bool preload(bool server, String &errorStr);
 	static void initPersistFields();
 	DECLARE_CONOBJECT(IParticleBehaviour);

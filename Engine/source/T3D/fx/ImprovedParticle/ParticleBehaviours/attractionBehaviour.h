@@ -40,17 +40,12 @@
 #include "particleBehaviour.h"
 #endif
 
-#ifndef _H_PARTICLE_EMITTER
-#include "../../particleEmitter.h"
-#endif
-
-#ifndef _H_MESH_EMITTER
-#include "../MeshEmitters/meshEmitter.h"
-#endif
-
 #ifndef attrobjectCount
 #define attrobjectCount (U8)2
 #endif
+
+class ParticleEmitter;
+class MeshEmitter;
 
 class AttractionBehaviour : public IParticleBehaviour
 {
@@ -62,6 +57,8 @@ public:
 	bool onAdd();
 	void packData(BitStream*);
 	void unpackData(BitStream*);
+   void packUpdate(BitStream*, NetConnection*);
+   void unpackUpdate(BitStream*, NetConnection*);
 	bool preload(bool server, String &errorStr);
 	static void initPersistFields();
 	

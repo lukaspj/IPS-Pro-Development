@@ -36,6 +36,7 @@
 #include "attractionBehaviour.h"
 #include "console/consoleTypes.h"
 #include "core/stream/bitStream.h"
+#include "sim\netConnection.h"
 
 IMPLEMENT_CO_DATABLOCK_V1(AttractionBehaviour);
 
@@ -217,4 +218,59 @@ bool AttractionBehaviour::preload(bool server, String &errorStr)
 	// Verify variables
 
 	return true;
+}
+
+//---------------------------------------------------------------
+// PackUpdate
+//--------------------------------------------------------------
+void AttractionBehaviour::packUpdate(BitStream* stream, NetConnection* conn)
+{
+	Parent::packData(stream);
+	stream->writeInt(attractionrange*1000, 20);
+	for(int i = 0; i < attrobjectCount; i++)
+	{
+		stream->writeInt(AttractionMode[i], 4);
+		stream->writeInt(Amount[i]*1000, 20);
+      SceneObject* object;
+      if(Sim::findObject(attractedObjectID[i], object))
+      {
+         S32 ghostID = conn->getGhostIndex(object);
+         if(stream->writeFlag(ghostID != -1))
+         {
+            stream->writeRangedU32(U32(ghostID), 0, NetConnection::MaxGhostCount);
+         }
+         else
+            object = NULL;
+      }
+		stream->writeString(Attraction_offset[i]);
+	}
+}
+
+//---------------------------------------------------------------
+// UnpackUpdate
+//--------------------------------------------------------------
+void AttractionBehaviour::unpackUpdate(BitStream* stream, NetConnection* conn)
+{
+	Parent::unpackData(stream);
+
+	attractionrange = stream->readInt(20)  / 1000.0f;
+	for(int i = 0; i < attrobjectCount; i++)
+	{
+		AttractionMode[i] = stream->readInt(4);
+		Amount[i] = stream->readInt(20) / 1000.0f;
+      SceneObject* object;
+      if(stream->readFlag())
+      {
+         S32 TargetID = stream->readRangedU32(0, NetConnection::MaxGhostCount);
+         object = dynamic_cast<SceneObject*>(conn->resolveGhost(TargetID));
+      }
+      else
+         object = NULL;
+
+      if(object)
+		   attractedObjectID[i] = object->getIdString();
+		char buf2[256];
+		stream->readString(buf2);
+		Attraction_offset[i] = dStrdup(buf2);
+	}
 }

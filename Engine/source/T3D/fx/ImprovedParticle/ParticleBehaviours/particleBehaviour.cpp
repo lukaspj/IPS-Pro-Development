@@ -43,5 +43,7 @@ void IParticleBehaviour::updateParticle(MeshEmitter* emitter, Particle* part, F3
 bool IParticleBehaviour::onAdd() { return Parent::onAdd(); }
 void IParticleBehaviour::packData(BitStream* stream) { Parent::packData(stream); }
 void IParticleBehaviour::unpackData(BitStream* stream) { Parent::unpackData(stream); }
+void IParticleBehaviour::packUpdate(BitStream* stream, NetConnection*) { packData(stream); };
+void IParticleBehaviour::unpackUpdate(BitStream* stream, NetConnection*) { unpackData(stream); };
 bool IParticleBehaviour::preload(bool server, String &errorStr) { return Parent::preload(server, errorStr); }
 void IParticleBehaviour::initPersistFields() { Parent::initPersistFields(); }
