@@ -42,7 +42,7 @@
 #include "sim/netConnection.h"
 #endif
 
-#define GroundEmitterLayers (U8)5
+#define GroundEmitterLayers 5
 
 class GroundEmitterData : public ParticleEmitterData
 {

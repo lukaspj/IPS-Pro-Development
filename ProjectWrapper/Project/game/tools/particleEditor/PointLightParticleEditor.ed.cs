@@ -77,5 +77,17 @@ function PEP_PointLightParticleEditor::guiSync( %this, %new )
    PEP_PointLightParticleEditor-->PEP_pointTime_slider3.setValue( %data.times[ 3 ] );
    PEP_PointLightParticleEditor-->PEP_pointTime_textEdit3.setText( %data.times[ 3 ] );
    
-   PEP_ParticleClassSelector.setSelected(0);
+   PEP_ParticleClassSelector.setSelected(3);
+   
+   PEP_EffectParticleEditor-->PEP_Effect_PopUp.clear();
+   foreach( %obj in DatablockGroup )
+   {
+      if( %obj.isMemberOfClass( "PointLightParticleData" ) )
+      {
+         %name = %obj.getName();
+         %id = %obj.getId();
+         PEP_EffectParticleEditor-->PEP_Effect_PopUp.add( %name, %id );
+      }
+   }
+   PEP_EffectParticleEditor-->PEP_Effect_PopUp.setSelected(%data.getId());
 }

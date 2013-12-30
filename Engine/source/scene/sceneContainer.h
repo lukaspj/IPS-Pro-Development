@@ -60,19 +60,19 @@ struct RayInfo;
 template< typename T >
 class SceneObjectRefBase
 {
-public:
+   public:
 
-   /// Object that is referenced in the link.
-   SceneObject* object;
+      /// Object that is referenced in the link.
+      SceneObject* object;
 
-   /// Next link in chain of container.
-   T* nextInBin;
+      /// Next link in chain of container.
+      T* nextInBin;
 
-   /// Previous link in chain of container.
-   T* prevInBin;
+      /// Previous link in chain of container.
+      T* prevInBin;
 
-   /// Next link in chain that is associated with #object.
-   T* nextInObj;
+      /// Next link in chain that is associated with #object.
+      T* nextInObj;
 };
 
 
@@ -87,7 +87,7 @@ enum PolyListContext
    /// A hint that the polyist is intended 
    /// for collision testing.
    PLC_Collision,
-
+   
    /// A hint that the polyist is for decal
    /// geometry generation.
    PLC_Decal,
@@ -106,21 +106,21 @@ enum PolyListContext
 /// For simple queries.  Simply creates a vector of the objects
 class SimpleQueryList
 {
-public:
+   public:
 
-   Vector< SceneObject* > mList;
+      Vector< SceneObject* > mList;
 
-   SimpleQueryList() 
-   {
-      VECTOR_SET_ASSOCIATION( mList );
-   }
+      SimpleQueryList() 
+      {
+         VECTOR_SET_ASSOCIATION( mList );
+      }
 
-   void insertObject( SceneObject* obj ) { mList.push_back(obj); }
-   static void insertionCallback( SceneObject* obj, void* key )
-   {
-      SimpleQueryList* pList = reinterpret_cast< SimpleQueryList* >( key );
-      pList->insertObject( obj );
-   }
+      void insertObject( SceneObject* obj ) { mList.push_back(obj); }
+      static void insertionCallback( SceneObject* obj, void* key )
+      {
+         SimpleQueryList* pList = reinterpret_cast< SimpleQueryList* >( key );
+         pList->insertObject( obj );
+      }
 };
 
 
@@ -131,121 +131,121 @@ public:
 /// ScenceContainer implements a grid-based spatial subdivision for the contents of a scene.
 class SceneContainer
 {
-   enum CastRayType
-   {
-      CollisionGeometry,
-      RenderedGeometry,
-   };
+      enum CastRayType
+      {
+         CollisionGeometry,
+         RenderedGeometry,
+      };
 
-public:
+   public:
 
-   struct Link
-   {
-      Link* next;
-      Link* prev;
-      Link();
-      void unlink();
-      void linkAfter(Link* ptr);
-   };
+      struct Link
+      {
+         Link* next;
+         Link* prev;
+         Link();
+         void unlink();
+         void linkAfter(Link* ptr);
+      };
 
-   struct CallbackInfo 
-   {
-      PolyListContext context;
-      AbstractPolyList* polyList;
-      Box3F boundingBox;
-      SphereF boundingSphere;
-      void *key;
-   };
+      struct CallbackInfo 
+      {
+         PolyListContext context;
+         AbstractPolyList* polyList;
+         Box3F boundingBox;
+         SphereF boundingSphere;
+         void *key;
+      };
 
-private:
+   private:
 
-   Link mStart;
-   Link mEnd;
+      Link mStart;
+      Link mEnd;
 
-   /// Container queries based on #mCurrSeqKey are are not re-entrant;
-   /// this is used to detect when it happens.
-   bool mSearchInProgress;
+      /// Container queries based on #mCurrSeqKey are are not re-entrant;
+      /// this is used to detect when it happens.
+      bool mSearchInProgress;
 
-   /// Current sequence key.
-   U32 mCurrSeqKey;
+      /// Current sequence key.
+      U32 mCurrSeqKey;
 
-   SceneObjectRef* mFreeRefPool;
-   Vector< SceneObjectRef* > mRefPoolBlocks;
+      SceneObjectRef* mFreeRefPool;
+      Vector< SceneObjectRef* > mRefPoolBlocks;
 
-   SceneObjectRef* mBinArray;
-   SceneObjectRef mOverflowBin;
+      SceneObjectRef* mBinArray;
+      SceneObjectRef mOverflowBin;
 
-   /// A vector that contains just the water and physical zone
-   /// object types which is used to optimize searches.
-   Vector< SceneObject* > mWaterAndZones;
+      /// A vector that contains just the water and physical zone
+      /// object types which is used to optimize searches.
+      Vector< SceneObject* > mWaterAndZones;
 
-   /// Vector that contains just the terrain objects in the container.
-   Vector< SceneObject* > mTerrains;
+      /// Vector that contains just the terrain objects in the container.
+      Vector< SceneObject* > mTerrains;
 
-   static const U32 csmNumBins;
-   static const F32 csmBinSize;
-   static const F32 csmTotalBinSize;
-   static const U32 csmRefPoolBlockSize;
+      static const U32 csmNumBins;
+      static const F32 csmBinSize;
+      static const F32 csmTotalBinSize;
+      static const U32 csmRefPoolBlockSize;
 
-public:
+   public:
 
-   SceneContainer();
-   ~SceneContainer();
+      SceneContainer();
+      ~SceneContainer();
 
-   /// Return a vector containing all the water and physical zone objects in this container.
-   const Vector< SceneObject* >& getWaterAndPhysicalZones() const { return mWaterAndZones; }
+      /// Return a vector containing all the water and physical zone objects in this container.
+      const Vector< SceneObject* >& getWaterAndPhysicalZones() const { return mWaterAndZones; }
 
-   /// Return a vector containing all terrain objects in this container.
-   const Vector< SceneObject* >& getTerrains() const { return mTerrains; }
+      /// Return a vector containing all terrain objects in this container.
+      const Vector< SceneObject* >& getTerrains() const { return mTerrains; }
 
-   /// @name Basic database operations
-   /// @{
+      /// @name Basic database operations
+      /// @{
 
-   ///
-   typedef void ( *FindCallback )( SceneObject* object, void* key );
+      ///
+      typedef void ( *FindCallback )( SceneObject* object, void* key );
 
-   /// Find all objects of the given type(s) and invoke the given callback for each
-   /// of them.
-   /// @param mask Object type mask (@see SimObjectTypes).
-   /// @param callback Pointer to function to invoke for each object.
-   /// @param key User data to pass to the "key" argument of @a callback.
-   void findObjects( U32 mask, FindCallback callback, void* key = NULL );
+      /// Find all objects of the given type(s) and invoke the given callback for each
+      /// of them.
+      /// @param mask Object type mask (@see SimObjectTypes).
+      /// @param callback Pointer to function to invoke for each object.
+      /// @param key User data to pass to the "key" argument of @a callback.
+      void findObjects( U32 mask, FindCallback callback, void* key = NULL );
 
-   void findObjects( const Box3F& box, U32 mask, FindCallback, void *key = NULL );
-   void findObjects( const Frustum& frustum, U32 mask, FindCallback, void *key = NULL );
+      void findObjects( const Box3F& box, U32 mask, FindCallback, void *key = NULL );
+      void findObjects( const Frustum& frustum, U32 mask, FindCallback, void *key = NULL );
 
-   void polyhedronFindObjects( const Polyhedron& polyhedron, U32 mask, FindCallback, void *key = NULL );
+      void polyhedronFindObjects( const Polyhedron& polyhedron, U32 mask, FindCallback, void *key = NULL );
 
-   /// Find all objects of the given type(s) and add them to the given vector.
-   /// @param mask Object type mask (@see SimObjectTypes).
-   /// @param outFound Vector to add found objects to.
-   void findObjectList( U32 mask, Vector< SceneObject* >* outFound );
+      /// Find all objects of the given type(s) and add them to the given vector.
+      /// @param mask Object type mask (@see SimObjectTypes).
+      /// @param outFound Vector to add found objects to.
+      void findObjectList( U32 mask, Vector< SceneObject* >* outFound );
 
-   ///
-   void findObjectList( const Box3F& box, U32 mask, Vector< SceneObject* >* outFound );
+      ///
+      void findObjectList( const Box3F& box, U32 mask, Vector< SceneObject* >* outFound );
 
-   ///
-   void findObjectList( const Frustum& frustum, U32 mask, Vector< SceneObject* >* outFound );
+      ///
+      void findObjectList( const Frustum& frustum, U32 mask, Vector< SceneObject* >* outFound );
 
-   /// @}
+      /// @}
 
-   /// @name Line intersection
-   /// @{
+      /// @name Line intersection
+      /// @{
 
-   typedef bool ( *CastRayCallback )( RayInfo* ri );
+      typedef bool ( *CastRayCallback )( RayInfo* ri );
 
-   /// Test against collision geometry -- fast.
-   bool castRay( const Point3F &start, const Point3F &end, U32 mask, RayInfo* info, CastRayCallback callback = NULL );
+      /// Test against collision geometry -- fast.
+      bool castRay( const Point3F &start, const Point3F &end, U32 mask, RayInfo* info, CastRayCallback callback = NULL );
 
-   /// Test against rendered geometry -- slow.
-   bool castRayRendered( const Point3F &start, const Point3F &end, U32 mask, RayInfo* info, CastRayCallback callback = NULL );
+      /// Test against rendered geometry -- slow.
+      bool castRayRendered( const Point3F &start, const Point3F &end, U32 mask, RayInfo* info, CastRayCallback callback = NULL );
 
-   bool collideBox(const Point3F &start, const Point3F &end, U32 mask, RayInfo* info);
+      bool collideBox(const Point3F &start, const Point3F &end, U32 mask, RayInfo* info);
 
-   /// @}
+      /// @}
 
-   /// @name Poly list
-   /// @{
+      /// @name Poly list
+      /// @{
 
    ///
    bool buildPolyList(  PolyListContext context, 
@@ -305,15 +305,15 @@ private:
    S32                                 mCurrSearchPos;
    Point3F                             mSearchReferencePoint;
 
-   void cleanupSearchVectors();
+      void cleanupSearchVectors();
 
-   /// Base cast ray code
-   bool _castRay( U32 type, const Point3F &start, const Point3F &end, U32 mask, RayInfo* info, CastRayCallback callback );
+      /// Base cast ray code
+      bool _castRay( U32 type, const Point3F &start, const Point3F &end, U32 mask, RayInfo* info, CastRayCallback callback );
 
-   void _findSpecialObjects( const Vector< SceneObject* >& vector, U32 mask, FindCallback, void *key = NULL );
-   void _findSpecialObjects( const Vector< SceneObject* >& vector, const Box3F &box, U32 mask, FindCallback callback, void *key = NULL );   
+      void _findSpecialObjects( const Vector< SceneObject* >& vector, U32 mask, FindCallback, void *key = NULL );
+      void _findSpecialObjects( const Vector< SceneObject* >& vector, const Box3F &box, U32 mask, FindCallback callback, void *key = NULL );   
 
-   static void getBinRange( const F32 min, const F32 max, U32& minBin, U32& maxBin );
+      static void getBinRange( const F32 min, const F32 max, U32& minBin, U32& maxBin );
 };
 
 //-----------------------------------------------------------------------------

@@ -54,137 +54,147 @@ new GuiStackControl(PEP_PointLightParticleEditor) {
          tooltipprofile = "ToolsGuiToolTipProfile";
          hovertime = "1000";
          
-         new GuiContainer(){ // particle texture map
-            profile="ToolsGuiDefaultProfile";
+         new GuiControl(){ // PointLight Color
+            class = "";
             isContainer = "1";
-            position = "0 0";
-            Extent = "185 52";
             HorizSizing = "width";
+            VertSizing = "bottom";
+            Position = $PE_guielement_pos_single_container ;
+            Extent = $PE_guielement_ext_single_container ;
             
-            new GuiBitmapCtrl() {
-               canSaveDynamicFields = "0";
-               Enabled = "1";
-               isContainer = "0";
-               Profile = "ToolsGuiDefaultProfile";
-               HorizSizing = "right";
-               VertSizing = "bottom";
-               position = "1 1";
-               Extent = "48 48";
-               MinExtent = "8 2";
-               canSave = "1";
-               Visible = "1";
-               hovertime = "1000";
-               bitmap = "tools/materialeditor/gui/unknownImage";
-               wrap = "0";
-            };
             new GuiTextCtrl() {
-               canSaveDynamicFields = "0";
-               Enabled = "1";
-               isContainer = "0";
-               Profile = "EditorTextProfile";
-               HorizSizing = "right";
-               VertSizing = "bottom";
-               position = "56 -2";
-               Extent = "72 18";
-               MinExtent = "8 2";
-               canSave = "1";
-               Visible = "1";
-               hovertime = "1000";
-               Margin = "0 0 0 0";
-               Padding = "0 0 0 0";
-               AnchorTop = "1";
-               AnchorBottom = "0";
-               AnchorLeft = "1";
-               AnchorRight = "0";
-               text = "Texture Map";
-               maxLength = "1024";
-            };
-            new GuiBitmapButtonCtrl() {
-               internalName = "PEP_previewImage";
-               canSaveDynamicFields = "0";
-               Enabled = "1";
-               isContainer = "0";
-               Profile = "ToolsGuiDefaultProfile";
-               HorizSizing = "right";
-               VertSizing = "bottom";
-               position = "1 1";
-               Extent = "48 48";
-               MinExtent = "8 2";
-               canSave = "1";
-               Visible = "1";
-               Command = "";
-               tooltipprofile = "ToolsGuiDefaultProfile";
-               ToolTip = "Edit Selected Particle.";
-               hovertime = "1000";
-               groupNum = "-1";
-               buttonType = "PushButton";
-               useMouseEvents = "0";
-               bitmap = "tools/materialEditor/gui/cubemapBtnBorder";
-            };
-            new GuiBitmapButtonCtrl() {
-               canSaveDynamicFields = "0";
-               Enabled = "1";
-               isContainer = "0";
-               Profile = "ToolsGuiDefaultProfile";
-               HorizSizing = "right";
-               VertSizing = "bottom";
-               position = "1 1";
-               Extent = "48 48";
-               MinExtent = "8 2";
-               canSave = "1";
-               Visible = "1";
-               Command = "";
-               tooltipprofile = "ToolsGuiDefaultProfile";
-               ToolTip = "Edit Selected Particle.";
-               hovertime = "1000";
-               groupNum = "-1";
-               buttonType = "PushButton";
-               useMouseEvents = "0";
-               bitmap = "tools/materialEditor/gui/cubemapBtnBorder";
-               Command = "PE_ParticleEditor.updateParticleTexture(1);";
-            };
-            new GuiCheckBoxCtrl() {
-               internalName = "PEP_inverseAlpha";
+               Profile = "ToolsGuiTextProfile";
                HorizSizing = "width";
                VertSizing = "bottom";
-               position = "55 14";
-               Extent = "84 18";
-               MinExtent = "8 2";
-               text = "Inverse Alpha";
-               command = "PE_ParticleEditor.updateParticle( \"useInvAlpha\", $ThisControl.getValue());";
+               position = $PE_guielement_pos_name;
+               Extent = $PE_guielement_ext_name;
+               text = "Color";
             };
-            new GuiTextEditCtrl() {
-               internalName = "PEP_previewImageName";
+            
+            new GuiSwatchButtonCtrl() {
+               internalName = "PE_LightColor";               
                canSaveDynamicFields = "0";
                Enabled = "1";
                isContainer = "0";
+               Profile = "GuiInspectorSwatchButtonProfile";
+               HorizSizing = "left";
+               VertSizing = "bottom";
+               position = $PE_guielement_pos_value;
+               Extent = $PE_guielement_ext_value;
+               MinExtent = "8 2";
+               canSave = "1";
+               Visible = "1";
+               Command = "getColorF( PE_ParticleEditor.currParticle.color - PE_ParticleEditor.currParticle.ColorVariance, \"PE_ColorTintSwatch0.updateParticleColor\");";
+               altCommand = "$ThisControl.updateParticleColor( $ThisControl.color );";
+               hovertime = "1000";
+               groupNum = "-1";
+               buttonType = "PushButton";
+               useMouseEvents = "1";
+               arrayNum = "0";
+               class = "PE_ColorTintSwatch";
+            };
+         };
+         
+         new GuiControl(){ // PointLight Color Variance
+            class = "AggregateControl";
+            isContainer = "1";
+            HorizSizing = "width";
+            VertSizing = "bottom";
+            Position = $PE_guielement_pos_single_container ;
+            Extent = $PE_guielement_ext_single_container ;
+            
+            new GuiTextCtrl() {
+               Profile = "ToolsGuiTextProfile";
+               HorizSizing = "width";
+               VertSizing = "bottom";
+               position = $PE_guielement_pos_name;
+               Extent = $PE_guielement_ext_name;
+               text = "ColorVariance";
+            };
+            
+            new GuiTextEditCtrl() {
                Profile = "ToolsGuiTextEditProfile";
                HorizSizing = "width";
                VertSizing = "bottom";
-               position = "55 31";
-               Extent = "120 18";
+               position = $PE_guielement_pos_textedit;
+               Extent = $PE_guielement_ext_textedit;
+               text = "0 0 0";
+               altCommand = "PE_ParticleEditor.updateParticle( \"ColorVariance\", $ThisControl.getValue());";
+            };
+         };
+         
+         new GuiControl(){ // PointLight Use Particle Colors
+            isContainer = "1";
+            HorizSizing = "width";
+            VertSizing = "bottom";
+            Position = $PE_guielement_pos_single_container ;
+            Extent = $PE_guielement_ext_single_container ;
+            
+            new GuiTextCtrl() {
+               Profile = "ToolsGuiTextProfile";
+               HorizSizing = "width";
+               VertSizing = "bottom";
+               position = $PE_guielement_pos_name;
+               Extent = $PE_guielement_ext_checkbox_name;
+               text = "Use Particle Colors ";
+            };
+            new GuiCheckBoxCtrl() {
+               internalName = "PE_PartColors";
+               Profile = "ToolsGuiCheckBoxProfile";
+               HorizSizing = "left";
+               VertSizing = "bottom";
+               position = $PE_guielement_pos_checkbox;
+               Extent = $PE_guielement_ext_checkbox;
+               text = "";
+               command = "PE_ParticleEditor.updateParticle( \"UseParticleColors\", $ThisControl.getValue());";
+            };
+         };
+         
+         new GuiControl(){ // PointLight Brightness
+            class = "AggregateControl";
+            isContainer = "1";
+            HorizSizing = "width";
+            VertSizing = "bottom";
+            Position = $PE_guielement_pos_single_container ;
+            Extent = $PE_guielement_ext_single_container ;
+            
+            new GuiTextCtrl() {
+               Profile = "ToolsGuiTextProfile";
+               HorizSizing = "width";
+               VertSizing = "bottom";
+               position = $PE_guielement_pos_name;
+               Extent = $PE_guielement_ext_name;
+               text = "Brightness ";
+            };
+            new GuiSliderCtrl() {
+               internalName = "PE_brightness_slider";
+               canSaveDynamicFields = "0";
+               Enabled = "1";
+               isContainer = "0";
+               Profile = "ToolsGuiSliderProfile";
+               HorizSizing = "left";
+               VertSizing = "bottom";
+               position = $PE_guielement_pos_slider;
+               Extent = $PE_guielement_ext_slider;
                MinExtent = "8 2";
                canSave = "1";
                Visible = "1";
+               Command = "";
                hovertime = "1000";
-               Margin = "0 0 0 0";
-               Padding = "0 0 0 0";
-               AnchorTop = "1";
-               AnchorBottom = "0";
-               AnchorLeft = "1";
-               AnchorRight = "0";
-               text = "None";
-               maxLength = "1024";
+               range = "0 5";
+               ticks = "0";
+               value = "0";
+               Command = "PE_ParticleEditor.updateParticle( \"brightness\", $ThisControl.getValue(), true, true );";
+               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_ParticleEditor.updateParticle( \"brightness\", $ThisControl.getValue(), true, false );";
             };
-            new GuiButtonCtrl(){
-               profile="ToolsGuiButtonProfile";
-               text ="Edit";
+            new GuiTextEditCtrl() {
+               internalName = "PE_brightness_textEdit";
+               Profile = "ToolsGuiTextEditProfile";
                HorizSizing = "left";
-               VertSizing = "bottom"; 
-               position = "138 0";
-               Extent = "36 18" ;
-               buttonType = "PushButton";
-               Command = "PE_ParticleEditor.updateParticleTexture(1);";
+               VertSizing = "bottom";
+               position = $PE_guielement_pos_value;
+               Extent = $PE_guielement_ext_value;
+               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_ParticleEditor.updateParticle( \"brightness\", $ThisControl.getText());";
             };
          };
          
@@ -558,208 +568,6 @@ new GuiStackControl(PEP_PointLightParticleEditor) {
          };
       }; // end stack
    }; // end "motion" rollout
-   new GuiRolloutCtrl() {
-      class = "BehaviorQuickEditRollout";
-      superclass = LBQuickEditRollout;
-      Profile = "GuiRolloutProfile";
-      HorizSizing = "width";
-      VertSizing = "bottom";
-      Position = "0 0";
-      Extent = "197 0";
-      Caption = "Spin";
-      Margin = "4 4 4 0";
-      DragSizable = false;
-      container = true;
-      parentRollout = %this.rollout;
-      object = %behavior;
-      
-      new GuiStackControl() {
-         StackingType = "Vertical";
-         HorizStacking = "Left to Right";
-         VertStacking = "Top to Bottom";
-         Padding = "0";
-         canSaveDynamicFields = "0";
-         Enabled = "1";
-         isContainer = "1";
-         Profile = "ToolsGuiDefaultProfile";
-         HorizSizing = "width";
-         VertSizing = "bottom";
-         Position = "1 3";
-         Extent = "197 16";
-         MinExtent = "16 16";
-         canSave = "1";
-         isDecoy = "0";
-         Visible = "1";
-         tooltipprofile = "ToolsGuiToolTipProfile";
-         hovertime = "1000";
-         
-         new GuiControl(){ // Particle spin Min
-            class = "AggregateControl";
-            isContainer = "1";
-            HorizSizing = "width";
-            VertSizing = "bottom";
-            Position = $PE_guielement_pos_single_container ;
-            Extent = $PE_guielement_ext_single_container ;
-            
-            new GuiBitmapCtrl(){ // No Spin
-               HorizSizing = "left";
-               position = getWord($PE_guielement_pos_slider,0)+mCeil(getWord($PE_guielement_ext_slider,0)/2)-1 SPC "0";
-               Extent = "2 18";
-               minExtent = "0 0";
-               bitmap = "tools/gui/images/separator-h";
-               tooltip = "No Spin";
-            };
-            
-            new GuiTextCtrl() {
-               Profile = "ToolsGuiTextProfile";
-               HorizSizing = "width";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_name;
-               Extent = $PE_guielement_ext_name;
-               text = "Spin Min";
-            };
-            new GuiSliderCtrl() {
-               internalName = "PEP_spinRandomMin_slider";
-               canSaveDynamicFields = "0";
-               Enabled = "1";
-               isContainer = "0";
-               Profile = "ToolsGuiSliderProfile";
-               HorizSizing = "left";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_slider;
-               Extent = $PE_guielement_ext_slider;
-               MinExtent = "8 2";
-               canSave = "1";
-               Visible = "1";
-               Command = "PE_ParticleEditor.updateSpinFields( true, $ThisControl.getValue(), true, true );";
-               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_ParticleEditor.updateSpinFields( true, $ThisControl.getValue(), true, false );";
-               hovertime = "1000";
-               range = "-1000 999";
-               ticks = "0";
-               value = "0";
-            };
-            new GuiTextEditCtrl() {
-               internalName = "PEP_spinRandomMin_textEdit";
-               Profile = "ToolsGuiTextEditProfile";
-               HorizSizing = "left";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_value;
-               Extent = $PE_guielement_ext_value;
-               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_ParticleEditor.updateSpinFields( true, $ThisControl.getText() );";
-            };
-         };
-         new GuiControl(){ // Particle Spin Max
-            class = "AggregateControl";
-            isContainer = "1";
-            HorizSizing = "width";
-            VertSizing = "bottom";
-            Position = $PE_guielement_pos_single_container ;
-            Extent = $PE_guielement_ext_single_container ;
-            
-            new GuiBitmapCtrl(){ // No Spin
-               HorizSizing = "left";
-               position = getWord($PE_guielement_pos_slider,0)+mCeil(getWord($PE_guielement_ext_slider,0)/2)-1 SPC "0";
-               Extent = "2 18";
-               minExtent = "0 0";
-               bitmap = "tools/gui/images/separator-h";
-               tooltip = "No Spin";
-            };
-            
-            new GuiTextCtrl() {
-               Profile = "ToolsGuiTextProfile";
-               HorizSizing = "width";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_name;
-               Extent = $PE_guielement_ext_name;
-               text = "Spin Max";
-            };
-            new GuiSliderCtrl() {
-               internalName = "PEP_spinRandomMax_slider";
-               canSaveDynamicFields = "0";
-               Enabled = "1";
-               isContainer = "0";
-               Profile = "ToolsGuiSliderProfile";
-               HorizSizing = "left";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_slider;
-               Extent = $PE_guielement_ext_slider;
-               MinExtent = "8 2";
-               canSave = "1";
-               Visible = "1";
-               Command = "PE_ParticleEditor.updateSpinFields( false, $ThisControl.getValue(), true, true );";
-               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_ParticleEditor.updateSpinFields( false, $ThisControl.getValue(), true, false );";
-               hovertime = "1000";
-               range = "-999 1000";
-               ticks = "0";
-               value = "0";
-            };
-            new GuiTextEditCtrl() {
-               internalName = "PEP_spinRandomMax_textEdit";
-               Profile = "ToolsGuiTextEditProfile";
-               HorizSizing = "left";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_value;
-               Extent = $PE_guielement_ext_value;
-               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_ParticleEditor.updateSpinFields( false, $ThisControl.getText() );";
-            };
-         };
-         
-         new GuiControl(){ // Spacer ----------------------------
-            isContainer = "1"; HorizSizing = "width"; Position = "0 0"; Extent = "194 8";
-            new GuiBitmapCtrl(){
-               position="0 3"; extent ="188 2"; HorizSizing = "width";
-               bitmap ="tools/gui/images/separator-v"; 
-            };
-         };// end spacer ----------------------------------------
-         
-         new GuiControl(){ // Particle spin Speed
-            class = "AggregateControl";
-            isContainer = "1";
-            HorizSizing = "width";
-            VertSizing = "bottom";
-            Position = $PE_guielement_pos_single_container ;
-            Extent = $PE_guielement_ext_single_container ;
-            
-            new GuiTextCtrl() {
-               Profile = "ToolsGuiTextProfile";
-               HorizSizing = "width";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_name;
-               Extent = $PE_guielement_ext_name;
-               text = "Spin Speed";
-            };
-            new GuiSliderCtrl() {
-               internalName = "PEP_spinSpeed_slider";
-               canSaveDynamicFields = "0";
-               Enabled = "1";
-               isContainer = "0";
-               Profile = "ToolsGuiSliderProfile";
-               HorizSizing = "left";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_slider;
-               Extent = $PE_guielement_ext_slider;
-               MinExtent = "8 2";
-               canSave = "1";
-               Visible = "1";
-               hovertime = "1000";
-               range = "0 1";
-               ticks = "0";
-               value = "0";
-               Command = "PE_ParticleEditor.updateParticle( \"spinSpeed\", $ThisControl.getValue(), true, true );";
-               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_ParticleEditor.updateParticle( \"spinSpeed\", $ThisControl.getValue(), true, false );";
-            };
-            new GuiTextEditCtrl() {
-               internalName = "PEP_spinSpeed_textEdit";
-               Profile = "ToolsGuiTextEditProfile";
-               HorizSizing = "left";
-               VertSizing = "bottom";
-               position = $PE_guielement_pos_value;
-               Extent = $PE_guielement_ext_value;
-               altCommand = "$ThisControl.getParent().updateFromChild($ThisControl); PE_ParticleEditor.updateParticle( \"spinSpeed\", $ThisControl.getText());";
-            };
-         };
-      }; // end stack
-   }; // end "Spin" rollout
    new GuiRolloutCtrl() {
       class = "BehaviorQuickEditRollout";
       superclass = LBQuickEditRollout;

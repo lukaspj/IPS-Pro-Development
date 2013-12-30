@@ -155,7 +155,7 @@ void PointLightParticleManager::UpdateKeyData( Particle* part, U32 numMillisecon
          F32 total     = _part->dataBlock->times[i] - _part->dataBlock->times[i-1];
 
          firstPart /= total;
-         if( !_data->mUseParticleColors )
+         if( _data->mUseParticleColors )
          {
             if( mEmitterDatablock->useEmitterColors() )
             {

@@ -49,7 +49,7 @@
 #endif
 
 #ifndef attrobjectCount
-#define attrobjectCount (U8)2
+#define attrobjectCount 2
 #endif
 
 class AttractionBehaviour : public IParticleBehaviour

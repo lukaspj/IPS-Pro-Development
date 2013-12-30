@@ -252,10 +252,10 @@ bool RaySphereEmitter::addParticle(const Point3F& pos,
    if(!hit)
       return false;
 
-   pNew->setPosition(rInfo.point);
-   pNew->relPos = pNew->getPosition() - pos;
+   pNew->pos = rInfo.point;
+   pNew->relPos = pNew->pos - pos;
 	pNew->vel = ejectionAxis * initialVel;
-   pNew->setOrientDir(ejectionAxis);
+	pNew->orientDir = ejectionAxis;
 	pNew->acc.set(0, 0, 0);
 	pNew->currentAge = 0;
 

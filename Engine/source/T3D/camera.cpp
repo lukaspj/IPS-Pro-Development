@@ -36,7 +36,7 @@
 #include "math/mTransform.h"
 
 #ifdef TORQUE_EXTENDED_MOVE
-#include "T3D/gameBase/extended/extendedMove.h"
+   #include "T3D/gameBase/extended/extendedMove.h"
 #endif
 
 S32 Camera::smExtendedMovePosRotIndex = 0;  // The ExtendedMove position/rotation index used for camera movements
@@ -46,16 +46,16 @@ S32 Camera::smExtendedMovePosRotIndex = 0;  // The ExtendedMove position/rotatio
 
 
 ImplementEnumType( CameraMotionMode,
-                  "Movement behavior type for Camera.\n\n"
-                  "@ingroup BaseCamera" )
-{ Camera::StationaryMode,   "Stationary",  "Camera does not rotate or move." },
-{ Camera::FreeRotateMode,   "FreeRotate",  "Camera may rotate but does not move." },
-{ Camera::FlyMode,          "Fly",         "Camera may rotate and move freely." },
-{ Camera::OrbitObjectMode,  "OrbitObject", "Camera orbits about a given object.  Damage flash and white out is determined by the object being orbited.  See Camera::setOrbitMode() to set the orbit object and other parameters." },
-{ Camera::OrbitPointMode,   "OrbitPoint",  "Camera orbits about a given point.  See Camera::setOrbitMode() to set the orbit point and other parameters." },
-{ Camera::TrackObjectMode,  "TrackObject", "Camera always faces a given object.  See Camera::setTrackObject() to set the object to track and a distance to remain from the object." },
-{ Camera::OverheadMode,     "Overhead",    "Camera moves in the XY plane." },
-{ Camera::EditOrbitMode,    "EditOrbit",   "Used by the World Editor to orbit about a point.  When first activated, the camera is rotated to face the orbit point rather than move to it." }
+   "Movement behavior type for Camera.\n\n"
+   "@ingroup BaseCamera" )
+   { Camera::StationaryMode,   "Stationary",  "Camera does not rotate or move." },
+   { Camera::FreeRotateMode,   "FreeRotate",  "Camera may rotate but does not move." },
+   { Camera::FlyMode,          "Fly",         "Camera may rotate and move freely." },
+   { Camera::OrbitObjectMode,  "OrbitObject", "Camera orbits about a given object.  Damage flash and white out is determined by the object being orbited.  See Camera::setOrbitMode() to set the orbit object and other parameters." },
+   { Camera::OrbitPointMode,   "OrbitPoint",  "Camera orbits about a given point.  See Camera::setOrbitMode() to set the orbit point and other parameters." },
+   { Camera::TrackObjectMode,  "TrackObject", "Camera always faces a given object.  See Camera::setTrackObject() to set the object to track and a distance to remain from the object." },
+   { Camera::OverheadMode,     "Overhead",    "Camera moves in the XY plane." },
+   { Camera::EditOrbitMode,    "EditOrbit",   "Used by the World Editor to orbit about a point.  When first activated, the camera is rotated to face the orbit point rather than move to it." }
 EndImplementEnumType;
 
 
@@ -66,20 +66,20 @@ EndImplementEnumType;
 
 IMPLEMENT_CO_DATABLOCK_V1( CameraData );
 ConsoleDocClass( CameraData, 
-                "@brief A datablock that describes a camera.\n\n"
+   "@brief A datablock that describes a camera.\n\n"
 
-                "@tsexample\n"
-                "datablock CameraData(Observer)\n"
-                "{\n"
-                "   mode = \"Observer\";\n"
-                "};\n"
-                "@endtsexample\n"
+   "@tsexample\n"
+   "datablock CameraData(Observer)\n"
+   "{\n"
+   "   mode = \"Observer\";\n"
+   "};\n"
+   "@endtsexample\n"
 
-                "@see Camera\n\n"
-                "@ref Datablock_Networking\n"
-                "@ingroup BaseCamera\n"
-                "@ingroup Datablocks\n"
-                );
+   "@see Camera\n\n"
+   "@ref Datablock_Networking\n"
+   "@ingroup BaseCamera\n"
+   "@ingroup Datablocks\n"
+);
 
 //-----------------------------------------------------------------------------
 
@@ -109,148 +109,148 @@ void CameraData::unpackData(BitStream* stream)
 
 IMPLEMENT_CO_NETOBJECT_V1( Camera );
 ConsoleDocClass( Camera, 
-                "@brief Represents a position, direction and field of view to render a scene from.\n\n"
+   "@brief Represents a position, direction and field of view to render a scene from.\n\n"
 
-                "A camera is typically manipulated by a GameConnection.  When set as the connection's "
-                "control object, the camera handles all movement actions ($mvForwardAction, $mvPitch, etc.) "
-                "just like a Player.\n"
+   "A camera is typically manipulated by a GameConnection.  When set as the connection's "
+   "control object, the camera handles all movement actions ($mvForwardAction, $mvPitch, etc.) "
+   "just like a Player.\n"
 
-                "@tsexample\n"
-                "// Set an already created camera as the GameConnection's control object\n"
-                "%connection.setControlObject(%camera);\n"
-                "@endtsexample\n\n"
+   "@tsexample\n"
+   "// Set an already created camera as the GameConnection's control object\n"
+   "%connection.setControlObject(%camera);\n"
+   "@endtsexample\n\n"
 
-                "<h3>Methods of Operation</h3>\n\n"
+   "<h3>Methods of Operation</h3>\n\n"
 
-                "The camera has two general methods of operation.  The first is the standard mode where "
-                "the camera starts and stops its motion and rotation instantly.  This is the default operation "
-                "of the camera and is used by most games.  It may be specifically set with Camera::setFlyMode() "
-                "for 6 DoF motion.  It is also typically the method used with Camera::setOrbitMode() or one of "
-                "its helper methods to orbit about a specific object (such as the Player's dead body) or a "
-                "specific point.\n\n"
+   "The camera has two general methods of operation.  The first is the standard mode where "
+   "the camera starts and stops its motion and rotation instantly.  This is the default operation "
+   "of the camera and is used by most games.  It may be specifically set with Camera::setFlyMode() "
+   "for 6 DoF motion.  It is also typically the method used with Camera::setOrbitMode() or one of "
+   "its helper methods to orbit about a specific object (such as the Player's dead body) or a "
+   "specific point.\n\n"
 
-                "The second method goes under the name of Newton as it follows Newton's 2nd law of "
-                "motion: F=ma.  This provides the camera with an ease-in and ease-out feel for both movement "
-                "and rotation.  To activate this method for movement, either use Camera::setNewtonFlyMode() or set "
-                "the Camera::newtonMode field to true.  To activate this method for rotation, set the Camera::newtonRotation "
-                "to true.  This method of operation is not typically used in games, and was developed to allow "
-                "for a smooth fly through of a game level while recording a demo video.  But with the right force "
-                "and drag settings, it may give a more organic feel to the camera to games that use an overhead view, "
-                "such as a RTS.\n\n"
+   "The second method goes under the name of Newton as it follows Newton's 2nd law of "
+   "motion: F=ma.  This provides the camera with an ease-in and ease-out feel for both movement "
+   "and rotation.  To activate this method for movement, either use Camera::setNewtonFlyMode() or set "
+   "the Camera::newtonMode field to true.  To activate this method for rotation, set the Camera::newtonRotation "
+   "to true.  This method of operation is not typically used in games, and was developed to allow "
+   "for a smooth fly through of a game level while recording a demo video.  But with the right force "
+   "and drag settings, it may give a more organic feel to the camera to games that use an overhead view, "
+   "such as a RTS.\n\n"
 
-                "There is a third, minor method of operation but it is not generally used for games.  This is when the "
-                "camera is used with Torque's World Editor in Edit Orbit Mode.  When set, this allows the camera "
-                "to rotate about a specific point in the world, and move towards and away from this point.  See "
-                "Camera::setEditOrbitMode() and Camera::setEditOrbitPoint().  While in this mode, Camera::autoFitRadius() "
-                "may also be used.\n\n"
+   "There is a third, minor method of operation but it is not generally used for games.  This is when the "
+   "camera is used with Torque's World Editor in Edit Orbit Mode.  When set, this allows the camera "
+   "to rotate about a specific point in the world, and move towards and away from this point.  See "
+   "Camera::setEditOrbitMode() and Camera::setEditOrbitPoint().  While in this mode, Camera::autoFitRadius() "
+   "may also be used.\n\n"
 
-                "@tsexample\n"
-                "// Create a camera in the level and set its position to a given spawn point.\n"
-                "// Note: The camera starts in the standard fly mode.\n"
-                "%cam = new Camera() {\n"
-                "   datablock = \"Observer\";\n"
-                "};\n"
-                "MissionCleanup.add( %cam );\n"
-                "%cam.setTransform( %spawnPoint.getTransform() );\n"
-                "@endtsexample\n\n"
+   "@tsexample\n"
+   "// Create a camera in the level and set its position to a given spawn point.\n"
+   "// Note: The camera starts in the standard fly mode.\n"
+   "%cam = new Camera() {\n"
+   "   datablock = \"Observer\";\n"
+   "};\n"
+   "MissionCleanup.add( %cam );\n"
+   "%cam.setTransform( %spawnPoint.getTransform() );\n"
+   "@endtsexample\n\n"
 
-                "@tsexample\n"
-                "// Create a camera at the given spawn point for the specified\n"
-                "// GameConnection i.e. the client.  Uses the standard\n"
-                "// Sim::spawnObject() function to create the camera using the\n"
-                "// defined default settings.\n"
-                "// Note: The camera starts in the standard fly mode.\n"
-                "function GameConnection::spawnCamera(%this, %spawnPoint)\n"
-                "{\n"
-                "   // Set the control object to the default camera\n"
-                "   if (!isObject(%this.camera))\n"
-                "   {\n"
-                "      if (isDefined(\"$Game::DefaultCameraClass\"))\n"
-                "         %this.camera = spawnObject($Game::DefaultCameraClass, $Game::DefaultCameraDataBlock);\n"
-                "   }\n"
-                "\n"
-                "   // If we have a camera then set up some properties\n"
-                "   if (isObject(%this.camera))\n"
-                "   {\n"
-                "      // Make sure we're cleaned up when the mission ends\n"
-                "      MissionCleanup.add( %this.camera );\n"
-                "\n"
-                "      // Make sure the camera is always in scope for the connection\n"
-                "      %this.camera.scopeToClient(%this);\n"
-                "\n"
-                "      // Send all user input from the connection to the camera\n"
-                "      %this.setControlObject(%this.camera);\n"
-                "\n"
-                "      if (isDefined(\"%spawnPoint\"))\n"
-                "      {\n"
-                "         // Attempt to treat %spawnPoint as an object, such as a\n"
-                "         // SpawnSphere class.\n"
-                "         if (getWordCount(%spawnPoint) == 1 && isObject(%spawnPoint))\n"
-                "         {\n"
-                "            %this.camera.setTransform(%spawnPoint.getTransform());\n"
-                "         }\n"
-                "         else\n"
-                "         {\n"
-                "            // Treat %spawnPoint as an AngleAxis transform\n"
-                "            %this.camera.setTransform(%spawnPoint);\n"
-                "         }\n"
-                "      }\n"
-                "   }\n"
-                "}\n"
-                "@endtsexample\n\n"
+   "@tsexample\n"
+   "// Create a camera at the given spawn point for the specified\n"
+   "// GameConnection i.e. the client.  Uses the standard\n"
+   "// Sim::spawnObject() function to create the camera using the\n"
+   "// defined default settings.\n"
+   "// Note: The camera starts in the standard fly mode.\n"
+   "function GameConnection::spawnCamera(%this, %spawnPoint)\n"
+   "{\n"
+   "   // Set the control object to the default camera\n"
+   "   if (!isObject(%this.camera))\n"
+   "   {\n"
+   "      if (isDefined(\"$Game::DefaultCameraClass\"))\n"
+   "         %this.camera = spawnObject($Game::DefaultCameraClass, $Game::DefaultCameraDataBlock);\n"
+   "   }\n"
+   "\n"
+   "   // If we have a camera then set up some properties\n"
+   "   if (isObject(%this.camera))\n"
+   "   {\n"
+   "      // Make sure we're cleaned up when the mission ends\n"
+   "      MissionCleanup.add( %this.camera );\n"
+   "\n"
+   "      // Make sure the camera is always in scope for the connection\n"
+   "      %this.camera.scopeToClient(%this);\n"
+   "\n"
+   "      // Send all user input from the connection to the camera\n"
+   "      %this.setControlObject(%this.camera);\n"
+   "\n"
+   "      if (isDefined(\"%spawnPoint\"))\n"
+   "      {\n"
+   "         // Attempt to treat %spawnPoint as an object, such as a\n"
+   "         // SpawnSphere class.\n"
+   "         if (getWordCount(%spawnPoint) == 1 && isObject(%spawnPoint))\n"
+   "         {\n"
+   "            %this.camera.setTransform(%spawnPoint.getTransform());\n"
+   "         }\n"
+   "         else\n"
+   "         {\n"
+   "            // Treat %spawnPoint as an AngleAxis transform\n"
+   "            %this.camera.setTransform(%spawnPoint);\n"
+   "         }\n"
+   "      }\n"
+   "   }\n"
+   "}\n"
+   "@endtsexample\n\n"
 
-                "<h3>Motion Modes</h3>\n\n"
+   "<h3>Motion Modes</h3>\n\n"
 
-                "Beyond the different operation methods, the Camera may be set to one of a number "
-                "of motion modes.  These motion modes determine how the camera will respond to input "
-                "and may be used to constrain how the Camera moves.  The CameraMotionMode enumeration "
-                "defines the possible set of modes and the Camera's current may be obtained by using "
-                "getMode().\n\n"
+   "Beyond the different operation methods, the Camera may be set to one of a number "
+   "of motion modes.  These motion modes determine how the camera will respond to input "
+   "and may be used to constrain how the Camera moves.  The CameraMotionMode enumeration "
+   "defines the possible set of modes and the Camera's current may be obtained by using "
+   "getMode().\n\n"
 
-                "Some of the motion modes may be set using specific script methods.  These often provide "
-                "additional parameters to set up the mode in one go.  Otherwise, it is always possible to "
-                "set a Camera's motion mode using the controlMode property.  Just pass in the name of the "
-                "mode enum.  The following table lists the motion modes, how to set them up, and what they offer:\n\n"
+   "Some of the motion modes may be set using specific script methods.  These often provide "
+   "additional parameters to set up the mode in one go.  Otherwise, it is always possible to "
+   "set a Camera's motion mode using the controlMode property.  Just pass in the name of the "
+   "mode enum.  The following table lists the motion modes, how to set them up, and what they offer:\n\n"
 
-                "<table border='1' cellpadding='1'>"
-                "<tr><th>Mode</th><th>Set From Script</th><th>Input Move</th><th>Input Rotate</th><th>Can Use Newton Mode?</th></tr>"
-                "<tr><td>Stationary</td><td>controlMode property</td><td>No</td><td>No</td><td>No</td></tr>"
-                "<tr><td>FreeRotate</td><td>controlMode property</td><td>No</td><td>Yes</td><td>Rotate Only</td></tr>"
-                "<tr><td>Fly</td><td>setFlyMode()</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>"
-                "<tr><td>OrbitObject</td><td>setOrbitMode()</td><td>Orbits object</td><td>Points to object</td><td>Move only</td></tr>"
-                "<tr><td>OrbitPoint</td><td>setOrbitPoint()</td><td>Orbits point</td><td>Points to location</td><td>Move only</td></tr>"
-                "<tr><td>TrackObject</td><td>setTrackObject()</td><td>No</td><td>Points to object</td><td>Yes</td></tr>"
-                "<tr><td>Overhead</td><td>controlMode property</td><td>Yes</td><td>No</td><td>Yes</td></tr>"
-                "<tr><td>EditOrbit (object selected)</td><td>setEditOrbitMode()</td><td>Orbits object</td><td>Points to object</td><td>Move only</td></tr>"
-                "<tr><td>EditOrbit (no object)</td><td>setEditOrbitMode()</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>"
-                "</table>\n\n"
+   "<table border='1' cellpadding='1'>"
+   "<tr><th>Mode</th><th>Set From Script</th><th>Input Move</th><th>Input Rotate</th><th>Can Use Newton Mode?</th></tr>"
+   "<tr><td>Stationary</td><td>controlMode property</td><td>No</td><td>No</td><td>No</td></tr>"
+   "<tr><td>FreeRotate</td><td>controlMode property</td><td>No</td><td>Yes</td><td>Rotate Only</td></tr>"
+   "<tr><td>Fly</td><td>setFlyMode()</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>"
+   "<tr><td>OrbitObject</td><td>setOrbitMode()</td><td>Orbits object</td><td>Points to object</td><td>Move only</td></tr>"
+   "<tr><td>OrbitPoint</td><td>setOrbitPoint()</td><td>Orbits point</td><td>Points to location</td><td>Move only</td></tr>"
+   "<tr><td>TrackObject</td><td>setTrackObject()</td><td>No</td><td>Points to object</td><td>Yes</td></tr>"
+   "<tr><td>Overhead</td><td>controlMode property</td><td>Yes</td><td>No</td><td>Yes</td></tr>"
+   "<tr><td>EditOrbit (object selected)</td><td>setEditOrbitMode()</td><td>Orbits object</td><td>Points to object</td><td>Move only</td></tr>"
+   "<tr><td>EditOrbit (no object)</td><td>setEditOrbitMode()</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>"
+   "</table>\n\n"
 
-                "<h3>%Trigger Input</h3>\n\n"
+   "<h3>%Trigger Input</h3>\n\n"
 
-                "Passing a move trigger ($mvTriggerCount0, $mvTriggerCount1, etc.) on to a Camera performs "
-                "different actions depending on which mode the camera is in.  While in Fly, Overhead or "
-                "EditOrbit mode, either trigger0 or trigger1 will cause a camera to move twice its normal "
-                "movement speed.  You can see this in action within the World Editor, where holding down the "
-                "left mouse button while in mouse look mode (right mouse button is also down) causes the Camera "
-                "to move faster.\n\n"
+   "Passing a move trigger ($mvTriggerCount0, $mvTriggerCount1, etc.) on to a Camera performs "
+   "different actions depending on which mode the camera is in.  While in Fly, Overhead or "
+   "EditOrbit mode, either trigger0 or trigger1 will cause a camera to move twice its normal "
+   "movement speed.  You can see this in action within the World Editor, where holding down the "
+   "left mouse button while in mouse look mode (right mouse button is also down) causes the Camera "
+   "to move faster.\n\n"
 
-                "Passing along trigger2 will put the camera into strafe mode.  While in this mode a Fly, "
-                "FreeRotate or Overhead Camera will not rotate from the move input.  Instead the yaw motion "
-                "will be applied to the Camera's x motion, and the pitch motion will be applied to the Camera's "
-                "z motion.  You can see this in action within the World Editor where holding down the middle mouse "
-                "button allows the user to move the camera up, down and side-to-side.\n\n"
+   "Passing along trigger2 will put the camera into strafe mode.  While in this mode a Fly, "
+   "FreeRotate or Overhead Camera will not rotate from the move input.  Instead the yaw motion "
+   "will be applied to the Camera's x motion, and the pitch motion will be applied to the Camera's "
+   "z motion.  You can see this in action within the World Editor where holding down the middle mouse "
+   "button allows the user to move the camera up, down and side-to-side.\n\n"
 
-                "While the camera is operating in Newton Mode, trigger0 and trigger1 behave slightly differently.  "
-                "Here trigger0 activates a multiplier to the applied acceleration force as defined by speedMultiplier.  "
-                "This has the affect of making the camera move up to speed faster.  trigger1 has the opposite affect "
-                "by acting as a brake.  When trigger1 is active a multiplier is added to the Camera's drag as "
-                "defined by brakeMultiplier.\n\n"
+   "While the camera is operating in Newton Mode, trigger0 and trigger1 behave slightly differently.  "
+   "Here trigger0 activates a multiplier to the applied acceleration force as defined by speedMultiplier.  "
+   "This has the affect of making the camera move up to speed faster.  trigger1 has the opposite affect "
+   "by acting as a brake.  When trigger1 is active a multiplier is added to the Camera's drag as "
+   "defined by brakeMultiplier.\n\n"
 
-                "@see CameraData\n"
-                "@see CameraMotionMode\n"
-                "@see Camera::movementSpeed\n\n"
-                "@ingroup BaseCamera\n"
-                );
+   "@see CameraData\n"
+   "@see CameraMotionMode\n"
+   "@see Camera::movementSpeed\n\n"
+   "@ingroup BaseCamera\n"
+);
 
 F32 Camera::smMovementSpeed = 40.0f;
 
@@ -903,7 +903,7 @@ void Camera::_setPosition(const Point3F& pos, const Point3F& rot)
    MatrixF xRot, zRot;
    xRot.set(EulerF(rot.x, 0.0f, 0.0f));
    zRot.set(EulerF(0.0f, 0.0f, rot.z));
-
+   
    MatrixF temp;
 
    if(mDataBlock->cameraCanBank)
@@ -1315,30 +1315,30 @@ void Camera::unpackUpdate(NetConnection *con, BitStream *bstream)
 void Camera::initPersistFields()
 {
    addGroup( "Camera" );
-   addProtectedField( "controlMode", TYPEID< CameraMotionMode >(), Offset( mMode, Camera ),
-      &_setModeField, &defaultProtectedGetFn,
-      "The current camera control mode." );
+      addProtectedField( "controlMode", TYPEID< CameraMotionMode >(), Offset( mMode, Camera ),
+         &_setModeField, &defaultProtectedGetFn,
+         "The current camera control mode." );
    endGroup( "Camera" );
 
    addGroup( "Camera: Newton Mode" );
-   addField( "newtonMode",               TypeBool,   Offset(mNewtonMode, Camera),
-      "Apply smoothing (acceleration and damping) to camera movements." );
-   addField( "newtonRotation",           TypeBool,   Offset(mNewtonRotation, Camera),
-      "Apply smoothing (acceleration and damping) to camera rotations." );
-   addProtectedField( "mass",            TypeF32,    Offset(mMass, Camera),            &_setNewtonField, &defaultProtectedGetFn,
-      "The camera's mass (Newton mode only).  Default value is 10." );
-   addProtectedField( "drag",            TypeF32,    Offset(mDrag, Camera),            &_setNewtonField, &defaultProtectedGetFn,
-      "Drag on camera when moving (Newton mode only).  Default value is 2." );
-   addProtectedField( "force",           TypeF32,    Offset(mFlyForce, Camera),        &_setNewtonField, &defaultProtectedGetFn,
-      "Force applied on camera when asked to move (Newton mode only).  Default value is 500." );
-   addProtectedField( "angularDrag",     TypeF32,    Offset(mAngularDrag, Camera),     &_setNewtonField, &defaultProtectedGetFn,
-      "Drag on camera when rotating (Newton mode only).  Default value is 2." );
-   addProtectedField( "angularForce",    TypeF32,    Offset(mAngularForce, Camera),    &_setNewtonField, &defaultProtectedGetFn,
-      "Force applied on camera when asked to rotate (Newton mode only).  Default value is 100." );
-   addProtectedField( "speedMultiplier", TypeF32,    Offset(mSpeedMultiplier, Camera), &_setNewtonField, &defaultProtectedGetFn,
-      "Speed multiplier when triggering the accelerator (Newton mode only).  Default value is 2." );
-   addProtectedField( "brakeMultiplier", TypeF32,    Offset(mBrakeMultiplier, Camera), &_setNewtonField, &defaultProtectedGetFn,
-      "Speed multiplier when triggering the brake (Newton mode only).  Default value is 2." );
+      addField( "newtonMode",               TypeBool,   Offset(mNewtonMode, Camera),
+         "Apply smoothing (acceleration and damping) to camera movements." );
+      addField( "newtonRotation",           TypeBool,   Offset(mNewtonRotation, Camera),
+         "Apply smoothing (acceleration and damping) to camera rotations." );
+      addProtectedField( "mass",            TypeF32,    Offset(mMass, Camera),            &_setNewtonField, &defaultProtectedGetFn,
+         "The camera's mass (Newton mode only).  Default value is 10." );
+      addProtectedField( "drag",            TypeF32,    Offset(mDrag, Camera),            &_setNewtonField, &defaultProtectedGetFn,
+         "Drag on camera when moving (Newton mode only).  Default value is 2." );
+      addProtectedField( "force",           TypeF32,    Offset(mFlyForce, Camera),        &_setNewtonField, &defaultProtectedGetFn,
+         "Force applied on camera when asked to move (Newton mode only).  Default value is 500." );
+      addProtectedField( "angularDrag",     TypeF32,    Offset(mAngularDrag, Camera),     &_setNewtonField, &defaultProtectedGetFn,
+         "Drag on camera when rotating (Newton mode only).  Default value is 2." );
+      addProtectedField( "angularForce",    TypeF32,    Offset(mAngularForce, Camera),    &_setNewtonField, &defaultProtectedGetFn,
+         "Force applied on camera when asked to rotate (Newton mode only).  Default value is 100." );
+      addProtectedField( "speedMultiplier", TypeF32,    Offset(mSpeedMultiplier, Camera), &_setNewtonField, &defaultProtectedGetFn,
+         "Speed multiplier when triggering the accelerator (Newton mode only).  Default value is 2." );
+      addProtectedField( "brakeMultiplier", TypeF32,    Offset(mBrakeMultiplier, Camera), &_setNewtonField, &defaultProtectedGetFn,
+         "Speed multiplier when triggering the brake (Newton mode only).  Default value is 2." );
    endGroup( "Camera: Newton Mode" );
 
    Parent::initPersistFields();
@@ -1359,7 +1359,7 @@ void Camera::consoleInit()
    // ExtendedMove support
    Con::addVariable("$camera::extendedMovePosRotIndex", TypeS32, &smExtendedMovePosRotIndex, 
       "@brief The ExtendedMove position/rotation index used for camera movements.\n\n"
-      "@ingroup BaseCamera\n");
+	   "@ingroup BaseCamera\n");
 }
 
 //-----------------------------------------------------------------------------
@@ -1389,16 +1389,16 @@ bool Camera::_setModeField( void *object, const char *index, const char *data )
    }
 
    else if( (dStricmp(data, "OrbitObject") == 0 && cam->mMode != OrbitObjectMode) ||
-      (dStricmp(data, "TrackObject") == 0 && cam->mMode != TrackObjectMode) ||
-      (dStricmp(data, "OrbitPoint")  == 0 && cam->mMode != OrbitPointMode)  )
+            (dStricmp(data, "TrackObject") == 0 && cam->mMode != TrackObjectMode) ||
+            (dStricmp(data, "OrbitPoint")  == 0 && cam->mMode != OrbitPointMode)  )
    {
       Con::warnf("Couldn't change Camera mode to %s: required information missing.  Use camera.set%s().", data, data);
       return false; // don't change the mode - not valid
    }
 
    else if( dStricmp(data, "OrbitObject") != 0 &&
-      dStricmp(data, "TrackObject") != 0 &&
-      bool(cam->mOrbitObject) )
+            dStricmp(data, "TrackObject") != 0 &&
+            bool(cam->mOrbitObject) )
    {
       cam->clearProcessAfter();
       cam->clearNotify(cam->mOrbitObject);
@@ -1407,10 +1407,10 @@ bool Camera::_setModeField( void *object, const char *index, const char *data )
 
    // make sure the requested mode is supported, and set it
    // NOTE: The _CameraMode namespace is generated by ImplementEnumType above
-
+   
    const EngineEnumTable& enums = *( TYPE< CameraMotionMode >()->getEnumTable() );
    const U32 numValues = enums.getNumValues();
-
+   
    for( S32 i = 0; i < numValues; ++i)
    {
       if( dStricmp(data, enums[i].mName) == 0 )
@@ -1528,7 +1528,7 @@ void Camera::_validateEyePoint(F32 pos, MatrixF *mat)
       mat->getColumn(1, &dir);
       if (mMaxOrbitDist - mMinOrbitDist > 0.0f)
          pos *= mMaxOrbitDist - mMinOrbitDist;
-
+      
       // Use the camera node's pos.
       Point3F startPos = getRenderPosition();
       Point3F endPos;
@@ -1539,11 +1539,11 @@ void Camera::_validateEyePoint(F32 pos, MatrixF *mat)
       disableCollision();
       RayInfo collision;
       U32 mask = TerrainObjectType |
-         WaterObjectType |
-         StaticShapeObjectType |
-         PlayerObjectType |
-         ItemObjectType |
-         VehicleObjectType;
+                 WaterObjectType |
+                 StaticShapeObjectType |
+                 PlayerObjectType |
+                 ItemObjectType |
+                 VehicleObjectType;
 
       SceneContainer* pContainer = isServerObject() ? &gServerContainer : &gClientContainer;
       if (!pContainer->castRay(startPos, startPos - dir * 2.5 * pos, mask, &collision))
@@ -1867,18 +1867,18 @@ DefineEngineMethod( Camera, setOffset, void, (Point3F offset), ,
 //-----------------------------------------------------------------------------
 
 DefineEngineMethod( Camera, setOrbitMode, void, (GameBase* orbitObject, TransformF orbitPoint, F32 minDistance, F32 maxDistance, 
-   F32 initDistance, bool ownClientObj, Point3F offset, bool locked), (false, Point3F(0.0f, 0.0f, 0.0f), false),
-   "Set the camera to orbit around the given object, or if none is given, around the given point.\n\n"
-   "@param orbitObject The object to orbit around.  If no object is given (0 or blank string is passed in) use the orbitPoint instead\n"
-   "@param orbitPoint The point to orbit around when no object is given.  In the form of \"x y z ax ay az aa\" such as returned by SceneObject::getTransform().\n"
-   "@param minDistance The minimum distance allowed to the orbit object or point.\n"
-   "@param maxDistance The maximum distance allowed from the orbit object or point.\n"
-   "@param initDistance The initial distance from the orbit object or point.\n"
-   "@param ownClientObj [optional] Are we orbiting an object that is owned by us?  Default is false.\n"
-   "@param offset [optional] An offset added to the camera's position.  Default is no offset.\n"
-   "@param locked [optional] Indicates the camera does not receive input from the player.  Default is false.\n"
-   "@see Camera::setOrbitObject()\n"
-   "@see Camera::setOrbitPoint()\n")
+                    F32 initDistance, bool ownClientObj, Point3F offset, bool locked), (false, Point3F(0.0f, 0.0f, 0.0f), false),
+                    "Set the camera to orbit around the given object, or if none is given, around the given point.\n\n"
+                    "@param orbitObject The object to orbit around.  If no object is given (0 or blank string is passed in) use the orbitPoint instead\n"
+                    "@param orbitPoint The point to orbit around when no object is given.  In the form of \"x y z ax ay az aa\" such as returned by SceneObject::getTransform().\n"
+                    "@param minDistance The minimum distance allowed to the orbit object or point.\n"
+                    "@param maxDistance The maximum distance allowed from the orbit object or point.\n"
+                    "@param initDistance The initial distance from the orbit object or point.\n"
+                    "@param ownClientObj [optional] Are we orbiting an object that is owned by us?  Default is false.\n"
+                    "@param offset [optional] An offset added to the camera's position.  Default is no offset.\n"
+                    "@param locked [optional] Indicates the camera does not receive input from the player.  Default is false.\n"
+                    "@see Camera::setOrbitObject()\n"
+                    "@see Camera::setOrbitPoint()\n")
 {
    MatrixF mat;
    orbitPoint.mOrientation.setMatrix(&mat);
@@ -1889,19 +1889,19 @@ DefineEngineMethod( Camera, setOrbitMode, void, (GameBase* orbitObject, Transfor
 //-----------------------------------------------------------------------------
 
 DefineEngineMethod( Camera, setOrbitObject, bool, (GameBase* orbitObject, VectorF rotation, F32 minDistance, 
-   F32 maxDistance, F32 initDistance, bool ownClientObject, Point3F offset, bool locked),
-   (false, Point3F(0.0f, 0.0f, 0.0f), false),
-   "Set the camera to orbit around a given object.\n\n"
-   "@param orbitObject The object to orbit around.\n"
-   "@param rotation The initial camera rotation about the object in radians in the form of \"x y z\".\n"
-   "@param minDistance The minimum distance allowed to the orbit object or point.\n"
-   "@param maxDistance The maximum distance allowed from the orbit object or point.\n"
-   "@param initDistance The initial distance from the orbit object or point.\n"
-   "@param ownClientObject [optional] Are we orbiting an object that is owned by us?  Default is false.\n"
-   "@param offset [optional] An offset added to the camera's position.  Default is no offset.\n"
-   "@param locked [optional] Indicates the camera does not receive input from the player.  Default is false.\n"
-   "@returns false if the given object could not be found.\n"
-   "@see Camera::setOrbitMode()\n")
+                    F32 maxDistance, F32 initDistance, bool ownClientObject, Point3F offset, bool locked),
+                    (false, Point3F(0.0f, 0.0f, 0.0f), false),
+                    "Set the camera to orbit around a given object.\n\n"
+                    "@param orbitObject The object to orbit around.\n"
+                    "@param rotation The initial camera rotation about the object in radians in the form of \"x y z\".\n"
+                    "@param minDistance The minimum distance allowed to the orbit object or point.\n"
+                    "@param maxDistance The maximum distance allowed from the orbit object or point.\n"
+                    "@param initDistance The initial distance from the orbit object or point.\n"
+                    "@param ownClientObject [optional] Are we orbiting an object that is owned by us?  Default is false.\n"
+                    "@param offset [optional] An offset added to the camera's position.  Default is no offset.\n"
+                    "@param locked [optional] Indicates the camera does not receive input from the player.  Default is false.\n"
+                    "@returns false if the given object could not be found.\n"
+                    "@see Camera::setOrbitMode()\n")
 {
    if( !orbitObject )
    {
@@ -1917,16 +1917,16 @@ DefineEngineMethod( Camera, setOrbitObject, bool, (GameBase* orbitObject, Vector
 //-----------------------------------------------------------------------------
 
 DefineEngineMethod( Camera, setOrbitPoint, void, (TransformF orbitPoint, F32 minDistance, F32 maxDistance, F32 initDistance, 
-   Point3F offset, bool locked),
-   (Point3F(0.0f, 0.0f, 0.0f), false),
-   "Set the camera to orbit around a given point.\n\n"
-   "@param orbitPoint The point to orbit around.  In the form of \"x y z ax ay az aa\" such as returned by SceneObject::getTransform().\n"
-   "@param minDistance The minimum distance allowed to the orbit object or point.\n"
-   "@param maxDistance The maximum distance allowed from the orbit object or point.\n"
-   "@param initDistance The initial distance from the orbit object or point.\n"
-   "@param offset [optional] An offset added to the camera's position.  Default is no offset.\n"
-   "@param locked [optional] Indicates the camera does not receive input from the player.  Default is false.\n"
-   "@see Camera::setOrbitMode()\n")
+                    Point3F offset, bool locked),
+                    (Point3F(0.0f, 0.0f, 0.0f), false),
+                    "Set the camera to orbit around a given point.\n\n"
+                    "@param orbitPoint The point to orbit around.  In the form of \"x y z ax ay az aa\" such as returned by SceneObject::getTransform().\n"
+                    "@param minDistance The minimum distance allowed to the orbit object or point.\n"
+                    "@param maxDistance The maximum distance allowed from the orbit object or point.\n"
+                    "@param initDistance The initial distance from the orbit object or point.\n"
+                    "@param offset [optional] An offset added to the camera's position.  Default is no offset.\n"
+                    "@param locked [optional] Indicates the camera does not receive input from the player.  Default is false.\n"
+                    "@see Camera::setOrbitMode()\n")
 {
    MatrixF mat;
    orbitPoint.mOrientation.setMatrix(&mat);
@@ -1937,10 +1937,10 @@ DefineEngineMethod( Camera, setOrbitPoint, void, (TransformF orbitPoint, F32 min
 //-----------------------------------------------------------------------------
 
 DefineEngineMethod( Camera, setTrackObject, bool, (GameBase* trackObject, Point3F offset), (Point3F(0.0f, 0.0f, 0.0f)),
-                   "Set the camera to track a given object.\n\n"
-                   "@param trackObject The object to track.\n"
-                   "@param offset [optional] An offset added to the camera's position.  Default is no offset.\n"
-                   "@returns false if the given object could not be found.\n")
+                    "Set the camera to track a given object.\n\n"
+                    "@param trackObject The object to track.\n"
+                    "@param offset [optional] An offset added to the camera's position.  Default is no offset.\n"
+                    "@returns false if the given object could not be found.\n")
 {
    if(!trackObject)
    {
@@ -1955,9 +1955,9 @@ DefineEngineMethod( Camera, setTrackObject, bool, (GameBase* trackObject, Point3
 //-----------------------------------------------------------------------------
 
 DefineEngineMethod( Camera, setEditOrbitMode, void, (), ,
-                   "Set the editor camera to orbit around a point set with Camera::setEditOrbitPoint().\n\n"
-                   "@note This method is generally used only within the World Editor and other tools.  To "
-                   "orbit about an object or point within a game, see Camera::setOrbitMode() and its helper methods.\n")
+                    "Set the editor camera to orbit around a point set with Camera::setEditOrbitPoint().\n\n"
+                    "@note This method is generally used only within the World Editor and other tools.  To "
+                    "orbit about an object or point within a game, see Camera::setOrbitMode() and its helper methods.\n")
 {
    object->setEditOrbitMode();
 }
@@ -1976,10 +1976,10 @@ DefineEngineMethod( Camera, setFlyMode, void, (), ,
 //-----------------------------------------------------------------------------
 
 DefineEngineMethod( Camera, setNewtonFlyMode, void, (), ,
-                   "Set the camera to fly freely, but with ease-in and ease-out.\n\n"
-                   "This method allows for the same 6 degrees of freedom as Camera::setFlyMode() but "
-                   "activates the ease-in and ease-out on the camera's movement.  To also activate "
-                   "Newton mode for the camera's rotation, set Camera::newtonRotation to true.")
+                    "Set the camera to fly freely, but with ease-in and ease-out.\n\n"
+                    "This method allows for the same 6 degrees of freedom as Camera::setFlyMode() but "
+                    "activates the ease-in and ease-out on the camera's movement.  To also activate "
+                    "Newton mode for the camera's rotation, set Camera::newtonRotation to true.")
 {
    object->setNewtonFlyMode();
 }
@@ -1987,8 +1987,8 @@ DefineEngineMethod( Camera, setNewtonFlyMode, void, (), ,
 //-----------------------------------------------------------------------------
 
 DefineEngineMethod( Camera, isRotationDamped, bool, (), ,
-                   "Is this a Newton Fly mode camera with damped rotation?\n\n"
-                   "@returns true if the camera uses a damped rotation.  i.e. Camera::newtonRotation is set to true.\n")
+                    "Is this a Newton Fly mode camera with damped rotation?\n\n"
+                    "@returns true if the camera uses a damped rotation.  i.e. Camera::newtonRotation is set to true.\n")
 {
    return object->isRotationDamped();
 }

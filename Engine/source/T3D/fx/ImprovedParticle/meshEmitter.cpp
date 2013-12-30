@@ -142,9 +142,6 @@ ConsoleDocClass( MeshEmitterData,
 // MeshEmitterData
 //-----------------------------------------------------------------------------
 
-typedef ParticleRenderInst::BlendStyle mParticleBlendStyle;
-DefineEnumType( mParticleBlendStyle );
-
 const F32 sgDefaultEjectionOffset = 0.0f;
 
 //-----------------------------------------------------------------------------

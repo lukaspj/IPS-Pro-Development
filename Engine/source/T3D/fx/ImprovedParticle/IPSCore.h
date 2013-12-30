@@ -51,7 +51,7 @@
 
 
 #ifndef ParticleBehaviourCount
-#define ParticleBehaviourCount (U8)8
+#define ParticleBehaviourCount 8
 #endif
 
 class IPSCore{
