@@ -71,7 +71,7 @@ void Impact::doImpact( SimObjectId src, SimObjectId tgt )
 {
    doImpact_callback( src, tgt); 
    if(ScriptCallback != "")
-      Con::executef(this, ScriptCallback, std::to_string(src).c_str(), std::to_string(tgt).c_str());
+      Con::executef(this, ScriptCallback, std::to_string((_Longlong)src).c_str(), std::to_string((_Longlong)tgt).c_str());
 }
 
 IMPLEMENT_CALLBACK( Impact, doImpact, void, (SimObjectId SourceID, SimObjectId TargetID), (SourceID, TargetID),

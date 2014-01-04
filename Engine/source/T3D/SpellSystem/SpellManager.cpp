@@ -154,11 +154,11 @@ void SpellManager::findTarget()
 
    if(mCurSpellData->mTargetType == SpellData::Object)
    {
-      pickType->PickObject(this, mCurSpellData, mControllingObject, mCurSpellData->mTypeMask, (&PickCallback));
+      pickType->PickObject(this, mCurSpellData, mControllingObject, mCurSpellData->mTypeMask, (&SpellManager::PickCallback));
    }
    else if(mCurSpellData->mTargetType == SpellData::Point)
    {
-      pickType->PickPosition(this, mCurSpellData, mControllingObject, mCurSpellData->mTypeMask, (&PickCallback));
+      pickType->PickPosition(this, mCurSpellData, mControllingObject, mCurSpellData->mTypeMask, (&SpellManager::PickCallback));
    }
 }
 
