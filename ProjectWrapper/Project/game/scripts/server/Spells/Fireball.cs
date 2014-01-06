@@ -25,7 +25,8 @@ function Fireball::onChannelBegin(%this, %spell)
       emitter = FireballChannelEmitterBASE;
       position = %spell.getSource().position;
    };
-   %spell.baseEmitter.schedule(32, "addParticleBehaviour", %bhv1, false);
+   %spell.baseEmitter.addParticleBehaviour(%bhv1, false);
+   //%spell.baseEmitter.schedule(32, "addParticleBehaviour", %bhv1, false);
 }
 
 function Fireball::onChannelEnd(%this, %spell)

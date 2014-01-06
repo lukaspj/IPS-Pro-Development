@@ -91,6 +91,8 @@ ParticleEmitterNode::ParticleEmitterNode()
    mVelocity           = 1.0;
 
    mNodeMounted = false;
+
+   mGhosted = false;
 }
 
 ParticleEmitterNode::~ParticleEmitterNode()
@@ -200,6 +202,24 @@ void ParticleEmitterNode::inspectPostApply()
 void ParticleEmitterNode::processTick(const Move* move)
 {
    Parent::processTick(move);
+   
+   if(isServerObject() && mGhosted)
+   {
+      for(int i = 0; i < mPendingEvents.size(); i++)
+      {
+         NetEvent* evt = mPendingEvents[i];
+         SimGroup* pClientGroup = Sim::getClientGroup();
+      
+         SimGroup::iterator itr = pClientGroup->begin();
+         for ( ; itr != pClientGroup->end(); itr++ )
+         {
+            GameConnection* gc = static_cast<GameConnection*>(*itr);
+            if ( gc )
+               gc->postNetEvent( evt );
+         }
+      }
+      mPendingEvents.clear();
+   }
 
    if ( isMounted() )
    {
@@ -276,6 +296,8 @@ U32 ParticleEmitterNode::packUpdate(NetConnection* conn, U32 mask, BitStream* st
    }
 
    stream->writeFlag(mNodeMounted);
+
+   mGhosted = true;
 
    return retMask;
 }
@@ -424,17 +446,8 @@ void ParticleEmitterNode::addParticleBehaviour(IParticleBehaviour* bhv, bool ove
          getEmitter()->ParticleBHVs[ParticleBehaviourCount - 1] = bhv;
    }
    else {
-      SimGroup* pClientGroup = Sim::getClientGroup();
-      
-      SimGroup::iterator itr = pClientGroup->begin();
-      for ( ; itr != pClientGroup->end(); itr++ )
-      {
-         GameConnection* gc = static_cast<GameConnection*>(*itr);
-         if ( gc ) {
-            NetEvent* evt = (NetEvent*)new ParticleBehaviourNetEvent(bhv, this, overrideLast);
-            gc->postNetEvent( evt );
-         }
-      }
+      NetEvent* evt = (NetEvent*)new ParticleBehaviourNetEvent(bhv, this, overrideLast);
+      mPendingEvents.push_back(evt);
    }
 }
 

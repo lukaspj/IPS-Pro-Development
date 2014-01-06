@@ -95,6 +95,9 @@ public:
 
 	bool mNodeMounted;
 
+   Vector< NetEvent* > mPendingEvents;
+   bool mGhosted;
+
 	ParticleEmitterNode();
 	~ParticleEmitterNode();
 
