@@ -1633,235 +1633,23 @@ bool MeshEmitter::getPointOnFace(SimObject *SB, ShapeBase *SS, TSStatic* TS, Par
 	{
 		PROFILE_SCOPE(meshEmitOdd);
 #pragma region skinMesh
-		if(skinmesh)
-		{
-			Vector<Point3F> normList = shape->meshes[meshIndex]->norms;
-			if (sMesh)
-			{
-				S32 numVerts = sMesh->mVertexData.size();
-				if(numVerts)
-				{
-					S32 numPrims = sMesh->primitives.size();
-					if(numPrims)
-					{
-						S32 numIndices = sMesh->indices.size();
-						if(numIndices)
-						{
-							// Get a random primitive
-							S32 primIndex = rand() % numPrims;
-							S32 start = sMesh->primitives[primIndex].start;
-							S16 numElements = sMesh->primitives[primIndex].numElements;
-
-							// Define some variables we will use later
-							TSMesh::__TSMeshVertexBase v1, v2, v3;
-							Point3F vp1;
-
-							// Test if the primitive is a triangle. Which it should be.
-							//  - Theres no handler for other primitives than triangles,
-							//  - if such is needed email me at LukasPJ@FuzzyVoidStudio.com
-							if ( (shape->meshes[meshIndex]->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Triangles)
-							{
-								// Get a random triangle
-								U32 triStart = (rand() % (numElements/3));
-								// This is not really necessary due to the way we handle the
-								//  - triangles, but it is an useful snippet for modifications!
-								//  - due to some rendering thing, every other triangle is 
-								//  - counter clock wise. Read about it in the official DX9 docs.
-								U8 indiceBool = (triStart * 3) % 2;
-								if(indiceBool == 0)
-								{
-									v1 = sMesh->mVertexData[sMesh->indices[start + (triStart*3)]];
-									v2 = sMesh->mVertexData[sMesh->indices[start + (triStart*3) + 1]];
-									v3 = sMesh->mVertexData[sMesh->indices[start + (triStart*3) + 2]];
-								}
-								else
-								{
-									v3 = sMesh->mVertexData[sMesh->indices[start + (triStart*3)]];
-									v2 = sMesh->mVertexData[sMesh->indices[start + (triStart*3) + 1]];
-									v1 = sMesh->mVertexData[sMesh->indices[start + (triStart*3) + 2]];
-									/*
-									v1
-									v3
-									v2
-									*/
-								}
-								// Create 2 vectors from the 3 points that make up the triangle
-								Point3F p1 = v1.vert();
-								Point3F p2 = v2.vert();
-								Point3F p3 = v3.vert();
-								Point3F vec1;
-								Point3F vec2;
-								vec1 = p2-p1;
-								vec2 = p3-p2;
-								// Get 2 random coefficients
-								F32 K1 = rand() % 1000 + 1;
-								F32 K2 = rand() % 1000 + 1;
-								Point3F planeVec;
-								// If the point is outside of the triangle, mirror it in so it fits
-								//  - into the triangle. This is for a perfectly even result on a 
-								//  - per face basis.
-								if(K2 <= K1)
-									planeVec = p1 + (vec1 * (K1 / 1000)) + (vec2 * (K2 / 1000));
-								else
-									planeVec = p1 + (vec1 * (1-(K1 / 1000))) + (vec2 * (1-(K2 / 1000)));
-
-								// Add up the normals of the three vertices and normalize them to get
-								//  - the correct normal of the plane.
-								Point3F* normalV = new Point3F((v1.normal()+v2.normal()+v3.normal())/3);
-								normalV->normalize();
-
-								// Get the transform of the object to get the transform matrix.
-								//  - If it is a TSStatic we need to access the rootnode aswell
-								//  - Which contains the rotation information.
-								MatrixF trans;
-								MatrixF nodetrans;
-								MatrixF mat;
-								if(SS)
-								{
-									trans = SS->getTransform();
-								}
-								else
-								{
-									trans = TS->getTransform();
-									nodetrans = TS->getShapeInstance()->mNodeTransforms[0];
-									mat.mul(trans, nodetrans);
-								}
-
-								Point3F* p = new Point3F();
-
-								if(SS)
-								{
-									trans.mulV(planeVec,p);
-									pNew->pos = SS->getPosition() + *p + (*normalV * ejectionOffset);
-								}
-								else{
-									mat.mulV((*planeVec * TS->getScale()),p);
-									pNew->pos = TS->getPosition() + *p + (*normalV * ejectionOffset);
-								}
-								delete(*p);
-								delete(*normalV);
-								return true;
-							}
-							else
-							{
-								if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Fan) 
-									Con::warnf("Was a fan DrawPrimitive not TrisDrawPrimitive");
-								else if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Strip) 
-									Con::warnf("Was a Strip DrawPrimitive not TrisDrawPrimitive");
-								else
-									Con::warnf("Couldn't determine primitive type");
-							}
-						}
-					}
-				}
-			}
-		}
+      Point3F point;
+      if(ComputePoint(sMesh->mVertexData, sMesh->indices, sMesh->primitives,SS,TS,sMesh->primitives,point) 
+         && skinmesh && sMesh)
+      {
+         pNew->pos = point;
+         return true;
+      }
 #pragma endregion
 #pragma region staticmesh
 		// Same procedure as above
-		if(!skinmesh)
-		{
-			if(Mesh)
-			{
-				S32 numVerts = Mesh->mVertexData.size();
-				if(numVerts)
-				{
-					S32 numPrims = Mesh->primitives.size();
-					if(numPrims)
-					{
-						S32 numIndices = Mesh->indices.size();
-						if(numIndices)
-						{
-							S32 primIndex = rand() % numPrims;
-							S32 start = Mesh->primitives[primIndex].start;
-							S16 numElements = Mesh->primitives[primIndex].numElements;
-
-							TSMesh::__TSMeshVertexBase v1, v2, v3;
-							Point3F vp1;
-
-							if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Triangles)
-							{
-								U32 triStart = (rand() % (numElements/3));
-								U8 indiceBool = (triStart * 3) % 2;
-								if(indiceBool == 0)
-								{
-									v1 = Mesh->mVertexData[Mesh->indices[start + (triStart*3)]];
-									v2 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 1]];
-									v3 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 2]];
-								}
-								else
-								{
-									v3 = Mesh->mVertexData[Mesh->indices[start + (triStart*3)]];
-									v2 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 1]];
-									v1 = Mesh->mVertexData[Mesh->indices[start + (triStart*3) + 2]];
-									/*
-									v1
-									v3
-									v2
-									*/
-								}
-								Point3F p1 = v1.vert();
-								Point3F p2 = v2.vert();
-								Point3F p3 = v3.vert();
-								Point3F vec1;
-								Point3F vec2;
-								vec1 = p2-p1;
-								vec2 = p3-p2;
-								F32 K1 = rand() % 1000 + 1;
-								F32 K2 = rand() % 1000 + 1;
-								Point3F planeVec;
-								if(K2 <= K1)
-									planeVec = p1 + (vec1 * (K1 / 1000)) + (vec2 * (K2 / 1000));
-								else
-									planeVec = p1 + (vec1 * (1-(K1 / 1000))) + (vec2 * (1-(K2 / 1000)));
-
-								// Construct a vector from the 3 results
-								const Point3F *vertPos = new const Point3F(planeVec);
-
-								Point3F* normalV = new Point3F((v1.normal()+v2.normal()+v3.normal())/3);
-								normalV->normalize();
-
-								MatrixF trans;
-								MatrixF nodetrans;
-								MatrixF mat;
-								if(SS)
-								{
-									trans = SS->getTransform();
-								}
-								else
-								{
-									trans = TS->getTransform();
-									nodetrans = TS->getShapeInstance()->mNodeTransforms[0];
-									mat.mul(trans, nodetrans);
-								}
-								// Rotate our point by the rotation matrix
-								Point3F* p = new Point3F();
-
-								if(SS)
-								{
-									trans.mulV(*vertPos,p);
-									pNew->pos = SS->getPosition() + *p + (*normalV * ejectionOffset);
-								}
-								else{
-									mat.mulV((*vertPos * TS->getScale()),p);
-									pNew->pos = TS->getPosition() + *p + (*normalV * ejectionOffset);
-								}
-								return true;
-							}
-							else
-							{
-								if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Fan) 
-									Con::warnf("Was a fan DrawPrimitive not TrisDrawPrimitive");
-								else if ( (Mesh->primitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Strip) 
-									Con::warnf("Was a Strip DrawPrimitive not TrisDrawPrimitive");
-								else
-									Con::warnf("Couldn't determine primitive type");
-							}
-						}
-					}
-				}
-			}
-		}
+      Point3F point;
+      if(ComputePoint(Mesh->mVertexData, Mesh->indices, Mesh->primitives,SS,TS,Mesh->primitives,point)
+         && !skinmesh && Mesh)
+      {
+         pNew->pos = point;
+         return true;
+      }
 #pragma endregion
 	}
 	if(evenEmission)
@@ -1971,6 +1759,132 @@ bool MeshEmitter::getPointOnFace(SimObject *SB, ShapeBase *SS, TSStatic* TS, Par
 	}
 	return false;
 #pragma endregion
+}
+
+bool MeshEmitter::ComputePoint(TSMesh::TSMeshVertexArray vertexData, 
+                    Vector<U32> indices, 
+                    Vector<TSDrawPrimitive> primitives, 
+                    ShapeBase* SS, 
+                    TSStatic* TS, 
+                    Vector<TSDrawPrimitive> meshPrimitives,
+                    Point3F& out)
+{
+	S32 numVerts = vertexData.size();
+	S32 numPrims = primitives.size();
+	S32 numIndices = indices.size();
+   if(numVerts)
+   {
+      if(numPrims)
+      {
+         if(numIndices)
+         {
+            // Get a random primitive
+            S32 primIndex = rand() % numPrims;
+            S32 start = primitives[primIndex].start;
+            S16 numElements = primitives[primIndex].numElements;
+
+            // Define some variables we will use later
+            TSMesh::__TSMeshVertexBase v1, v2, v3;
+            Point3F vp1;
+
+            // Test if the primitive is a triangle. Which it should be.
+            //  - Theres no handler for other primitives than triangles,
+            //  - if such is needed email me at LukasPJ@FuzzyVoidStudio.com
+            if ( (meshPrimitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Triangles)
+            {
+               // Get a random triangle
+               U32 triStart = (rand() % (numElements/3));
+               // This is not really necessary due to the way we handle the
+               //  - triangles, but it is an useful snippet for modifications!
+               //  - due to some rendering thing, every other triangle is 
+               //  - counter clock wise. Read about it in the official DX9 docs.
+               U8 indiceBool = (triStart * 3) % 2;
+               if(indiceBool == 0)
+               {
+                  v1 = vertexData[indices[start + (triStart*3)]];
+                  v2 = vertexData[indices[start + (triStart*3) + 1]];
+                  v3 = vertexData[indices[start + (triStart*3) + 2]];
+               }
+               else
+               {
+                  v3 = vertexData[indices[start + (triStart*3)]];
+                  v2 = vertexData[indices[start + (triStart*3) + 1]];
+                  v1 = vertexData[indices[start + (triStart*3) + 2]];
+                  /*
+                  v1
+                  v3
+                  v2
+                  */
+               }
+               // Create 2 vectors from the 3 points that make up the triangle
+               Point3F p1 = v1.vert();
+               Point3F p2 = v2.vert();
+               Point3F p3 = v3.vert();
+               Point3F vec1;
+               Point3F vec2;
+               vec1 = p2-p1;
+               vec2 = p3-p2;
+               // Get 2 random coefficients
+               F32 K1 = rand() % 1000 + 1;
+               F32 K2 = rand() % 1000 + 1;
+               Point3F planeVec;
+               // If the point is outside of the triangle, mirror it in so it fits
+               //  - into the triangle. This is for a perfectly even result on a 
+               //  - per face basis.
+               if(K2 <= K1)
+                  planeVec = p1 + (vec1 * (K1 / 1000)) + (vec2 * (K2 / 1000));
+               else
+                  planeVec = p1 + (vec1 * (1-(K1 / 1000))) + (vec2 * (1-(K2 / 1000)));
+
+               // Add up the normals of the three vertices and normalize them to get
+               //  - the correct normal of the plane.
+               Point3F* normalV = new Point3F((v1.normal()+v2.normal()+v3.normal())/3);
+               normalV->normalize();
+
+               // Get the transform of the object to get the transform matrix.
+               //  - If it is a TSStatic we need to access the rootnode aswell
+               //  - Which contains the rotation information.
+               MatrixF trans;
+               MatrixF nodetrans;
+               MatrixF mat;
+               if(SS)
+               {
+                  trans = SS->getTransform();
+               }
+               else
+               {
+                  trans = TS->getTransform();
+                  nodetrans = TS->getShapeInstance()->mNodeTransforms[0];
+                  mat.mul(trans, nodetrans);
+               }
+
+               Point3F* p = new Point3F();
+
+               if(SS)
+               {
+                  trans.mulV(planeVec,p);
+                  return SS->getPosition() + *p + (*normalV * ejectionOffset);
+               }
+               else{
+                  mat.mulV((*planeVec * TS->getScale()),p);
+                  return TS->getPosition() + *p + (*normalV * ejectionOffset);
+               }
+               delete(*p);
+               delete(*normalV);
+               return true;
+            }
+            else
+            {
+               if ( (meshPrimitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Fan) 
+                  Con::warnf("Was a fan DrawPrimitive not TrisDrawPrimitive");
+               else if ( (meshPrimitives[primIndex].matIndex & TSDrawPrimitive::TypeMask) == TSDrawPrimitive::Strip) 
+                  Con::warnf("Was a Strip DrawPrimitive not TrisDrawPrimitive");
+               else
+                  Con::warnf("Couldn't determine primitive type");
+            }
+         }
+      }
+   }
 }
 
 //-----------------------------------------------------------------------------

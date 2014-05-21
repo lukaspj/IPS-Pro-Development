@@ -202,6 +202,13 @@ public:
 	virtual void addParticle(const F32 &vel);
 	virtual bool getPointOnVertex(SimObject *SB, ShapeBase *SS, TSStatic* TS, Particle *pNew);
 	virtual bool getPointOnFace(SimObject *SB, ShapeBase *SS, TSStatic* TS, Particle *pNew);
+   virtual bool ComputePoint(TSMesh::TSMeshVertexArray vertexData, 
+                    Vector<U32> indices, 
+                    Vector<TSDrawPrimitive> primitives, 
+                    ShapeBase* SS, 
+                    TSStatic* TS, 
+                    Vector<TSDrawPrimitive> meshPrimitives,
+                    Point3F& out);
 	virtual void loadFaces(SimObject *SB, ShapeBase *SS, TSStatic* TS);
 	virtual void loadFaces();
 	virtual void debugRenderDelegate(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance* overrideMat) { };
